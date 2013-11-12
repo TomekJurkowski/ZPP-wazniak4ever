@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DeleteView, CreateView
+from django.views.generic import ListView, DeleteView, CreateView, TemplateView
 from models import SampleItem
 from forms import AddItemForm
 
@@ -24,3 +24,7 @@ class ItemCreateView(CreateView):
     form_class = AddItemForm
     model = SampleItem
     success_url = "/"
+
+
+class LatexView(TemplateView):
+    template_name = "latex.html"

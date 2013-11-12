@@ -3,7 +3,7 @@ from wazniakWeb.views import SampleItemListView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-from wazniakWeb.views import ItemDeleteView, ItemCreateView
+from wazniakWeb.views import ItemDeleteView, ItemCreateView, LatexView
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -18,4 +18,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^addItem/', ItemCreateView.as_view(), name='add_item'),
     url(r'^item/(?P<pk>\d+)/delete/$', ItemDeleteView.as_view(), name='delete_item'),
+
+
+    url(r'^latex/', LatexView.as_view(), name='latex'),
 )
