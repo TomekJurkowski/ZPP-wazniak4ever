@@ -23,29 +23,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/WazniakWebsite/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="48" selection-start="466" selection-end="466" vertical-scroll-proportion="0.0" vertical-offset="340" max-vertical-offset="2839">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WazniakWebsite/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="52" selection-start="894" selection-end="894" vertical-scroll-proportion="0.0" vertical-offset="24" max-vertical-offset="493">
+            <state line="22" column="52" selection-start="894" selection-end="894" vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="493">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="latex.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="latex.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/latex.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="0" selection-start="638" selection-end="638" vertical-scroll-proportion="-0.30357143" vertical-offset="459" max-vertical-offset="952">
-              <folding />
+            <state line="43" column="13" selection-start="1339" selection-end="1339" vertical-scroll-proportion="-5.607843" vertical-offset="445" max-vertical-offset="3060">
+              <folding>
+                <element signature="n#style#0;n#div#1;n#div#1;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/wazniakWeb/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="0" selection-start="432" selection-end="432" vertical-scroll-proportion="0.569378" vertical-offset="0" max-vertical-offset="595">
+              <folding>
+                <element signature="e#0#79#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -53,7 +57,7 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="0" selection-start="228" selection-end="281" vertical-scroll-proportion="-3.2692308" vertical-offset="17" max-vertical-offset="1037">
+            <state line="6" column="0" selection-start="228" selection-end="281" vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="1037">
               <folding />
             </state>
           </provider>
@@ -80,7 +84,7 @@
       <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wazniakWeb/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="0" selection-start="209" selection-end="209" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="272">
+            <state line="10" column="0" selection-start="209" selection-end="209" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="272">
               <folding />
             </state>
           </provider>
@@ -89,7 +93,7 @@
       <file leaf-file-name="admin.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wazniakWeb/admin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="48" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="221">
+            <state line="7" column="48" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="204">
               <folding />
             </state>
           </provider>
@@ -110,10 +114,10 @@
         <option value="$PROJECT_DIR$/WazniakWebsite/settings.py" />
         <option value="$PROJECT_DIR$/wazniakWeb/admin.py" />
         <option value="$PROJECT_DIR$/wazniakWeb/models.py" />
-        <option value="$PROJECT_DIR$/wazniakWeb/views.py" />
         <option value="$PROJECT_DIR$/WazniakWebsite/urls.py" />
         <option value="$PROJECT_DIR$/templates/index.html" />
         <option value="$PROJECT_DIR$/templates/latex.html" />
+        <option value="$PROJECT_DIR$/wazniakWeb/views.py" />
       </list>
     </option>
   </component>
@@ -509,20 +513,20 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3289689" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26573938" sideWeight="0.7266776" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935154" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27332243" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27332243" sideWeight="0.29575402" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27332243" sideWeight="0.704246" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -556,9 +560,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wazniakWeb/tests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/index.html">
@@ -591,28 +593,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wazniakWeb/tests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wazniakWeb/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="48" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WazniakWebsite/static/bootstrap/js/bootstrap.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WazniakWebsite/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="48" selection-start="466" selection-end="466" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <folding />
         </state>
       </provider>
@@ -631,12 +617,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wazniakWeb/views.py">
+    <entry file="file://$PROJECT_DIR$/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="11" selection-start="676" selection-end="676" vertical-scroll-proportion="0.0" vertical-offset="109" max-vertical-offset="595">
+        <state line="6" column="0" selection-start="228" selection-end="281" vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="1037">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wazniakWeb/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="48" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/latex.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="13" selection-start="1339" selection-end="1339" vertical-scroll-proportion="-5.607843" vertical-offset="445" max-vertical-offset="3060">
           <folding>
-            <element signature="e#0#79#0" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WazniakWebsite/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="159" column="0" selection-start="5230" selection-end="5230" vertical-scroll-proportion="0.9186603" vertical-offset="2319" max-vertical-offset="2839">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -647,17 +654,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/index.html">
+    <entry file="file://$PROJECT_DIR$/wazniakWeb/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="228" selection-end="281" vertical-scroll-proportion="-3.2692308" vertical-offset="17" max-vertical-offset="1037">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/latex.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="0" selection-start="638" selection-end="638" vertical-scroll-proportion="-0.30357143" vertical-offset="459" max-vertical-offset="952">
-          <folding />
+        <state line="14" column="0" selection-start="432" selection-end="432" vertical-scroll-proportion="0.569378" vertical-offset="0" max-vertical-offset="595">
+          <folding>
+            <element signature="e#0#79#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
