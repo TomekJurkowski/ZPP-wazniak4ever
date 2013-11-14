@@ -29,8 +29,12 @@
 
         $(function() {
             var h = $('#MathInput').height();
-            $('#MathPreview').height(h);
-            $('#MathBuffer').height(h);
+            $("#MathPreview").css("min-height", function(){
+                 return h;
+            });
+            $("#MathBuffer").css("min-height", function(){
+                 return h;
+            });
         })
 
     </script>
