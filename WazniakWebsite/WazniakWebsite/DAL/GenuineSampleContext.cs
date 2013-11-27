@@ -18,6 +18,9 @@ namespace WazniakWebsite.DAL
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Entity<SampleItem>().ToTable("SampleItem", "wazniak_forever");
+            modelBuilder.Entity<MathematicalTask>().ToTable("MathematicalTask", "wazniak_forever");
         }
+
+        public DbSet<MathematicalTask> MathematicalTasks { get; set; }
     }
 }

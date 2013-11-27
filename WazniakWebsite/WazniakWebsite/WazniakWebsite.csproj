@@ -139,6 +139,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MathematicalTaskController.cs" />
     <Compile Include="Controllers\SampleItemController.cs" />
     <Compile Include="Controllers\SampleItemMobileController.cs" />
     <Compile Include="DAL\GenuineSampleContext.cs" />
@@ -150,7 +151,16 @@
     <Compile Include="Migrations\201311232005352_InitialCreate.Designer.cs">
       <DependentUpon>201311232005352_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201311271915329_MathematicalTask.cs" />
+    <Compile Include="Migrations\201311271915329_MathematicalTask.Designer.cs">
+      <DependentUpon>201311271915329_MathematicalTask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311271950577_MathematicalTask-TitleAdded.cs" />
+    <Compile Include="Migrations\201311271950577_MathematicalTask-TitleAdded.Designer.cs">
+      <DependentUpon>201311271950577_MathematicalTask-TitleAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\MathematicalTask.cs" />
     <Compile Include="Models\SampleItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -195,10 +205,21 @@
     <Content Include="Views\SampleItemMobile\Details.cshtml" />
     <Content Include="Views\SampleItemMobile\Edit.cshtml" />
     <Content Include="Views\SampleItemMobile\Index.cshtml" />
+    <Content Include="Views\MathematicalTask\Create.cshtml" />
+    <Content Include="Views\MathematicalTask\Delete.cshtml" />
+    <Content Include="Views\MathematicalTask\Details.cshtml" />
+    <Content Include="Views\MathematicalTask\Edit.cshtml" />
+    <Content Include="Views\MathematicalTask\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201311232005352_InitialCreate.resx">
       <DependentUpon>201311232005352_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311271915329_MathematicalTask.resx">
+      <DependentUpon>201311271915329_MathematicalTask.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311271950577_MathematicalTask-TitleAdded.resx">
+      <DependentUpon>201311271950577_MathematicalTask-TitleAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
