@@ -6,28 +6,31 @@
 
 <h2>Details</h2>
 
-<div>
-    <h4>MathematicalTask</h4>
 	<hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Title)
+    </dt>
 
-        <dd>
+    <dd>
+        <div class="well-large alert alert-info text-center">
             @Html.DisplayFor(model => model.Title)
-        </dd>
+        </div>
+    </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Text)
-        </dt>
+    <dt>
+        @Html.DisplayNameFor(model => model.Text)
+    </dt>
 
-        <dd>
+    <dd>
+        <div class="well-large alert alert-info">
             @Html.DisplayFor(model => model.Text)
-        </dd>
+        </div>
+    </dd>
 
-    </dl>
-</div>
+</dl>
+
+<hr />
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
