@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Roadkill</id>
+    <version>1.70.1</version>
+    <title>Roadkill Wiki</title>
+    <authors>C.Small</authors>
+    <owners>C.Small</owners>
+    <licenseUrl>http://roadkill.codeplex.com/license</licenseUrl>
+    <projectUrl>http://roadkill.codeplex.com/</projectUrl>
+    <iconUrl>https://download-codeplex.sec.s-msft.com/Download?ProjectName=roadkill&amp;DownloadId=218571&amp;Build=20686</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Roadkill .NET wiki engine is a lightweight but powerful Wiki engine. It is powered by Lightspeed, ASP.NET Razor and jQuery. Supports Creole, Markdown and a subset of Mediawiki syntaxes.</description>
+    <summary>Roadkill .NET wiki engine is a lightweight but powerful Wiki engine</summary>
+    <releaseNotes>Version 1.7</releaseNotes>
+    <copyright />
+    <language>en-US</language>
+    <tags>wiki cms content-management roadkill asp.net-mvc razor</tags>
+  </metadata>
+</package>
