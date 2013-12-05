@@ -30,6 +30,30 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        private List<Option> _allOptions;
+
+        public List<Option> AllOptions
+        {
+            get { return _allOptions; }
+            set
+            {
+                _allOptions = value;
+                NotifyPropertyChanged("AllOptions");
+            }
+        }
+
+        private List<Course> _allCourses;
+
+        public List<Course> AllCourses
+        {
+            get { return _allCourses; }
+            set
+            {
+                _allCourses = value;
+                NotifyPropertyChanged("AllCourses");
+            }
+        }
+
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -47,6 +71,24 @@ namespace wazniak_forever.ViewModel
         public async void LoadCollectionsFromDatabase()
         {
             AllSampleItems = await _sampleDB.Items.ToCollectionAsync();
+        }
+
+        public void LoadMenu()
+        {
+            AllOptions = new List<Option>()
+            {
+                new Option(OptionType.StartCourse, "start", new Uri("/Assets/ApplicationIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Settings, "settings", new Uri("/Assets/ApplicationIcon.png", UriKind.RelativeOrAbsolute))
+            };
+        }
+
+        public void LoadCourses()
+        {
+            AllCourses = new List<Course>()
+            {
+                new Course("Algorithms I"),
+                new Course("Algorithms II")
+            };
         }
 
         public async void AddSampleItem(SampleItem newSampleItem)
