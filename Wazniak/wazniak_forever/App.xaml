@@ -8,6 +8,13 @@
     <!--Application Resources-->
     <Application.Resources>
         <local:LocalizedStrings xmlns:local="clr-namespace:wazniak_forever" x:Key="LocalizedStrings"/>
+
+        <SolidColorBrush x:Key="PageNameColor" Color="#FF360093"/>
+        <SolidColorBrush x:Key="BackgroundColor" Color="#FFE5EAFB"/>
+        <SolidColorBrush x:Key="TileBackgroundColor" Color="#FF5624AE"/>
+        <SolidColorBrush x:Key="MenuItemColor" Color="#FF693CB8"/>
+        <SolidColorBrush x:Key="WebBrowserColor" Color="#FFC4C4EA"/>
+
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

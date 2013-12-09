@@ -9,12 +9,12 @@
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
+    Foreground="{StaticResource AppBackgroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -22,7 +22,11 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="wazniak_forever" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
+            <TextBlock 
+                Text="WAŻNIAK FOREVER" 
+                Style="{StaticResource PhoneTextNormalStyle}" 
+                Foreground="{StaticResource PageNameColor}" 
+                Margin="12,0"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -40,13 +44,13 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
            
-            <TextBox Grid.Row="0" Grid.Column="0" Name="TodoInput" Text="" />
-            <Button Grid.Row ="0" Grid.Column="1" Name="ButtonSave" Click="ButtonSave_Click">Save</Button>
-            <Button Grid.Row="1" Grid.Column="1" Name="ButtonRefresh" Click="ButtonRefresh_Click">Refresh</Button>    
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Text" Margin="10,5" VerticalAlignment="Center"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="Number" Margin="10,5" VerticalAlignment="Center" />
+            <TextBox Grid.Row="0" Grid.Column="0" Name="TodoInput" Text=""/>
+            <Button Grid.Row ="0" Grid.Column="1" Name="ButtonSave" Click="ButtonSave_Click" Foreground="{StaticResource TileBackgroundColor}">Save</Button>
+            <Button Grid.Row="1" Grid.Column="1" Name="ButtonRefresh" Click="ButtonRefresh_Click" Foreground="{StaticResource TileBackgroundColor}">Refresh</Button>    
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Text" Margin="10,5" VerticalAlignment="Center" Foreground="{StaticResource MenuItemColor}"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="Number" Margin="10,5" VerticalAlignment="Center" Foreground="{StaticResource MenuItemColor}"/>
 
-            <phone:LongListSelector Grid.Row="5" Grid.ColumnSpan="2" Name="ListItems" ItemsSource="{Binding AllSampleItems}">
+            <phone:LongListSelector Grid.Row="5" Grid.ColumnSpan="2" Name="ListItems" ItemsSource="{Binding AllSampleItems}" Foreground="{StaticResource MenuItemColor}">
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
