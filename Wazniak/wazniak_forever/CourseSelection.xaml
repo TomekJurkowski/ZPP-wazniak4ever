@@ -37,14 +37,16 @@
                         </Grid.ColumnDefinitions>
                         <TextBox Name="CourseSearch"
                                  KeyUp="CourseSearch_KeyUp"
-                                 Grid.Column="0" />
+                                 Grid.Column="0"
+                                 Foreground="{StaticResource PageNameColor}"
+                                 Background="{StaticResource TextBoxColor}" SelectionBackground="{Binding Source={StaticResource MenuItemColor}}"/>
                         <Grid Grid.Column="1"
                               Width="50"
                               Height="50"
                               toolkit:TiltEffect.IsTiltEnabled="True">
                             <Ellipse Stroke="{StaticResource PhoneForegroundBrush}"
                                                  StrokeThickness="3"/>
-                            <Image Source="/Assets/feature.search.png"
+                            <Image Source="/Assets/feature.search_1.png"
                                    />
                         </Grid>
                     </Grid>

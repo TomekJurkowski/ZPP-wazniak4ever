@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />
+    <Content Include="Assets\feature.search_1.png" />
     <Content Include="Assets\Math\MathJax.js" />
     <Content Include="Assets\Math\MathJax2\images\CloseX-31.png" />
     <Content Include="Assets\Math\MathJax2\images\MenuArrow-15.png" />

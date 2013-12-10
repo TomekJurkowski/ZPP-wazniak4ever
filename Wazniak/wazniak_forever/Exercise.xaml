@@ -39,7 +39,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <phone:WebBrowser x:Name="WebBrowser"
-                              Background="{StaticResource WebBrowserColor}"
+                              Background="{StaticResource TextBoxColor}"
                               Grid.Row="0"
                               Height="300"
                               Margin="10,10,10,10"

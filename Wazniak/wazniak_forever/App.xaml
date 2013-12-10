@@ -13,7 +13,7 @@
         <SolidColorBrush x:Key="BackgroundColor" Color="#FFE5EAFB"/>
         <SolidColorBrush x:Key="TileBackgroundColor" Color="#FF5624AE"/>
         <SolidColorBrush x:Key="MenuItemColor" Color="#FF693CB8"/>
-        <SolidColorBrush x:Key="WebBrowserColor" Color="#FFC4C4EA"/>
+        <SolidColorBrush x:Key="TextBoxColor" Color="#FFDBC5FB"/>
 
     </Application.Resources>
 
