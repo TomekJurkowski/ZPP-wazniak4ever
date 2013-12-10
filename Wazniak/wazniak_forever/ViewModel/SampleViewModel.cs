@@ -87,7 +87,13 @@ namespace wazniak_forever.ViewModel
             AllCourses = new List<Course>()
             {
                 new Course("Algorithms I"),
-                new Course("Algorithms II")
+                new Course("Algorithms II"),
+                new Course("Databases"),
+                new Course("Operating Systems"),
+                new Course("Linear Algebra I"),
+                new Course("Linear Algebra II"),
+                new Course("Linear Algebra III"),
+                new Course("Numerical Analysis")
             };
         }
 

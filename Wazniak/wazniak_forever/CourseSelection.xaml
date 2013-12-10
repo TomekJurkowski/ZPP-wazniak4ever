@@ -18,7 +18,6 @@
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
         <!--Pivot Control-->
         <phone:Pivot Title="WAŻNIAK FOREVER"
-                     LoadingPivotItem="Pivot_LoadingPivotItem"
                      Foreground="{StaticResource PageNameColor}">
             <!--Pivot item one-->
             <phone:PivotItem 
@@ -26,7 +25,31 @@
                 x:Name="AllCourses" 
                 Foreground="{StaticResource PageNameColor}">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0"
+                          Margin="10,-20,20,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Name="CourseSearch"
+                                 KeyUp="CourseSearch_KeyUp"
+                                 Grid.Column="0" />
+                        <Grid Grid.Column="1"
+                              Width="50"
+                              Height="50"
+                              toolkit:TiltEffect.IsTiltEnabled="True">
+                            <Ellipse Stroke="{StaticResource PhoneForegroundBrush}"
+                                                 StrokeThickness="3"/>
+                            <Image Source="/Assets/feature.search.png"
+                                   />
+                        </Grid>
+                    </Grid>
                     <phone:LongListSelector x:Name="AllCoursesList"
+                                            Grid.Row="1"
                                             ItemsSource="{Binding AllCourses}"
                                             SelectionChanged="LongListSelector_SelectionChanged"
                                             toolkit:TiltEffect.IsTiltEnabled="True">
@@ -59,7 +82,7 @@
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>
-    <phone:PhoneApplicationPage.ApplicationBar>
+    <!--<phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/Assets/feature.search.png" Text="Search"/>
             <shell:ApplicationBar.MenuItems>
@@ -67,5 +90,5 @@
                 <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>-->
 </phone:PhoneApplicationPage>

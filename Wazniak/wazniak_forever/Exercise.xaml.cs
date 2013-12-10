@@ -19,6 +19,12 @@ namespace wazniak_forever
             InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
+        }
+
         private async void WebBrowser_Loaded(object sender, RoutedEventArgs e)
         {
             StorageFile sFile = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(@"Assets\Math\web.html");
