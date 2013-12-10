@@ -40,3 +40,38 @@ input[type="checkbox"].input-validation-error {
 .validation-summary-valid {
     display: none;
 }
+
+.PurpleText {
+    color: #660066;
+}
+
+.PurpleBtn {
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #660066;
+    *background-color: #660066;
+    background-image: -moz-linear-gradient(top, #9900cc, #660066);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9900cc), to(#660066));
+    background-image: -webkit-linear-gradient(top, #9900cc, #660066);
+    background-image: -o-linear-gradient(top, #9900cc, #660066);
+    background-image: linear-gradient(to bottom, #9900cc, #660066);
+    background-repeat: repeat-x;
+    border-color: #660066;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#9900cc', endColorstr='#660066', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.PurpleBtn:hover,
+.PurpleBtn:active,
+.PurpleBtn.active,
+.PurpleBtn.disabled,
+.PurpleBtn[disabled] {
+    color: #FFFFFF;
+    background-color: #660066;
+    *background-color: #003bb3;
+}
+
+.lightPurpleBackground {    
+    background-color: #FFCCFF;
+}

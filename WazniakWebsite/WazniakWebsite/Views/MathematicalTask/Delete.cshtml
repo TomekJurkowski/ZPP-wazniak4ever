@@ -4,39 +4,42 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<h2 class="PurpleText">Delete</h2>
 
-<h3>Are you sure you want to delete this exercise?</h3>
+<h3 class="PurpleText">Are you sure you want to delete this exercise?</h3>
 
 <hr />
-<dl class="dl-horizontal">
-    <dt>
-        @Html.DisplayNameFor(model => model.Title)
-    </dt>
-
-    <dd>
-        <div class="well-large alert alert-info text-center">
-            @Html.DisplayFor(model => model.Title)
+<div class="form-horizontal">
+        
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground text-center">
+                @Html.DisplayFor(model => model.Title)
+            </div>
         </div>
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.Text)
-    </dt>
-
-    <dd>
-        <div class="well-large alert alert-info">
-            @Html.DisplayFor(model => model.Text)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Text, new { @class = "control-label col-md-2 PurpleText" })
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground">
+                @Html.DisplayFor(model => model.Text)
+            </div>
         </div>
-    </dd>
+    </div>
 
-</dl>
+</div>
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     @Html.AntiForgeryToken()
-
-    <div class="form-actions no-color">
-        <input type="submit" value="Delete" class="btn btn-default" />
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="form-actions no-color col-md-offset-2 col-md-10">
+                <input type="submit" value="Delete" class="btn PurpleBtn" />
+            </div>
+        </div>
     </div>
 }
 

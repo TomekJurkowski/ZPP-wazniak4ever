@@ -19,8 +19,9 @@
              padding-left: 5px;
              padding-right: 5px;
          }
+
         #Text {
-            background-color: rgb(247, 245, 250);
+            background-color: #F7F5FA;
             max-width: 100% !important;
             width: 100% !important;
         }
@@ -133,19 +134,19 @@
 }
 
 
-<h2>Create</h2>
+<h2 class="PurpleText">Create</h2>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Exercise consisting of mathematical expressions</h4>
+        <h4 class="PurpleText">Exercise consisting of mathematical expressions</h4>
         @Html.ValidationSummary(true)
         <hr />
         
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
             <div class="col-md-10">
                 @Html.TextBoxFor(model => model.Title, new { @class = "form-control text-box single-line" })
                 @Html.ValidationMessageFor(model => model.Title)
@@ -153,15 +154,17 @@
         </div>
         
         <br/>
-        <h5 id="description">
-            Type in the content of the exercise to the text input. If you want to insert a mathematical expression
-            simply type sign \$ (or \$\$ if you want the expression to be placed in the next line), then write the expression
-            in LaTeX syntax and finish it with another \$ (\$\$). The preview of the text that you are typing will be dynamically 
-            displayed in the box bellow.
+        <h5 id="description" class=" col-md-10 col-md-offset-2 PurpleText">
+            <b>
+                Type in the content of the exercise to the text input. If you want to insert a mathematical expression
+                simply type sign \$ (or \$\$ if you want the expression to be placed in the next line), then write the expression
+                in LaTeX syntax and finish it with another \$ (\$\$). The preview of the text that you are typing will be dynamically
+                displayed in the box bellow.
+            </b>
         </h5>
         
         <div class="form-group">
-            <label class="control-label col-md-2" for="Text">Content</label>
+            <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
             <div class="col-md-10">
                 <textarea class="text-box form-control alert" id="Text" name="Text" rows="8" onkeyup="Preview.Update()"></textarea>
                 <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
@@ -169,16 +172,16 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2" for="Text">Preview</label>
+            <label class="control-label col-md-2 PurpleText" for="Text">Preview</label>
             <div class="col-md-10">
-                <div id="MathPreview" class="well-large alert alert-info"></div>
-                <div id="MathBuffer" class="well-large alert alert-info" style="visibility:hidden; position:absolute; top:0; left: 0"></div>   
+                <div id="MathPreview" class="well-large alert lightPurpleBackground"></div>
+                <div id="MathBuffer" class="well-large alert lightPurpleBackground" style="visibility:hidden; position:absolute; top:0; left: 0"></div>   
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn PurpleBtn" />
             </div>
         </div>
     </div>
