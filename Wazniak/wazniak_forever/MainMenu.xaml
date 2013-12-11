@@ -44,13 +44,13 @@
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                          <!--
-                            <Image Width="100" 
-                                   Height="100" 
+                          
+                            <Image Width="60" 
+                                   Height="60" 
                                    Source="{Binding ImageUrl}" 
                                    VerticalAlignment="Center"
                                     />
-                            -->
+                           
                             <TextBlock Text="{Binding Name}" 
                                        FontSize="48"
                                        VerticalAlignment="Center"/>

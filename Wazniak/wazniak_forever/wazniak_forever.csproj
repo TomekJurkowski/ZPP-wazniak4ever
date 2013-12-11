@@ -738,6 +738,8 @@
     <Content Include="Assets\Math\MathJax2\unpacked\jax\output\HTML-CSS\jax.js" />
     <Content Include="Assets\Math\MathJax2\unpacked\MathJax.js" />
     <Content Include="Assets\Math\web.html" />
+    <Content Include="Assets\SettingsIcon.png" />
+    <Content Include="Assets\StartIcon.png" />
     <Content Include="Assets\tick.png" />
     <Content Include="Assets\ApplicationIcon.png" />
     <Content Include="Assets\ApplicationIcon_1.png">
