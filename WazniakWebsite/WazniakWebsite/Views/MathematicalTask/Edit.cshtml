@@ -159,7 +159,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Title, new { @class = "form-control text-box single-line" })
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control text-box" })
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
         </div>
@@ -177,7 +177,7 @@
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
             <div class="col-md-10">
-                <textarea class="text-box form-control alert" id="Text" name="Text" rows="8" onkeyup="Preview.Update()"></textarea>
+                <textarea class="text-box form-control" id="Text" name="Text" rows="8" onkeyup="Preview.Update()"></textarea>
                 <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
             </div>
         </div>

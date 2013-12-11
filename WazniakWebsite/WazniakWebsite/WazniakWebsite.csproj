@@ -170,6 +170,10 @@
     <Compile Include="Migrations\201312111436106_AbcdAnswer.Designer.cs">
       <DependentUpon>201312111436106_AbcdAnswer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312111752255_validators_changed.cs" />
+    <Compile Include="Migrations\201312111752255_validators_changed.Designer.cs">
+      <DependentUpon>201312111752255_validators_changed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbcdAnswer.cs" />
     <Compile Include="Models\MathematicalTask.cs" />
@@ -249,6 +253,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201312111436106_AbcdAnswer.resx">
       <DependentUpon>201312111436106_AbcdAnswer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312111752255_validators_changed.resx">
+      <DependentUpon>201312111752255_validators_changed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

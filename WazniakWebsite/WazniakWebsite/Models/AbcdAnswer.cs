@@ -11,12 +11,16 @@ namespace WazniakWebsite.Models
     {
         public int ID { get; set; }
 
+        [Required]
         public string A { get; set; }
 
+        [Required]
         public string B { get; set; }
-        
+
+        [Required]
         public string C { get; set; }
-        
+
+        [Required]
         public string D { get; set; }
         
         [DisplayName("Correct Answer")]

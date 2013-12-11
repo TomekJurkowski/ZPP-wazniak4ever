@@ -75,3 +75,7 @@ input[type="checkbox"].input-validation-error {
 .lightPurpleBackground {    
     background-color: #FFCCFF;
 }
+
+.purpleBackground {
+    background-color: #660066;
+}
