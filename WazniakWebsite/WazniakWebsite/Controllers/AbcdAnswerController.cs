@@ -7,107 +7,107 @@ using WazniakWebsite.DAL;
 
 namespace WazniakWebsite.Controllers
 {
-    public class MathematicalTaskController : Controller
+    public class AbcdAnswerController : Controller
     {
         private SchoolContext db = new SchoolContext();
 
-        // GET: /MathematicalTask/
+        // GET: /AbcdAnswer/
         public ActionResult Index()
         {
-            return View(db.MathematicalTasks.ToList());
+            return View(db.AbcdAnswers.ToList());
         }
 
-        // GET: /MathematicalTask/Details/5
+        // GET: /AbcdAnswer/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
-            if (mathematicaltask == null)
+            AbcdAnswer abcdanswer = db.AbcdAnswers.Find(id);
+            if (abcdanswer == null)
             {
                 return HttpNotFound();
             }
-            return View(mathematicaltask);
+            return View(abcdanswer);
         }
 
-        // GET: /MathematicalTask/Create
+        // GET: /AbcdAnswer/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: /MathematicalTask/Create
+        // POST: /AbcdAnswer/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,Title,Text")] MathematicalTask mathematicaltask)
+        public ActionResult Create([Bind(Include="ID,A,B,C,D,CorrectAnswer")] AbcdAnswer abcdanswer)
         {
             if (ModelState.IsValid)
             {
-                db.MathematicalTasks.Add(mathematicaltask);
+                db.AbcdAnswers.Add(abcdanswer);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(mathematicaltask);
+            return View(abcdanswer);
         }
 
-        // GET: /MathematicalTask/Edit/5
+        // GET: /AbcdAnswer/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
-            if (mathematicaltask == null)
+            AbcdAnswer abcdanswer = db.AbcdAnswers.Find(id);
+            if (abcdanswer == null)
             {
                 return HttpNotFound();
             }
-            return View(mathematicaltask);
+            return View(abcdanswer);
         }
 
-        // POST: /MathematicalTask/Edit/5
+        // POST: /AbcdAnswer/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Text")] MathematicalTask mathematicaltask)
+        public ActionResult Edit([Bind(Include="ID,A,B,C,D,CorrectAnswer")] AbcdAnswer abcdanswer)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(mathematicaltask).State = EntityState.Modified;
+                db.Entry(abcdanswer).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(mathematicaltask);
+            return View(abcdanswer);
         }
 
-        // GET: /MathematicalTask/Delete/5
+        // GET: /AbcdAnswer/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
-            if (mathematicaltask == null)
+            AbcdAnswer abcdanswer = db.AbcdAnswers.Find(id);
+            if (abcdanswer == null)
             {
                 return HttpNotFound();
             }
-            return View(mathematicaltask);
+            return View(abcdanswer);
         }
 
-        // POST: /MathematicalTask/Delete/5
+        // POST: /AbcdAnswer/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
-            db.MathematicalTasks.Remove(mathematicaltask);
+            AbcdAnswer abcdanswer = db.AbcdAnswers.Find(id);
+            db.AbcdAnswers.Remove(abcdanswer);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

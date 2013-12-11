@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using WazniakWebsite.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -26,8 +27,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Subjects", "Index", "Subject")</li>
                     <li>@Html.ActionLink("Mathematical Tasks", "Index", "MathematicalTask")</li>
+                    <li>@Html.ActionLink("ABCD Answers", "Index", "AbcdAnswer")</li>
                     <li>@Html.ActionLink("SampleItem - Mobile Services", "Index", "SampleItemMobile")</li>
                     <li>@Html.ActionLink("SampleItem - Connection String", "Index", "SampleItem")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>

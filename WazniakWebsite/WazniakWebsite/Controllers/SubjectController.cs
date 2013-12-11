@@ -7,107 +7,107 @@ using WazniakWebsite.DAL;
 
 namespace WazniakWebsite.Controllers
 {
-    public class MathematicalTaskController : Controller
+    public class SubjectController : Controller
     {
         private SchoolContext db = new SchoolContext();
 
-        // GET: /MathematicalTask/
+        // GET: /Subject/
         public ActionResult Index()
         {
-            return View(db.MathematicalTasks.ToList());
+            return View(db.Subjects.ToList());
         }
 
-        // GET: /MathematicalTask/Details/5
+        // GET: /Subject/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
-            if (mathematicaltask == null)
+            Subject subject = db.Subjects.Find(id);
+            if (subject == null)
             {
                 return HttpNotFound();
             }
-            return View(mathematicaltask);
+            return View(subject);
         }
 
-        // GET: /MathematicalTask/Create
+        // GET: /Subject/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: /MathematicalTask/Create
+        // POST: /Subject/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,Title,Text")] MathematicalTask mathematicaltask)
+        public ActionResult Create([Bind(Include="ID,Name,Description")] Subject subject)
         {
             if (ModelState.IsValid)
             {
-                db.MathematicalTasks.Add(mathematicaltask);
+                db.Subjects.Add(subject);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(mathematicaltask);
+            return View(subject);
         }
 
-        // GET: /MathematicalTask/Edit/5
+        // GET: /Subject/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
-            if (mathematicaltask == null)
+            Subject subject = db.Subjects.Find(id);
+            if (subject == null)
             {
                 return HttpNotFound();
             }
-            return View(mathematicaltask);
+            return View(subject);
         }
 
-        // POST: /MathematicalTask/Edit/5
+        // POST: /Subject/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Text")] MathematicalTask mathematicaltask)
+        public ActionResult Edit([Bind(Include="ID,Name,Description")] Subject subject)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(mathematicaltask).State = EntityState.Modified;
+                db.Entry(subject).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(mathematicaltask);
+            return View(subject);
         }
 
-        // GET: /MathematicalTask/Delete/5
+        // GET: /Subject/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
-            if (mathematicaltask == null)
+            Subject subject = db.Subjects.Find(id);
+            if (subject == null)
             {
                 return HttpNotFound();
             }
-            return View(mathematicaltask);
+            return View(subject);
         }
 
-        // POST: /MathematicalTask/Delete/5
+        // POST: /Subject/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
-            db.MathematicalTasks.Remove(mathematicaltask);
+            Subject subject = db.Subjects.Find(id);
+            db.Subjects.Remove(subject);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
