@@ -35,8 +35,11 @@ namespace wazniak_forever
             {
                 switch (option.Type)
                 {
-                    case OptionType.StartCourse:
+                    case OptionType.MyCourses:
                         NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
+                        break;
+                    case OptionType.Downloads:
+                        NavigationService.Navigate(new Uri("/Downloads.xaml", UriKind.RelativeOrAbsolute));
                         break;
                 }
             }

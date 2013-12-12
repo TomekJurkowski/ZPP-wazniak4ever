@@ -45,10 +45,11 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                           
-                            <Image Width="60" 
-                                   Height="60" 
+                            <Image Width="Auto" 
+                                   Height="Auto" 
                                    Source="{Binding ImageUrl}" 
                                    VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
                                     />
                            
                             <TextBlock Text="{Binding Name}" 

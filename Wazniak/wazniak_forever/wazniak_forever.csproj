@@ -98,6 +98,9 @@
     <Compile Include="CourseSelection.xaml.cs">
       <DependentUpon>CourseSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Downloads.xaml.cs">
+      <DependentUpon>Downloads.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Exercise.xaml.cs">
       <DependentUpon>Exercise.xaml</DependentUpon>
     </Compile>
@@ -125,6 +128,10 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Page Include="CourseSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Downloads.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -163,13 +170,16 @@
     <None Include="Assets\Math\MathJax2\fonts\HTML-CSS\TeX\woff\MathJax_Size4-Regular.woff" />
     <None Include="Assets\Math\MathJax2\fonts\HTML-CSS\TeX\woff\MathJax_Typewriter-Regular.woff" />
     <None Include="packages.config" />
-    <None Include="Properties\AppManifest.xml" />
+    <None Include="Properties\AppManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\WMAppManifest.xml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />
+    <Content Include="Assets\DownloadsIcon.png" />
     <Content Include="Assets\feature.search_1.png" />
     <Content Include="Assets\Math\MathJax.js" />
     <Content Include="Assets\Math\MathJax2\images\CloseX-31.png" />
@@ -737,7 +747,9 @@
     <Content Include="Assets\Math\MathJax2\unpacked\jax\output\HTML-CSS\imageFonts.js" />
     <Content Include="Assets\Math\MathJax2\unpacked\jax\output\HTML-CSS\jax.js" />
     <Content Include="Assets\Math\MathJax2\unpacked\MathJax.js" />
-    <Content Include="Assets\Math\web.html" />
+    <Content Include="Assets\Math\web.html">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Assets\SettingsIcon.png" />
     <Content Include="Assets\StartIcon.png" />
     <Content Include="Assets\tick.png" />

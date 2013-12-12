@@ -77,8 +77,9 @@ namespace wazniak_forever.ViewModel
         {
             AllOptions = new List<Option>()
             {
-                new Option(OptionType.StartCourse, "start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.Settings, "settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
+                new Option(OptionType.MyCourses, "My Courses", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Downloads, "Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Settings, "Settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
             };
         }
 
