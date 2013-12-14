@@ -20,9 +20,8 @@
         <phone:Pivot Title="WAŻNIAK FOREVER"
                      Foreground="{StaticResource PageNameColor}">
             <!--Pivot item one-->
-            <phone:PivotItem 
-                Header="all" 
-                x:Name="AllCourses" 
+            <phone:PivotItem
+                x:Name="coursesPivot"
                 Foreground="{StaticResource PageNameColor}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -77,11 +76,7 @@
                 </Grid>
                 
             </phone:PivotItem>
-
-            <!--Pivot item two-->
-            <phone:PivotItem Header="my courses">
-                <Grid/>
-            </phone:PivotItem>
+            
         </phone:Pivot>
     </Grid>
     <!--<phone:PhoneApplicationPage.ApplicationBar>
