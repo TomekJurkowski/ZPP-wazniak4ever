@@ -36,12 +36,10 @@ namespace wazniak_forever
                 switch (option.Type)
                 {
                     case OptionType.MyCourses:
-                        App.ViewModel.OnlineCourses = true;
                         NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
                         break;
                     case OptionType.Downloads:
-                        App.ViewModel.OnlineCourses = false;
-                        NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
+                        NavigationService.Navigate(new Uri("/Downloads.xaml", UriKind.RelativeOrAbsolute));
                         break;
                 }
             }

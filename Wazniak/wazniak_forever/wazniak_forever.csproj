@@ -98,6 +98,9 @@
     <Compile Include="CourseSelection.xaml.cs">
       <DependentUpon>CourseSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Downloads.xaml.cs">
+      <DependentUpon>Downloads.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Exercise.xaml.cs">
       <DependentUpon>Exercise.xaml</DependentUpon>
     </Compile>
@@ -125,6 +128,10 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Page Include="CourseSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Downloads.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

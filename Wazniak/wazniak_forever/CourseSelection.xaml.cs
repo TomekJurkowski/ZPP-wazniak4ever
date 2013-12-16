@@ -17,16 +17,7 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            if (App.ViewModel.OnlineCourses)
-            {
-                coursesPivot.Header = "My courses";
-                App.ViewModel.LoadCourses();
-            }
-            else
-            {
-                coursesPivot.Header = "Downloads";
-                App.ViewModel.LoadDownloadedCourses();
-            }
+            App.ViewModel.LoadCourses();
         }
 
         /*private void Pivot_LoadingPivotItem(object sender, PivotItemEventArgs e)
@@ -53,10 +44,7 @@ namespace wazniak_forever
         private void CourseSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(CourseSearch.Text);
-            List<Course> searchCourses;
-            if (App.ViewModel.OnlineCourses) searchCourses = App.ViewModel.AllCourses;
-            else searchCourses = App.ViewModel.DownloadedCourses;
-            AllCoursesList.ItemsSource = searchCourses.
+            AllCoursesList.ItemsSource = App.ViewModel.AllCourses.
                 Where(course => course.Name.IndexOf(CourseSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0)
                 .ToList();
         }
