@@ -1,0 +1,27 @@
+﻿<Application
+    x:Class="wazniak_forever.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone">
+
+    <!--Application Resources-->
+    <Application.Resources>
+        <local:LocalizedStrings xmlns:local="clr-namespace:wazniak_forever" x:Key="LocalizedStrings"/>
+
+        <SolidColorBrush x:Key="PageNameColor" Color="#FF4A0093"/>
+        <SolidColorBrush x:Key="BackgroundColor" Color="#FFE5EAFB"/>
+        <SolidColorBrush x:Key="TileBackgroundColor" Color="#FF5624AE"/>
+        <SolidColorBrush x:Key="MenuItemColor" Color="#FF693CB8"/>
+        <SolidColorBrush x:Key="TextBoxColor" Color="#FFDBC5FB"/>
+
+    </Application.Resources>
+
+    <Application.ApplicationLifetimeObjects>
+        <!--Required object that handles lifetime events for the application-->
+        <shell:PhoneApplicationService
+            Launching="Application_Launching" Closing="Application_Closing"
+            Activated="Application_Activated" Deactivated="Application_Deactivated"/>
+    </Application.ApplicationLifetimeObjects>
+
+</Application>
