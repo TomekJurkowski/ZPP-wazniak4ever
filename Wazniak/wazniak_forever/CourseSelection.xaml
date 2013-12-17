@@ -17,7 +17,7 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
         <!--Pivot Control-->
-        <phone:Pivot Title="WAŻNIAK FOREVER"
+        <phone:Pivot Title="CLARIFIER"
                      Foreground="{StaticResource PageNameColor}">
             <!--Pivot item one-->
             <phone:PivotItem 
