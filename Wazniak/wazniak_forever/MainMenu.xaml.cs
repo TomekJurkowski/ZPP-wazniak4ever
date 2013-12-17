@@ -16,7 +16,6 @@ namespace wazniak_forever
         public MainMenu()
         {
             InitializeComponent();
-
             DataContext = App.ViewModel;
             App.ViewModel.LoadMenu();
         }
@@ -36,10 +35,12 @@ namespace wazniak_forever
                 switch (option.Type)
                 {
                     case OptionType.MyCourses:
+                        App.ViewModel.AreDownloads = false;
                         NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
                         break;
                     case OptionType.Downloads:
-                        NavigationService.Navigate(new Uri("/Downloads.xaml", UriKind.RelativeOrAbsolute));
+                        App.ViewModel.AreDownloads = true;
+                        NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
                         break;
                 }
             }

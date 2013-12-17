@@ -15,82 +15,22 @@
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
+    <Grid xmlns:src="clr-namespace:wazniak_forever"
+        x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
         <!--Pivot Control-->
         <phone:Pivot Title="CLARIFIER"
+                     x:Name="MainPivot"
                      Foreground="{StaticResource PageNameColor}">
             <!--Pivot item one-->
             <phone:PivotItem 
-                Header="all" 
-                x:Name="AllCourses" 
+                Header="Downloads"
                 Foreground="{StaticResource PageNameColor}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0"
-                          Margin="10,-20,20,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="50" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox Name="CourseSearch"
-                                 KeyUp="CourseSearch_KeyUp"
-                                 Grid.Column="0"
-                                 Foreground="{StaticResource PageNameColor}"
-                                 Background="{StaticResource TextBoxColor}" SelectionBackground="{Binding Source={StaticResource MenuItemColor}}"/>
-                        <Grid Grid.Column="1"
-                              Width="50"
-                              Height="50"
-                              toolkit:TiltEffect.IsTiltEnabled="True">
-                            <Ellipse Stroke="{StaticResource PhoneForegroundBrush}"
-                                                 StrokeThickness="3"/>
-                            <Image Source="/Assets/feature.search_1.png"
-                                   />
-                        </Grid>
-                    </Grid>
-                    <phone:LongListSelector x:Name="AllCoursesList"
-                                            Grid.Row="1"
-                                            ItemsSource="{Binding AllCourses}"
-                                            SelectionChanged="LongListSelector_SelectionChanged"
-                                            toolkit:TiltEffect.IsTiltEnabled="True">
-                        <phone:LongListSelector.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Background="{StaticResource TileBackgroundColor}"
-                                      Margin="10,0,30,10">
-                                    <StackPanel HorizontalAlignment="Left">
-                                        <TextBlock Text="{Binding Name}"         
-                                                   FontSize="40"
-                                                   Margin="10,10,0,10"/>
-                                    </StackPanel>
-                                    <StackPanel HorizontalAlignment="Right">
-                                        <Image Width="50" 
-                                               Height="50"
-                                               Margin="0,10,10,10"
-                                               Source="/Assets/tick.png"/>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </phone:LongListSelector.ItemTemplate>
-                    </phone:LongListSelector>
-                </Grid>
+                <src:CoursePivotItem x:Name="DownloadsItem"
+                    ></src:CoursePivotItem>
                 
             </phone:PivotItem>
 
-            <!--Pivot item two-->
-            <phone:PivotItem Header="my courses">
-                <Grid/>
-            </phone:PivotItem>
         </phone:Pivot>
     </Grid>
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Assets/feature.search.png" Text="Search"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
+    
 </phone:PhoneApplicationPage>

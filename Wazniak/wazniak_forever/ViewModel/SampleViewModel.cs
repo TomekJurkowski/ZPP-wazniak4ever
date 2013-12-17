@@ -54,6 +54,42 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        private List<Course> _downloadedCourses;
+
+        public List<Course> DownloadedCourses
+        {
+            get { return _downloadedCourses; }
+            set
+            {
+                _downloadedCourses = value;
+                NotifyPropertyChanged("DownloadedCourses");
+            }
+        }
+
+        private List<Course> _myCourses;
+
+        public List<Course> MyCourses
+        {
+            get { return _myCourses; }
+            set
+            {
+                _myCourses = value;
+                NotifyPropertyChanged("MyCourses");
+            }
+        }
+
+        private bool _areDownloads;
+
+        public bool AreDownloads
+        {
+            get { return _areDownloads; }
+            set
+            {
+                _areDownloads = value;
+                NotifyPropertyChanged("AreDownloads");
+            }
+        }
+
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -83,7 +119,7 @@ namespace wazniak_forever.ViewModel
             };
         }
 
-        public void LoadCourses()
+        public void LoadAllCourses()
         {
             AllCourses = new List<Course>()
             {
@@ -95,6 +131,24 @@ namespace wazniak_forever.ViewModel
                 new Course("Linear Algebra II"),
                 new Course("Linear Algebra III"),
                 new Course("Numerical Analysis")
+            };
+        }
+
+        public void LoadDownloadedCourses()
+        {
+            DownloadedCourses = new List<Course>()
+            {
+                new Course("Databases")
+            };
+        }
+
+        public void LoadMyCourses()
+        {
+            MyCourses = new List<Course>()
+            {
+                new Course("Algorithms I"),
+                new Course("Algorithms II"),
+                new Course("Databases")
             };
         }
 

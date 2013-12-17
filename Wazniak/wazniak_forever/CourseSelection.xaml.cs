@@ -17,36 +17,32 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            App.ViewModel.LoadCourses();
+            App.ViewModel.LoadDownloadedCourses();
+            if (!App.ViewModel.AreDownloads)
+            {
+                App.ViewModel.LoadAllCourses();
+                App.ViewModel.LoadMyCourses();
+                LoadPivot();
+            }
         }
 
-        /*private void Pivot_LoadingPivotItem(object sender, PivotItemEventArgs e)
+        private PivotItem CreatePivotItem(string header, string name)
         {
-            if (e.Item == AllCourses)
-                ApplicationBar.IsVisible = true;
-            else
-                ApplicationBar.IsVisible = false; 
-        }*/
-
-        private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Course selectedCourse = AllCoursesList.SelectedItem as Course;
-
-            if (selectedCourse == null) return;
-
-            var courseName = selectedCourse.Name;
-
-            AllCoursesList.SelectedItem = null;
-            var navTo = string.Format("/Exercise.xaml?courseName={0}", courseName);
-            NavigationService.Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
+            PivotItem Item = new PivotItem();
+            Item.Header = header;
+            Item.Foreground = Application.Current.Resources["PageNameColor"] as System.Windows.Media.Brush;
+            CoursePivotItem CoursesItem = new CoursePivotItem();
+            CoursesItem.Name = name;
+            CoursesItem.setBinding(CoursesItem.Name);
+            Item.Content = CoursesItem;
+            return Item;
         }
 
-        private void CourseSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void LoadPivot()
         {
-            System.Diagnostics.Debug.WriteLine(CourseSearch.Text);
-            AllCoursesList.ItemsSource = App.ViewModel.AllCourses.
-                Where(course => course.Name.IndexOf(CourseSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0)
-                .ToList();
+            MainPivot.Items.Add(CreatePivotItem("All Courses", "AllCourses"));
+            MainPivot.Items.Add(CreatePivotItem("My Courses", "MyCourses"));
         }
+        
     }
 }
