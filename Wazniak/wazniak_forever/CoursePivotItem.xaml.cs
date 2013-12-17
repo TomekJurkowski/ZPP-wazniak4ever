@@ -34,9 +34,7 @@ namespace wazniak_forever
             Course selectedCourse = AllCoursesList.SelectedItem as Course;
 
             if (selectedCourse == null) return;
-
             var courseName = selectedCourse.Name;
-
             AllCoursesList.SelectedItem = null;
             var navTo = string.Format("/Exercise.xaml?courseName={0}", courseName);
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
