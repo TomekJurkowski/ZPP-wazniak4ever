@@ -20,8 +20,8 @@ namespace wazniak_forever
             App.ViewModel.LoadDownloadedCourses();
             if (!App.ViewModel.AreDownloads)
             {
-                App.ViewModel.LoadAllCourses();
                 App.ViewModel.LoadMyCourses();
+                App.ViewModel.LoadAllCourses();
                 LoadPivot();
             }
         }
@@ -40,8 +40,8 @@ namespace wazniak_forever
 
         private void LoadPivot()
         {
-            MainPivot.Items.Add(CreatePivotItem("All Courses", "AllCourses"));
             MainPivot.Items.Add(CreatePivotItem("My Courses", "MyCourses"));
+            MainPivot.Items.Add(CreatePivotItem("All Courses", "AllCourses"));
         }
         
     }
