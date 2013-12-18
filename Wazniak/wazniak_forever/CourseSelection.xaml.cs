@@ -8,6 +8,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using wazniak_forever.Model;
+using wazniak_forever.Controls;
 
 namespace wazniak_forever
 {

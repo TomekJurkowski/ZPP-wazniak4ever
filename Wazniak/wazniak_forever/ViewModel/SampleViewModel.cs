@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.MobileServices;
+﻿using Microsoft.Phone.Net.NetworkInformation;
+using Microsoft.WindowsAzure.MobileServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +18,19 @@ namespace wazniak_forever.ViewModel
         public SampleViewModel()
         {
             _sampleDB = new SampleItemContext();
+
+            CheckForNetworkAvailability();
+        }
+
+        private bool _onlineMode;
+        public bool OnlineMode
+        {
+            get { return _onlineMode; }
+            set
+            {
+                _onlineMode = value;
+                NotifyPropertyChanged("OnlineMode");
+            }
         }
 
         private MobileServiceCollection<SampleItem, SampleItem> _allSampleItems;
@@ -109,13 +123,19 @@ namespace wazniak_forever.ViewModel
             AllSampleItems = await _sampleDB.Items.ToCollectionAsync();
         }
 
+        public void CheckForNetworkAvailability()
+        {
+            //NetworkInterface.GetIsNetworkAvailable()
+            _onlineMode = DeviceNetworkInformation.IsNetworkAvailable; 
+        }
+
         public void LoadMenu()
         {
             AllOptions = new List<Option>()
             {
-                new Option(OptionType.MyCourses, "Courses", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.Downloads, "Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.Settings, "Settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
+                new Option(OptionType.MyCourses, true, "Courses", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Downloads, false, "Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Settings, false, "Settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
             };
         }
 

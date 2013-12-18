@@ -10,7 +10,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using wazniak_forever.Model;
 
-namespace wazniak_forever
+namespace wazniak_forever.Controls
 {
     public partial class CoursePivotItem : UserControl
     {

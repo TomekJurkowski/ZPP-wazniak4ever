@@ -22,7 +22,7 @@ namespace wazniak_forever
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            
+            App.ViewModel.CheckForNetworkAvailability();
         }
 
         private void MainOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -32,6 +32,8 @@ namespace wazniak_forever
 
             if (option != null)
             {
+                if (option.OnlineOnly && !App.ViewModel.OnlineMode) return;
+
                 switch (option.Type)
                 {
                     case OptionType.MyCourses:
