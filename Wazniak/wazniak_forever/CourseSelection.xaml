@@ -29,15 +29,7 @@
                      Grid.Row="1"
                      x:Name="MainPivot"
                      Foreground="{StaticResource PageNameColor}">
-            <!--Pivot item one-->
-            <phone:PivotItem 
-                Header="Downloads"
-                Foreground="{StaticResource PageNameColor}">
-                <src:CoursePivotItem x:Name="DownloadsItem"
-                    ></src:CoursePivotItem>
                 
-            </phone:PivotItem>
-
         </phone:Pivot>
     </Grid>
     

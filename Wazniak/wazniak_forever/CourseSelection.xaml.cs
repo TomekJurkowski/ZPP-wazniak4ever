@@ -19,7 +19,8 @@ namespace wazniak_forever
             InitializeComponent();
             DataContext = App.ViewModel;
             App.ViewModel.LoadDownloadedCourses();
-            if (!App.ViewModel.AreDownloads)
+            if (App.ViewModel.AreDownloads) MainPivot.Items.Add(CreatePivotItem("Downloads", "DownloadedCourses"));
+            else
             {
                 App.ViewModel.LoadMyCourses();
                 App.ViewModel.LoadAllCourses();
@@ -43,6 +44,7 @@ namespace wazniak_forever
         {
             MainPivot.Items.Add(CreatePivotItem("My Courses", "MyCourses"));
             MainPivot.Items.Add(CreatePivotItem("All Courses", "AllCourses"));
+            MainPivot.Items.Add(CreatePivotItem("Downloads", "DownloadedCourses"));
         }
         
     }
