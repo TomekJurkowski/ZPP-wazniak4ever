@@ -1,9 +1,11 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using WazniakWebsite.Models;
 using WazniakWebsite.DAL;
+using PagedList;
 
 namespace WazniakWebsite.Controllers
 {
@@ -12,9 +14,43 @@ namespace WazniakWebsite.Controllers
         private SchoolContext db = new SchoolContext();
 
         // GET: /Subject/
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(db.Subjects.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.SortParam = String.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+
+            var subjects = from s in db.Subjects
+                           select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                subjects = subjects.Where(s => s.Name.ToUpper().Contains(searchString.ToUpper()));
+            }
+
+            // Put the results in correct order
+            if (sortOrder == "Name_desc")
+            {
+                subjects = subjects.OrderByDescending(s => s.Name);
+            }
+            else
+            {
+                subjects = subjects.OrderBy(s => s.Name);
+            }
+
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+
+            return View(subjects.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: /Subject/Details/5
