@@ -7,9 +7,9 @@ using System.Web;
 
 namespace WazniakWebsite.Models
 {
-    public class AbcdAnswer
+    public class AbcdAnswer : Solution
     {
-        public int ID { get; set; }
+        //public int ID { get; set; }
 
         [Required]
         public string A { get; set; }

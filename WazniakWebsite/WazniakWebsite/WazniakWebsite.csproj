@@ -151,6 +151,7 @@
     <Compile Include="Controllers\SampleItemController.cs" />
     <Compile Include="Controllers\SampleItemMobileController.cs" />
     <Compile Include="Controllers\SubjectController.cs" />
+    <Compile Include="Controllers\TextAnswerController.cs" />
     <Compile Include="DAL\GenuineSampleContext.cs" />
     <Compile Include="DAL\SampleContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -180,11 +181,30 @@
     <Compile Include="Migrations\201312111752255_validators_changed.Designer.cs">
       <DependentUpon>201312111752255_validators_changed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401191517191_SolutionInheritance.cs" />
+    <Compile Include="Migrations\201401191517191_SolutionInheritance.Designer.cs">
+      <DependentUpon>201401191517191_SolutionInheritance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201401191626255_TextAnswer.cs" />
+    <Compile Include="Migrations\201401191626255_TextAnswer.Designer.cs">
+      <DependentUpon>201401191626255_TextAnswer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201401191648464_TextAnswer1.cs" />
+    <Compile Include="Migrations\201401191648464_TextAnswer1.Designer.cs">
+      <DependentUpon>201401191648464_TextAnswer1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201401191653177_TextAnswer2.cs" />
+    <Compile Include="Migrations\201401191653177_TextAnswer2.Designer.cs">
+      <DependentUpon>201401191653177_TextAnswer2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbcdAnswer.cs" />
+    <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\MathematicalTask.cs" />
     <Compile Include="Models\SampleItem.cs" />
+    <Compile Include="Models\Solution.cs" />
     <Compile Include="Models\Subject.cs" />
+    <Compile Include="Models\TextAnswer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -263,6 +283,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201312111752255_validators_changed.resx">
       <DependentUpon>201312111752255_validators_changed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401191517191_SolutionInheritance.resx">
+      <DependentUpon>201401191517191_SolutionInheritance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401191626255_TextAnswer.resx">
+      <DependentUpon>201401191626255_TextAnswer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401191648464_TextAnswer1.resx">
+      <DependentUpon>201401191648464_TextAnswer1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401191653177_TextAnswer2.resx">
+      <DependentUpon>201401191653177_TextAnswer2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
