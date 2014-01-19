@@ -264,6 +264,11 @@
     <Content Include="Views\AbcdAnswer\Details.cshtml" />
     <Content Include="Views\AbcdAnswer\Edit.cshtml" />
     <Content Include="Views\AbcdAnswer\Index.cshtml" />
+    <Content Include="Views\TextAnswer\Create.cshtml" />
+    <Content Include="Views\TextAnswer\Delete.cshtml" />
+    <Content Include="Views\TextAnswer\Details.cshtml" />
+    <Content Include="Views\TextAnswer\Edit.cshtml" />
+    <Content Include="Views\TextAnswer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201311232005352_InitialCreate.resx">

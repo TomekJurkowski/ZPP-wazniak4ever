@@ -1,6 +1,10 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using WazniakWebsite.Models;
 using WazniakWebsite.DAL;
@@ -10,7 +14,7 @@ namespace WazniakWebsite.Controllers
     public class TextAnswerController : Controller
     {
         private SchoolContext db = new SchoolContext();
-        //
+
         // GET: /TextAnswer/
         public ActionResult Index()
         {
@@ -24,13 +28,12 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TextAnswer textAnswer = db.TextAnswers.Find(id);
-
-            if (textAnswer == null)
+            TextAnswer textanswer = db.TextAnswers.Find(id);
+            if (textanswer == null)
             {
                 return HttpNotFound();
             }
-            return View(textAnswer);
+            return View(textanswer);
         }
 
         // GET: /TextAnswer/Create
@@ -44,16 +47,16 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,correctAnswer")] TextAnswer textAnswer)
+        public ActionResult Create([Bind(Include="ID,answer")] TextAnswer textanswer)
         {
             if (ModelState.IsValid)
             {
-                db.TextAnswers.Add(textAnswer);
+                db.TextAnswers.Add(textanswer);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(textAnswer);
+            return View(textanswer);
         }
 
         // GET: /TextAnswer/Edit/5
@@ -63,12 +66,12 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TextAnswer textAnswer = db.TextAnswers.Find(id);
-            if (textAnswer == null)
+            TextAnswer textanswer = db.TextAnswers.Find(id);
+            if (textanswer == null)
             {
                 return HttpNotFound();
             }
-            return View(textAnswer);
+            return View(textanswer);
         }
 
         // POST: /TextAnswer/Edit/5
@@ -76,15 +79,15 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,correctAnswer")] TextAnswer textAnswer)
+        public ActionResult Edit([Bind(Include="ID,answer")] TextAnswer textanswer)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(textAnswer).State = EntityState.Modified;
+                db.Entry(textanswer).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(textAnswer);
+            return View(textanswer);
         }
 
         // GET: /TextAnswer/Delete/5
@@ -94,12 +97,12 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TextAnswer textAnswer = db.TextAnswers.Find(id);
-            if (textAnswer == null)
+            TextAnswer textanswer = db.TextAnswers.Find(id);
+            if (textanswer == null)
             {
                 return HttpNotFound();
             }
-            return View(textAnswer);
+            return View(textanswer);
         }
 
         // POST: /TextAnswer/Delete/5
@@ -107,8 +110,8 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            TextAnswer textAnswer = db.TextAnswers.Find(id);
-            db.TextAnswers.Remove(textAnswer);
+            TextAnswer textanswer = db.TextAnswers.Find(id);
+            db.TextAnswers.Remove(textanswer);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -121,5 +124,5 @@ namespace WazniakWebsite.Controllers
             }
             base.Dispose(disposing);
         }
-	}
+    }
 }

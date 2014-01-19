@@ -9,7 +9,6 @@ namespace WazniakWebsite.Models
 {
     public class AbcdAnswer : Solution
     {
-        //public int ID { get; set; }
 
         [Required]
         public string A { get; set; }
