@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace wazniak_forever.Model
 {
@@ -21,10 +17,10 @@ namespace wazniak_forever.Model
     public abstract class AnyExercise
     {
         public string Question { get; set; }
-        public ExerciseType Type { get; set; }
+
+        public ExerciseType Type { get; protected set; }
 
         public abstract bool[] Check(Answer a);
-
     }
 
     public class MultipleChoiceExercise : AnyExercise
@@ -34,7 +30,7 @@ namespace wazniak_forever.Model
 
         public MultipleChoiceExercise()
         {
-            this.Type = ExerciseType.MultipleChoice;
+            Type = ExerciseType.MultipleChoice;
         }
 
         public override bool[] Check(Answer a)
@@ -55,13 +51,13 @@ namespace wazniak_forever.Model
 
         public OpenExercise()
         {
-            this.Type = ExerciseType.Open;
+            Type = ExerciseType.Open;
         }
 
         public override bool[] Check(Answer a)
         {
             bool[] feedback = new bool[1];
-            if (a.Text.CompareTo(Solution.Answer) == 0)
+            if (a.Text.ToUpper().Equals(Solution.Answer.ToUpper()))
             {
                 feedback[0] = true;
             }
@@ -79,8 +75,8 @@ namespace wazniak_forever.Model
 
         public OpenExerciseSolution(string answer, string explanation)
         {
-            this.Answer = answer;
-            this.Explanation = explanation;
+            Answer = answer;
+            Explanation = explanation;
         }
     }
 
@@ -90,8 +86,8 @@ namespace wazniak_forever.Model
 
         public MultipleChoiceSolution(bool isTrue, string explanation)
         {
-            this.IsTrue = IsTrue;
-            this.Explanation = explanation;
+            IsTrue = isTrue;
+            Explanation = explanation;
         }
                 
     }
@@ -100,7 +96,6 @@ namespace wazniak_forever.Model
     {
         public bool[] Choices { get; set; }
         public string Text { get; set; }
-
     }
 
 }
