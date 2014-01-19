@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 using wazniak_forever.Model;
 
 namespace wazniak_forever.ViewModel
@@ -103,6 +104,97 @@ namespace wazniak_forever.ViewModel
                 NotifyPropertyChanged("AreDownloads");
             }
         }
+
+        #region ExerciseSolving
+
+        private int _currentQuestionNumber;
+
+        public int CurrentQuestionNumber
+        {
+            get { return _currentQuestionNumber; }
+            set
+            {
+                _currentQuestionNumber = value;
+                NotifyPropertyChanged("CurrentQuestionNumber");
+            }
+        }
+
+        private AnyExercise _currentExercise;
+
+        public AnyExercise CurrentExercise
+        {
+            get { return _currentExercise; }
+            set
+            {
+                _currentExercise = value;
+                NotifyPropertyChanged("CurrentExercise");
+            }
+        }
+
+
+        private List<AnyExercise> _exercises;
+
+        public List<AnyExercise> Exercises
+        {
+            get { return _exercises; }
+            set
+            {
+                _exercises = value;
+                NotifyPropertyChanged("Exercises");
+            }
+        }
+
+        private List<string> _userChoices = new List<string>();
+
+        public List<string> UserChoices
+        {
+            get { return _userChoices; }
+            set
+            {
+                _userChoices = value;
+                NotifyPropertyChanged("UserChoices");
+            }
+        }
+
+        public void LoadExercises() {
+            Exercises = new List<AnyExercise>() {
+                new MultipleChoiceExercise() {
+                    Question = "This is a question",
+                    Choices = new List<string>() {
+                        "first choice",
+                        "second choice",
+                        "third choice"
+                    },
+                    Solutions = new List<MultipleChoiceSolution>() {
+                        new MultipleChoiceSolution(true, "explanation one"),
+                        new MultipleChoiceSolution(false, "explanation two"),
+                        new MultipleChoiceSolution(true, "explanation three"),
+                    }
+                },
+                new OpenExercise() {
+                    Question = "This is a question",
+                    Solution = new OpenExerciseSolution("answer", "explanation")
+                },
+                new MultipleChoiceExercise() {
+                    Question = "This is a question",
+                    Choices = new List<string>() {
+                        "another first choice",
+                        "another second choice",
+                        "another third choice"
+                    },
+                    Solutions = new List<MultipleChoiceSolution>() {
+                        new MultipleChoiceSolution(true, "another explanation")
+                    }
+                }
+            };
+
+            CurrentQuestionNumber = 0;
+            CurrentExercise = Exercises[0];
+            if (CurrentExercise.Type == ExerciseType.MultipleChoice)
+                UserChoices = ((MultipleChoiceExercise)Exercises[0]).Choices;
+        }
+        
+        #endregion
 
         #region INotifyPropertyChanged Members
 

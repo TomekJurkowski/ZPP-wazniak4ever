@@ -6,6 +6,7 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -16,6 +17,9 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -31,9 +35,53 @@
                        Style="{StaticResource PhoneTextTitle1Style}"
                        Foreground="{StaticResource PageNameColor}"/>
         </StackPanel>
+        
+        <TextBlock x:Name="QuestionContent" 
+                   Text="{Binding CurrentExercise.Question}"
+                   FontSize="40"
+                   Margin="30,30,30,30"
+                   Foreground="{StaticResource MenuItemColor}"
+                   Grid.Row="2"/>
 
+        <toolkit:LongListMultiSelector
+                x:Name="MultipleChoiceAnswerInput" 
+                Grid.Row="3"
+                Margin="20,30,30,20"
+                Visibility="Collapsed"
+                ItemsSource="{Binding UserChoices}"
+                LayoutMode="List"
+                IsSelectionEnabled="True">
+            <toolkit:LongListMultiSelector.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock x:Name="Choice"
+                               Foreground="{StaticResource MenuItemColor}"
+                               Text="{Binding}" 
+                               FontSize="30"/>
+                    
+                </DataTemplate>
+            </toolkit:LongListMultiSelector.ItemTemplate>
+        </toolkit:LongListMultiSelector>
+        
+        
+        
+        <TextBox 
+            x:Name="OpenAnswerInput"
+            Margin="30,0,30,30"
+            Grid.Row="3" 
+            Visibility="Collapsed"/>
+
+        <StackPanel 
+            Grid.Row="4" 
+            VerticalAlignment="Bottom" 
+            HorizontalAlignment="Right">
+            <Button 
+                x:Name="NextQuestion" 
+                Click="NextQuestion_Click">Next</Button>
+        </StackPanel>
+        
+        
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
