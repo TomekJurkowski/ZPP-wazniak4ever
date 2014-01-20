@@ -189,7 +189,6 @@ namespace wazniak_forever.ViewModel
                         new MultipleChoiceSolution(true, "another explanation"),
                         new MultipleChoiceSolution(false, "explanation two"),
                         new MultipleChoiceSolution(true, "explanation three"),
-
                     }
                 },
                 new OpenExercise() {
@@ -201,7 +200,7 @@ namespace wazniak_forever.ViewModel
             CurrentQuestionNumber = 0;
             CurrentExercise = Exercises[0];
             if (CurrentExercise.Type == ExerciseType.MultipleChoice)
-                UserChoices = ((MultipleChoiceExercise)Exercises[0]).Choices;
+                UserChoices = ((MultipleChoiceExercise)Exercises[0]).Choices; // ERROR
         }
         
         #endregion
