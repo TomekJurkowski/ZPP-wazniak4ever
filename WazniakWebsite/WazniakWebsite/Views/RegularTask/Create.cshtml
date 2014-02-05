@@ -1,0 +1,50 @@
+﻿@model WazniakWebsite.Models.RegularTask
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="PurpleText">Create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4 class="PurpleText">Regular exercise</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control text-box" })
+                @Html.ValidationMessageFor(model => model.Title)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
+            <div class="col-md-10">
+                <textarea class="text-box form-control" id="Text" name="Text" rows="8"></textarea>
+                <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn PurpleBtn" />
+            </div>
+        </div>
+    </div>
+}
+
+<hr />
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

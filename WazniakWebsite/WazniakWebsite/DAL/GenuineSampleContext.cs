@@ -19,7 +19,7 @@ namespace WazniakWebsite.DAL
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Entity<SampleItem>().ToTable("SampleItem", "wazniak_forever");
             modelBuilder.Entity<Subject>().ToTable("Subject", "wazniak_forever");
-            modelBuilder.Entity<MathematicalTask>().ToTable("MathematicalTask", "wazniak_forever");
+            modelBuilder.Entity<Task>().ToTable("Task", "wazniak_forever");
             modelBuilder.Entity<Solution>().ToTable("Solution", "wazniak_forever");
         }
 
@@ -28,5 +28,8 @@ namespace WazniakWebsite.DAL
         public DbSet<AbcdAnswer> AbcdAnswers { get; set; }
         public DbSet<TextAnswer> TextAnswers { get; set; }
         public DbSet<Solution> Solutions { get; set; }
+        public DbSet<Task> Tasks { get; set; }
+        public DbSet<RegularTask> RegularTasks { get; set; }
+
     }
 }
