@@ -23,7 +23,7 @@
     </style> 
 }
 
-<h2>Index</h2>
+<h2 class="PurpleText">Subjects</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -50,7 +50,8 @@
 <table class="table table-striped lightPurpleBackground">
     <tr class="PurpleText">
         <th>
-            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.SortParam, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.SortParam, currentFilter = ViewBag.CurrentFilter }, 
+            new { @class = "PurpleText" })
         </th>
         <th>
             Description
@@ -70,9 +71,9 @@
                 </span>
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "PurpleText" }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "PurpleText" }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "PurpleText" })
             </td>
         </tr>
     }

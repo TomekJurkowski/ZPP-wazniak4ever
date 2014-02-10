@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2 class="PurpleText">Regular tasks</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -13,6 +13,9 @@
     <tr class="PurpleText">
         <th>
             @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            Description
         </th>
         <th></th>
     </tr>
@@ -24,9 +27,14 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                <span class="shortDisplay">
+                    @Html.DisplayFor(modelItem => item.Text)
+                </span>
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "PurpleText" }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "PurpleText" }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "PurpleText" })
             </td>
         </tr>
     }
