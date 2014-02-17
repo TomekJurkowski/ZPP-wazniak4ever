@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace WazniakWebsite.Models
 {
     public class AbcdAnswer : Solution
     {
-
         [Required]
         public string A { get; set; }
 

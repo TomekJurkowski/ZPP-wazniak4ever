@@ -2,9 +2,9 @@
 
 namespace WazniakWebsite.Models
 {
-    public class TextAnswer : Solution
+    public class SingleValueAnswer : Solution
     {
         [Required]
-        public string answer { get; set; }
+        public string Text { get; set; }
     }
 }

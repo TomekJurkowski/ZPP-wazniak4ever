@@ -223,10 +223,12 @@
     <Compile Include="Models\MathematicalTask.cs" />
     <Compile Include="Models\RegularTask.cs" />
     <Compile Include="Models\SampleItem.cs" />
+    <Compile Include="Models\SingleValueAnswer.cs" />
     <Compile Include="Models\Solution.cs" />
     <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\Task.cs" />
     <Compile Include="Models\TextAnswer.cs" />
+    <Compile Include="Models\TrueFalseABCAnswer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
