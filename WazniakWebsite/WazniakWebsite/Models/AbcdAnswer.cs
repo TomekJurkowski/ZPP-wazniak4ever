@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WazniakWebsite.Models
 {
-    public class AbcdAnswer : Solution
+    public class AbcdAnswer : Answer
     {
         [Required]
         public string A { get; set; }

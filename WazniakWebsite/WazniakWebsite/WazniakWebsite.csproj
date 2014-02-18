@@ -158,65 +158,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201311232005352_InitialCreate.cs" />
-    <Compile Include="Migrations\201311232005352_InitialCreate.Designer.cs">
-      <DependentUpon>201311232005352_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201311271915329_MathematicalTask.cs" />
-    <Compile Include="Migrations\201311271915329_MathematicalTask.Designer.cs">
-      <DependentUpon>201311271915329_MathematicalTask.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201311271950577_MathematicalTask-TitleAdded.cs" />
-    <Compile Include="Migrations\201311271950577_MathematicalTask-TitleAdded.Designer.cs">
-      <DependentUpon>201311271950577_MathematicalTask-TitleAdded.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312111420160_Subject.cs" />
-    <Compile Include="Migrations\201312111420160_Subject.Designer.cs">
-      <DependentUpon>201312111420160_Subject.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312111436106_AbcdAnswer.cs" />
-    <Compile Include="Migrations\201312111436106_AbcdAnswer.Designer.cs">
-      <DependentUpon>201312111436106_AbcdAnswer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312111752255_validators_changed.cs" />
-    <Compile Include="Migrations\201312111752255_validators_changed.Designer.cs">
-      <DependentUpon>201312111752255_validators_changed.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401191517191_SolutionInheritance.cs" />
-    <Compile Include="Migrations\201401191517191_SolutionInheritance.Designer.cs">
-      <DependentUpon>201401191517191_SolutionInheritance.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401191626255_TextAnswer.cs" />
-    <Compile Include="Migrations\201401191626255_TextAnswer.Designer.cs">
-      <DependentUpon>201401191626255_TextAnswer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401191648464_TextAnswer1.cs" />
-    <Compile Include="Migrations\201401191648464_TextAnswer1.Designer.cs">
-      <DependentUpon>201401191648464_TextAnswer1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401191653177_TextAnswer2.cs" />
-    <Compile Include="Migrations\201401191653177_TextAnswer2.Designer.cs">
-      <DependentUpon>201401191653177_TextAnswer2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402051520558_Task.cs" />
-    <Compile Include="Migrations\201402051520558_Task.Designer.cs">
-      <DependentUpon>201402051520558_Task.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402051540021_AbcdTask.cs" />
-    <Compile Include="Migrations\201402051540021_AbcdTask.Designer.cs">
-      <DependentUpon>201402051540021_AbcdTask.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402051555532_AbcdTaskDeleted.cs" />
-    <Compile Include="Migrations\201402051555532_AbcdTaskDeleted.Designer.cs">
-      <DependentUpon>201402051555532_AbcdTaskDeleted.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402051601373_RegularTask.cs" />
-    <Compile Include="Migrations\201402051601373_RegularTask.Designer.cs">
-      <DependentUpon>201402051601373_RegularTask.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402051908041_ModelRelationships.cs" />
-    <Compile Include="Migrations\201402051908041_ModelRelationships.Designer.cs">
-      <DependentUpon>201402051908041_ModelRelationships.cs</DependentUpon>
+    <Compile Include="Migrations\201402181329169_InitialCreate.cs" />
+    <Compile Include="Migrations\201402181329169_InitialCreate.Designer.cs">
+      <DependentUpon>201402181329169_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbcdAnswer.cs" />
@@ -224,11 +168,11 @@
     <Compile Include="Models\RegularTask.cs" />
     <Compile Include="Models\SampleItem.cs" />
     <Compile Include="Models\SingleValueAnswer.cs" />
-    <Compile Include="Models\Solution.cs" />
+    <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\Task.cs" />
     <Compile Include="Models\TextAnswer.cs" />
-    <Compile Include="Models\TrueFalseABCAnswer.cs" />
+    <Compile Include="Models\MultipleChoiceAnswer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -300,58 +244,16 @@
     <Content Include="Views\RegularTask\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201311232005352_InitialCreate.resx">
-      <DependentUpon>201311232005352_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201311271915329_MathematicalTask.resx">
-      <DependentUpon>201311271915329_MathematicalTask.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201311271950577_MathematicalTask-TitleAdded.resx">
-      <DependentUpon>201311271950577_MathematicalTask-TitleAdded.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312111420160_Subject.resx">
-      <DependentUpon>201312111420160_Subject.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312111436106_AbcdAnswer.resx">
-      <DependentUpon>201312111436106_AbcdAnswer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312111752255_validators_changed.resx">
-      <DependentUpon>201312111752255_validators_changed.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401191517191_SolutionInheritance.resx">
-      <DependentUpon>201401191517191_SolutionInheritance.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401191626255_TextAnswer.resx">
-      <DependentUpon>201401191626255_TextAnswer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401191648464_TextAnswer1.resx">
-      <DependentUpon>201401191648464_TextAnswer1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401191653177_TextAnswer2.resx">
-      <DependentUpon>201401191653177_TextAnswer2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402051520558_Task.resx">
-      <DependentUpon>201402051520558_Task.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402051540021_AbcdTask.resx">
-      <DependentUpon>201402051540021_AbcdTask.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402051555532_AbcdTaskDeleted.resx">
-      <DependentUpon>201402051555532_AbcdTaskDeleted.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402051601373_RegularTask.resx">
-      <DependentUpon>201402051601373_RegularTask.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402051908041_ModelRelationships.resx">
-      <DependentUpon>201402051908041_ModelRelationships.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201402181329169_InitialCreate.resx">
+      <DependentUpon>201402181329169_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

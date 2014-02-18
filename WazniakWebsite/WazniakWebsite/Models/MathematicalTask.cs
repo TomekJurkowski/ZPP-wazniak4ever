@@ -2,7 +2,7 @@
 
 namespace WazniakWebsite.Models
 {
-    public class MathematicalTask : Solution
+    public class MathematicalTask : Task
     {
         [StringLength(50)]
         public string Title { get; set; }

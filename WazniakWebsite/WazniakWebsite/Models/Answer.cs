@@ -2,7 +2,7 @@
 
 namespace WazniakWebsite.Models
 {
-    public class Solution
+    public class Answer
     {
         [Key]
         public int ID { get; set; }
