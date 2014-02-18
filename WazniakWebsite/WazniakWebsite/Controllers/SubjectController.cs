@@ -1,11 +1,12 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using WazniakWebsite.Models;
 using WazniakWebsite.DAL;
-using PagedList;
+using WazniakWebsite.Models;
 
 namespace WazniakWebsite.Controllers
 {
@@ -81,11 +82,19 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include="ID,Name,Description")] Subject subject)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Subjects.Add(subject);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Subjects.Add(subject);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
             return View(subject);
@@ -113,21 +122,34 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include="ID,Name,Description")] Subject subject)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(subject).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(subject).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+
             return View(subject);
         }
 
         // GET: /Subject/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
             }
             Subject subject = db.Subjects.Find(id);
             if (subject == null)
@@ -138,13 +160,22 @@ namespace WazniakWebsite.Controllers
         }
 
         // POST: /Subject/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
-            Subject subject = db.Subjects.Find(id);
-            db.Subjects.Remove(subject);
-            db.SaveChanges();
+            try
+            {
+                Subject subject = db.Subjects.Find(id);
+                db.Subjects.Remove(subject);
+                db.SaveChanges();
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
+            
             return RedirectToAction("Index");
         }
 

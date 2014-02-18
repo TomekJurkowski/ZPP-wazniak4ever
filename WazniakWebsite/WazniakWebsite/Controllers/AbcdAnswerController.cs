@@ -1,9 +1,10 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using WazniakWebsite.Models;
 using WazniakWebsite.DAL;
+using WazniakWebsite.Models;
 
 namespace WazniakWebsite.Controllers
 {
@@ -45,11 +46,19 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include="ID,A,B,C,D,CorrectAnswer")] AbcdAnswer abcdanswer)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.AbcdAnswers.Add(abcdanswer);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.AbcdAnswers.Add(abcdanswer);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
             return View(abcdanswer);
@@ -77,12 +86,21 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include="ID,A,B,C,D,CorrectAnswer")] AbcdAnswer abcdanswer)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(abcdanswer).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(abcdanswer).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+
             return View(abcdanswer);
         }
 

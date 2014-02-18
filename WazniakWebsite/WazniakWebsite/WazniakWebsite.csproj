@@ -162,6 +162,14 @@
     <Compile Include="Migrations\201402181329169_InitialCreate.Designer.cs">
       <DependentUpon>201402181329169_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201402181624447_ModelRelationsAdded.cs" />
+    <Compile Include="Migrations\201402181624447_ModelRelationsAdded.Designer.cs">
+      <DependentUpon>201402181624447_ModelRelationsAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201402181821286_1to1RelationshipBetweenTaskAndAnswerAdded.cs" />
+    <Compile Include="Migrations\201402181821286_1to1RelationshipBetweenTaskAndAnswerAdded.Designer.cs">
+      <DependentUpon>201402181821286_1to1RelationshipBetweenTaskAndAnswerAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbcdAnswer.cs" />
     <Compile Include="Models\MathematicalTask.cs" />
@@ -253,6 +261,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201402181329169_InitialCreate.resx">
       <DependentUpon>201402181329169_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201402181624447_ModelRelationsAdded.resx">
+      <DependentUpon>201402181624447_ModelRelationsAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201402181821286_1to1RelationshipBetweenTaskAndAnswerAdded.resx">
+      <DependentUpon>201402181821286_1to1RelationshipBetweenTaskAndAnswerAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

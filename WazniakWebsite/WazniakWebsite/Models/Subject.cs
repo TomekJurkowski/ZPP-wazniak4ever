@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace WazniakWebsite.Models
 {
@@ -13,5 +14,7 @@ namespace WazniakWebsite.Models
 
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
+
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }

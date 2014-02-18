@@ -6,5 +6,14 @@ namespace WazniakWebsite.Models
     {
         [Key]
         public int ID { get; set; }
+
+        public int SubjectID { get; set; }
+        
+        public int AnswerID { get; set; }
+
+        public virtual Subject Subject { get; set; }
+        
+        public virtual Answer Answer { get; set; }
+
     }
 }

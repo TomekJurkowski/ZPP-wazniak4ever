@@ -63,7 +63,7 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.ActionLink(item.Name, "Details", new { id = item.ID }, new { @class = "PurpleText" })
             </td>
             <td>
                 <span class="shortDisplay">
