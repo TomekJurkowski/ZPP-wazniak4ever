@@ -2,6 +2,7 @@
 using Microsoft.Phone.Controls;
 using System;
 using System.IO;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Navigation;
 using wazniak_forever.Model;
@@ -39,6 +40,12 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
+        }
+
+        protected override void OnBackKeyPress(CancelEventArgs e)
+        {
+            base.OnBackKeyPress(e);
+            MultipleChoiceAnswerInput.SelectedItems.Clear();
         }
 
         private async void WebBrowser_Loaded(object sender, RoutedEventArgs e)
