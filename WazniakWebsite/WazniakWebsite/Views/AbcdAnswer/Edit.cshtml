@@ -15,7 +15,7 @@
         <h4 class="PurpleText">Edit any of the possible answers or the correct answer</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.TaskID)
 
         <div class="form-group">
             @Html.LabelFor(model => model.A, new { @class = "control-label col-md-2 PurpleText" })
