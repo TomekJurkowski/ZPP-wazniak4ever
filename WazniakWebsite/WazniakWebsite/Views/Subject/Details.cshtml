@@ -3,65 +3,131 @@
 @{
     ViewBag.Title = "Details";
 }
+@section HeadScripts
+{
+    <style>
+        .radio {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        #prompt {
+            margin-top: 0px;
+            margin-bottom: 50px;
+        }
+    </style>
 
-<h2 class="PurpleText">Subject details</h2>
+    <script type="text/javascript">
+        $(function () {
+            $("#tooltip1,#tooltip2").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
+            
+            $("#createExerciseBtn").click(function () {
+                if ($('input[name="optionsRadios"]:checked').val() == "option1") {
+                    window.location = '/RegularTask';
+                }
+                else {
+                    window.location = '/MathematicalTask';
+                }
+            });
 
-<div>
-	<hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+        });
+    </script>
+}
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+    <h2 class="PurpleText">Subject details</h2>
 
-        <br />
-        
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        
-        <br />
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
 
-        <dd>
-            <input type="button" value="Add new Exercise" class="btn PurpleBtn" />
-        </dd>
+            <br />
 
-        <br />
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Tasks)
-        </dt>
-        
-        <dd>
-            <table class="table">
-                <tr>
-                    <th>Exercise identificator</th>
-                    <th>Solution identificator</th>
-                </tr>
-                @foreach (var item in Model.Tasks)
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+            <br />
+
+            <dd>
+                <input type="button" value="Add new Exercise" class="btn PurpleBtn" data-toggle="modal" data-target="#addExerciseModal" />
+            </dd>
+
+            <br />
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Tasks)
+            </dt>
+
+            <dd>
+                <table class="table">
+                    <tr>
+                        <th>Exercise identificator</th>
+                        <th>Solution identificator</th>
+                    </tr>
+                    @foreach (var item in Model.Tasks)
                 {
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AnswerID)
-                        </td>
-                    </tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AnswerID)
+                            </td>
+                        </tr>
                 }
-            </table>
-        </dd>
+                </table>
+            </dd>
 
-    </dl>
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+    <!-- addExerciseModal -->
+    <div class="modal fade" id="addExerciseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title PurpleText" id="myModalLabel">Choose the exercise that you want to create:</h3>
+                </div>
+                <div class="modal-body">
+                    <h5 class="PurpleText" id="prompt">Move the mouse over the exercise names, to see a short description.</h5>
+
+                    <div class="radio">
+                        <label id="tooltip1" data-toggle="tooltip" title="Typical exercise which content is pure text.">
+                            <input type="radio" name="optionsRadios" id="regularExerciseOption" value="option1" checked>
+                            <h4 class="PurpleText">Regular Exercise</h4>
+                        </label>
+                    </div>
+
+                    <div class="radio">
+                        <label id="tooltip2" data-toggle="tooltip" title="Exercise that may include special signs, mathematical formulas, etc.">
+                            <input type="radio" name="optionsRadios" id="mathematicalExerciseOption" value="option2">
+                            <h4 class="PurpleText">Mathematical Exercise</h4>
+                        </label>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Dismiss</button>
+                    <button type="button" class="btn PurpleBtn" id="createExerciseBtn">Create exercise</button>
+                </div>
+            </div>
+        </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
