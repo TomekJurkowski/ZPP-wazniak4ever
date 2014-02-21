@@ -4,11 +4,11 @@ using System.Windows.Controls;
 
 namespace wazniak_forever.Model
 {
-    public class Course
+    public class Subject
     {
         public string Name { get; private set; }
 
-        public Course(string Name)
+        public Subject(string Name)
         {
             this.Name = Name;
         }

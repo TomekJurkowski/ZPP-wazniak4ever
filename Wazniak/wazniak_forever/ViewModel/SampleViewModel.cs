@@ -52,9 +52,9 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private List<Course> _allCourses;
+        private List<Subject> _allCourses;
 
-        public List<Course> AllCourses
+        public List<Subject> AllCourses
         {
             get { return _allCourses; }
             set
@@ -64,9 +64,9 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private List<Course> _downloadedCourses;
+        private List<Subject> _downloadedCourses;
 
-        public List<Course> DownloadedCourses
+        public List<Subject> DownloadedCourses
         {
             get { return _downloadedCourses; }
             set
@@ -76,9 +76,9 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private List<Course> _myCourses;
+        private List<Subject> _myCourses;
 
-        public List<Course> MyCourses
+        public List<Subject> MyCourses
         {
             get { return _myCourses; }
             set
@@ -242,34 +242,34 @@ namespace wazniak_forever.ViewModel
 
         public void LoadAllCourses()
         {
-            AllCourses = new List<Course>()
+            AllCourses = new List<Subject>()
             {
-                new Course("Algorithms I"),
-                new Course("Algorithms II"),
-                new Course("Databases"),
-                new Course("Operating Systems"),
-                new Course("Linear Algebra I"),
-                new Course("Linear Algebra II"),
-                new Course("Linear Algebra III"),
-                new Course("Numerical Analysis")
+                new Subject("Algorithms I"),
+                new Subject("Algorithms II"),
+                new Subject("Databases"),
+                new Subject("Operating Systems"),
+                new Subject("Linear Algebra I"),
+                new Subject("Linear Algebra II"),
+                new Subject("Linear Algebra III"),
+                new Subject("Numerical Analysis")
             };
         }
 
         public void LoadDownloadedCourses()
         {
-            DownloadedCourses = new List<Course>()
+            DownloadedCourses = new List<Subject>()
             {
-                new Course("Databases")
+                new Subject("Databases")
             };
         }
 
         public void LoadMyCourses()
         {
-            MyCourses = new List<Course>()
+            MyCourses = new List<Subject>()
             {
-                new Course("Algorithms I"),
-                new Course("Algorithms II"),
-                new Course("Databases")
+                new Subject("Algorithms I"),
+                new Subject("Algorithms II"),
+                new Subject("Databases")
             };
         }
 

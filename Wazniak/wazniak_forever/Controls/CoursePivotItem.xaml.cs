@@ -28,7 +28,7 @@ namespace wazniak_forever.Controls
 
         private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Course selectedCourse = AllCoursesList.SelectedItem as Course;
+            Subject selectedCourse = AllCoursesList.SelectedItem as Subject;
 
             if (selectedCourse == null) return;
             var courseName = selectedCourse.Name;
@@ -40,7 +40,7 @@ namespace wazniak_forever.Controls
         private void CourseSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(CourseSearch.Text);
-            List<Course> SearchList = App.ViewModel.DownloadedCourses;
+            List<Subject> SearchList = App.ViewModel.DownloadedCourses;
             if (this.Name == MY_COURSES_NAME) SearchList = App.ViewModel.MyCourses;
             else if (this.Name == ALL_COURSES_NAME) SearchList = App.ViewModel.AllCourses;
             AllCoursesList.ItemsSource = SearchList.
