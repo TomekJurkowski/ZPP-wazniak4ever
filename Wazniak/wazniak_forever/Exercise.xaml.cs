@@ -73,7 +73,7 @@ namespace wazniak_forever
 
             // Check the answer
             var choices = MultipleChoiceAnswerInput.SelectedItems;
-            Answer ans = new Answer();
+            Solution ans = new Solution();
             ans.Choices = new bool[MultipleChoiceAnswerInput.ItemsSource.Count];
             int selectedIndex;
             for (int i = 0; i < choices.Count; i++)
