@@ -20,7 +20,7 @@ namespace wazniak_forever.Model
         public string Question { get; set; }
         public Solution Solution { get; set; }
 
-        public Exercise(string _title, string _question, Solution _solution) 
+        public Exercise(string _title, string _question, Solution _solution)
         {
             Title = _title;
             Question = _question;
@@ -98,19 +98,20 @@ namespace wazniak_forever.Model
 
     public class MultipleChoiceSolution : ChoiceSolution<string>
     {
-        public MultipleChoiceSolution(List<string> _choices, List<bool> _answers)
+        public MultipleChoiceSolution(List<string> _choices, List<string> _answers)
         {
             Choices = _choices;
-            Answer = new AnswerList<bool>(_answers);
+            Answer = new AnswerList<string>(_answers);
         }
     }
 
     public class SingleChoiceSolution : ChoiceSolution<string>
     {
-        public SingleChoiceSolution(List<string> _choices, List<bool> _answers)
+        public SingleChoiceSolution(List<string> _choices, int _answer)
         {
             Choices = _choices;
-            Answer = new AnswerList<bool>(_answers);
+            if (_answer < _choices.Count && _answer >= 0) Answer = new SingleAnswer<string>(_choices[_answer]);
+            else Answer = new SingleAnswer<string>(""); // no good answer
         }
     }
 }
