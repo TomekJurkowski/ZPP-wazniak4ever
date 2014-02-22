@@ -79,3 +79,38 @@ input[type="checkbox"].input-validation-error {
 .purpleBackground {
     background-color: #660066;
 }
+
+a {
+    color: #9900cc;
+}
+
+a:active,
+a:hover,
+a:focus {
+    color: #660066;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+    text-decoration: none;
+    background-color: #FFCCFF;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #9900cc;
+    *background-color: #9900cc;
+    background-image: -moz-linear-gradient(top, #660066, #9900cc);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#660066), to(#9900cc));
+    background-image: -webkit-linear-gradient(top, #660066, #9900cc);
+    background-image: -o-linear-gradient(top, #660066, #9900cc);
+    background-image: linear-gradient(to bottom, #660066, #9900cc);
+    background-repeat: repeat-x;
+    border-color: #9900cc;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#660066', endColorstr='#9900cc', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}

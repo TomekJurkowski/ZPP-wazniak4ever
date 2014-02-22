@@ -1,4 +1,5 @@
-﻿@model WazniakWebsite.Models.RegularTask
+﻿@using System.Web.UI.HtmlControls
+@model WazniakWebsite.Models.RegularTask
 
 @{
     ViewBag.Title = "Create";
@@ -9,8 +10,27 @@
     <script type="text/javascript">
         $(function() {
             $("#SubjectID").val("@ViewBag.SubjectId");
+
+            $('.nav-pills a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+            
+            $("#tooltip1,#tooltip2,#tooltip3,#tooltip4").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
         });
     </script>
+    
+    <style>
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    </style>
 }
 
 <h2 class="PurpleText">Create</h2>
@@ -37,7 +57,7 @@
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
             <div class="col-md-10">
-                <textarea class="text-box form-control" id="Text" name="Text" rows="8"></textarea>
+                <textarea class="form-control" id="Text" name="Text" rows="8"></textarea>
                 <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
             </div>
         </div>
@@ -49,6 +69,28 @@
         </div>
     </div>
 }
+
+<ul class="nav nav-pills">
+    <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
+    <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
+    <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+    <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
+</ul>
+<br />
+<div class="pill-content">
+    <div class="pill-pane fade" id="SingleValueAnswer_pill">
+        <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
+    </div>
+    <div class="pill-pane fade" id="TextAnswer_pill">
+        <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+    </div>
+    <div class="pill-pane fade" id="AbcdAnswer_pill">
+        <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
+    </div>
+    <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
+        <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
+    </div>
+</div>
 
 <hr />
 <div>
