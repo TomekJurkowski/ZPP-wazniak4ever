@@ -25,13 +25,6 @@ namespace WazniakWebsite.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-            var sampleItems = new List<SampleItem>()
-            {
-                new SampleItem { Text = "text1", Number = 10 },
-                new SampleItem { Text = "text2", Number = 20 }
-            };
-            sampleItems.ForEach(s => context.SampleItems.AddOrUpdate(s));
-            context.SaveChanges();
         }
     }
 }

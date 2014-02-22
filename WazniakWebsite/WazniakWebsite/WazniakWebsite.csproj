@@ -149,12 +149,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MathematicalTaskController.cs" />
     <Compile Include="Controllers\RegularTaskController.cs" />
-    <Compile Include="Controllers\SampleItemController.cs" />
-    <Compile Include="Controllers\SampleItemMobileController.cs" />
     <Compile Include="Controllers\SubjectController.cs" />
     <Compile Include="Controllers\TextAnswerController.cs" />
     <Compile Include="DAL\GenuineSampleContext.cs" />
-    <Compile Include="DAL\SampleContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -162,11 +159,14 @@
     <Compile Include="Migrations\201402212152146_InitialCreate.Designer.cs">
       <DependentUpon>201402212152146_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201402222301508_UnusedSampleItemsRemoved.cs" />
+    <Compile Include="Migrations\201402222301508_UnusedSampleItemsRemoved.Designer.cs">
+      <DependentUpon>201402222301508_UnusedSampleItemsRemoved.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbcdAnswer.cs" />
     <Compile Include="Models\MathematicalTask.cs" />
     <Compile Include="Models\RegularTask.cs" />
-    <Compile Include="Models\SampleItem.cs" />
     <Compile Include="Models\SingleValueAnswer.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Subject.cs" />
@@ -207,16 +207,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\SampleItem\Create.cshtml" />
-    <Content Include="Views\SampleItem\Delete.cshtml" />
-    <Content Include="Views\SampleItem\Details.cshtml" />
-    <Content Include="Views\SampleItem\Edit.cshtml" />
-    <Content Include="Views\SampleItem\Index.cshtml" />
-    <Content Include="Views\SampleItemMobile\Create.cshtml" />
-    <Content Include="Views\SampleItemMobile\Delete.cshtml" />
-    <Content Include="Views\SampleItemMobile\Details.cshtml" />
-    <Content Include="Views\SampleItemMobile\Edit.cshtml" />
-    <Content Include="Views\SampleItemMobile\Index.cshtml" />
     <Content Include="Views\MathematicalTask\Create.cshtml" />
     <Content Include="Views\MathematicalTask\Delete.cshtml" />
     <Content Include="Views\MathematicalTask\Details.cshtml" />
@@ -253,6 +243,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201402212152146_InitialCreate.resx">
       <DependentUpon>201402212152146_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201402222301508_UnusedSampleItemsRemoved.resx">
+      <DependentUpon>201402222301508_UnusedSampleItemsRemoved.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

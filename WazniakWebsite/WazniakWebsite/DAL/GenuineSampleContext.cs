@@ -12,8 +12,6 @@ namespace WazniakWebsite.DAL
         {
         }
 
-        public DbSet<SampleItem> SampleItems { get; set; }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
