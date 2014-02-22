@@ -3,6 +3,7 @@ using Microsoft.Phone.Controls;
 using System;
 using System.IO;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Navigation;
 using wazniak_forever.Model;
@@ -72,15 +73,8 @@ namespace wazniak_forever
             OpenAnswerInput.Visibility = Visibility.Collapsed;
 
             // Check the answer
-            var choices = MultipleChoiceAnswerInput.SelectedItems;
-            Solution ans = new Solution();
-            ans.Choices = new bool[MultipleChoiceAnswerInput.ItemsSource.Count];
-            int selectedIndex;
-            for (int i = 0; i < choices.Count; i++)
-            {
-                selectedIndex = MultipleChoiceAnswerInput.ItemsSource.IndexOf(choices[i]);
-                ans.Choices[selectedIndex] = true;
-            }
+            List<string> choiceList = MultipleChoiceAnswerInput.SelectedItems as List<string>;
+            AnswerList<string> ans = new AnswerList<string>(choiceList);
 
             ans.Text = OpenAnswerInput.Text;
             bool[] feedback = App.ViewModel.CurrentExercise.Check(ans);

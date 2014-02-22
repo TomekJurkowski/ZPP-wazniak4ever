@@ -14,104 +14,107 @@ namespace wazniak_forever.Model
         }
     }
 
-    public class Exercise
+    public abstract class Exercise
     {
+        public int ID { get; set; }
+        public int SubjectID { get; set; }
+        public int SolutionID { get; set; }
         public string Title { get; set; }
-        public string Question { get; set; }
+        public Subject Subject { get; set; }
         public Solution Solution { get; set; }
+    }
 
-        public Exercise(string _title, string _question, Solution _solution)
-        {
-            Title = _title;
-            Question = _question;
-            Solution = _solution;
-        }
-
-        public Exercise(string _title, Solution _solution) 
-        {
-            Title = _title;
-            Solution = _solution;
-        }
+    public class RegularExercise : Exercise
+    {
+        public string Question { get; set; }
     }
 
     public class MathExercise : Exercise
     {
-        public override Image Question { get; set; }
-
-        public MathExercise(string _title, Image _question, Solution _solution) : base(_title, _solution)
-        {
-            Question = _question;
-        }
+        public Image Question { get; set; }
     }
 
-    public abstract class AnswerType 
+    
+    #region Solutions
+
+    public abstract class AnswerType
     {
+        public int Compare(AnswerType other);
     }
 
     public class SingleAnswer<T> : AnswerType where T : System.IComparable
     {
         public T value { get; set; }
         public SingleAnswer(T _value) { value = _value; }
-        public bool operator ==(SingleAnswer<T> first, SingleAnswer<T> second) { return first.value.Equals(second.value); }
+        public bool operator !=(SingleAnswer<T> first, SingleAnswer<T> second) { return first.value.CompareTo(second.value) != 0; }
     }
 
     public class AnswerList<T> : AnswerType where T : System.IComparable
     {
         public List<T> value { get; set; }
         public AnswerList(List<T> _value) { value = _value; }
-        public bool operator ==(AnswerList<T> first, AnswerList<T> second) 
+        public bool operator !=(AnswerList<T> first, AnswerList<T> second)
         {
-            if (first.value.Count != second.value.Count) return false;
+            if (first.value.Count != second.value.Count) return true;
             for (int i = 0; i < first.value.Count; i++)
             {
-                if (!first.value[i].Equals(second.value[i])) return false;
+                if (!first.value[i].Equals(second.value[i])) return true;
             }
-            return true; 
+            return false;
         }
     }
 
     public abstract class Solution
     {
-        public abstract AnswerType Answer { get; set; }
+        public int ExerciseID { get; set; }
+        public List<string> Choices { get; set; }
+        public AnswerType Answer { get; set; }
+        public Exercise Exercise { get; set; }
     }
 
     public class TextSolution : Solution
     {
-        public TextSolution(string _answer)
+        public TextSolution(int _id, string _answer, Exercise _ex)
         {
+            ExerciseID = _id;
+            Choices = null;
             Answer = new SingleAnswer<string>(_answer);
+            Exercise = _ex;
         }
     }
 
     public class SingleValueSolution : Solution
     {
-        public SingleValueSolution(int _answer)
+        public SingleValueSolution(int _id, string _answer, Exercise _ex)
         {
-            Answer = new SingleAnswer<int>(_answer);
+            ExerciseID = _id;
+            Choices = null;
+            Answer = new SingleAnswer<string>(_answer);
+            Exercise = _ex;
         }
     }
 
-    public abstract class ChoiceSolution<T> : Solution
+    public class MultipleChoiceSolution : Solution
     {
-        public List<T> Choices { get; set; }
-    }
-
-    public class MultipleChoiceSolution : ChoiceSolution<string>
-    {
-        public MultipleChoiceSolution(List<string> _choices, List<string> _answers)
+        public MultipleChoiceSolution(int _id, List<string> _choices, List<string> _answers, Exercise _ex)
         {
+            ExerciseID = _id;
             Choices = _choices;
             Answer = new AnswerList<string>(_answers);
+            Exercise = _ex;
         }
     }
 
-    public class SingleChoiceSolution : ChoiceSolution<string>
+    public class SingleChoiceSolution : Solution
     {
-        public SingleChoiceSolution(List<string> _choices, int _answer)
+        public SingleChoiceSolution(int _id, List<string> _choices, string _answer, Exercise _ex)
         {
+            ExerciseID = _id;
             Choices = _choices;
-            if (_answer < _choices.Count && _answer >= 0) Answer = new SingleAnswer<string>(_choices[_answer]);
-            else Answer = new SingleAnswer<string>(""); // no good answer
+            Answer = new SingleAnswer<string>(_answer);
+            Exercise = _ex;
         }
     }
+
+    #endregion
 }
