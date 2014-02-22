@@ -34,40 +34,43 @@ namespace wazniak_forever.Model
         public Image Question { get; set; }
     }
 
-    
+
     #region Solutions
+
+    public enum SolutionType { Open, Multiple, Single }
 
     public abstract class AnswerType
     {
-        public int Compare(AnswerType other);
+        public virtual bool Equals(AnswerType other) { return true; } // UGLY
+        public SolutionType Type { get; set; }
     }
 
     public class SingleAnswer<T> : AnswerType where T : System.IComparable
     {
         public T value { get; set; }
         public SingleAnswer(T _value) { value = _value; }
-        public bool operator !=(SingleAnswer<T> first, SingleAnswer<T> second) { return first.value.CompareTo(second.value) != 0; }
+        public bool Equals(SingleAnswer<T> other) { return value.CompareTo(other.value) != 0; }
     }
 
     public class AnswerList<T> : AnswerType where T : System.IComparable
     {
         public List<T> value { get; set; }
         public AnswerList(List<T> _value) { value = _value; }
-        public bool operator !=(AnswerList<T> first, AnswerList<T> second)
+        public bool Equals(AnswerList<T> other)
         {
-            if (first.value.Count != second.value.Count) return true;
-            for (int i = 0; i < first.value.Count; i++)
+            if (value.Count != other.value.Count) return false;
+            for (int i = 0; i < value.Count; i++)
             {
-                if (!first.value[i].Equals(second.value[i])) return true;
+                if (!value[i].Equals(other.value[i])) return false;
             }
-            return false;
+            return true;
         }
     }
 
     public abstract class Solution
     {
         public int ExerciseID { get; set; }
-        public List<string> Choices { get; set; }
+        public List<string> Choices { get; set; } // UGLY
         public AnswerType Answer { get; set; }
         public Exercise Exercise { get; set; }
     }
@@ -79,6 +82,7 @@ namespace wazniak_forever.Model
             ExerciseID = _id;
             Choices = null;
             Answer = new SingleAnswer<string>(_answer);
+            Answer.Type = SolutionType.Open;
             Exercise = _ex;
         }
     }
@@ -90,6 +94,7 @@ namespace wazniak_forever.Model
             ExerciseID = _id;
             Choices = null;
             Answer = new SingleAnswer<string>(_answer);
+            Answer.Type = SolutionType.Open;
             Exercise = _ex;
         }
     }
@@ -101,6 +106,7 @@ namespace wazniak_forever.Model
             ExerciseID = _id;
             Choices = _choices;
             Answer = new AnswerList<string>(_answers);
+            Answer.Type = SolutionType.Multiple;
             Exercise = _ex;
         }
     }
@@ -112,6 +118,7 @@ namespace wazniak_forever.Model
             ExerciseID = _id;
             Choices = _choices;
             Answer = new SingleAnswer<string>(_answer);
+            Answer.Type = SolutionType.Single;
             Exercise = _ex;
         }
     }

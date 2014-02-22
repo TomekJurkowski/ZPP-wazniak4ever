@@ -115,7 +115,6 @@ namespace wazniak_forever.ViewModel
         }
 
         private RegularExercise _currentExercise;
-
         public RegularExercise CurrentExercise
         {
             get { return _currentExercise; }
@@ -123,6 +122,17 @@ namespace wazniak_forever.ViewModel
             {
                 _currentExercise = value;
                 NotifyPropertyChanged("CurrentExercise");
+            }
+        }
+
+        private Solution _currentSolution;
+        public Solution CurrentSolution
+        {
+            get { return _currentSolution; }
+            set
+            {
+                _currentSolution = value;
+                NotifyPropertyChanged("CurrentSolution");
             }
         }
 
@@ -160,7 +170,8 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        public void LoadExercises() {
+        public void LoadExercises()
+        {
             Exercises = new List<RegularExercise>();
             string[] questions = new string[6] 
             { 
@@ -171,9 +182,9 @@ namespace wazniak_forever.ViewModel
                 "This is a question",
                 "Suppose that you do binary search for the key 13 in the following sorted array of size 15:\n\t14 25 26 36 38 47 53 55 59 67 78 84 89 90 97\nGive the sequence of keys in the array that are compared with 13."
             };
-            for (int i = 0; i < 6; i++) 
+            for (int i = 0; i < 6; i++)
             {
-                RegularExercise re;
+                RegularExercise re = new RegularExercise();
                 re.ID = i;
                 re.SubjectID = 0;
                 re.SolutionID = i;
@@ -235,9 +246,10 @@ namespace wazniak_forever.ViewModel
 
             CurrentQuestionNumber = 0;
             CurrentExercise = Exercises[0];
+            CurrentSolution = Solutions[0];
             UserChoices = Exercises[0].Solution.Choices;
         }
-        
+
         #endregion
 
         #region INotifyPropertyChanged Members
@@ -262,7 +274,7 @@ namespace wazniak_forever.ViewModel
         public void CheckForNetworkAvailability()
         {
             //NetworkInterface.GetIsNetworkAvailable()
-            _onlineMode = DeviceNetworkInformation.IsNetworkAvailable; 
+            _onlineMode = DeviceNetworkInformation.IsNetworkAvailable;
         }
 
         public void LoadMenu()

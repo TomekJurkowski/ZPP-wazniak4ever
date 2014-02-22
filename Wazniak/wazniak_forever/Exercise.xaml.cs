@@ -23,14 +23,13 @@ namespace wazniak_forever
             wrongAnswers = 0;
             DataContext = App.ViewModel;
             App.ViewModel.LoadExercises();
-            var currentExercise = App.ViewModel.CurrentExercise;
-            switch (currentExercise.Type)
+            switch (App.ViewModel.CurrentSolution.Answer.Type)
             {
-                case ExerciseType.Open:
+                case SolutionType.Open:
                     MultipleChoiceAnswerInput.Visibility = Visibility.Collapsed;
                     OpenAnswerInput.Visibility = Visibility.Visible;
                     break;
-                case ExerciseType.MultipleChoice:
+                case SolutionType.Multiple:
                     MultipleChoiceAnswerInput.Visibility = Visibility.Visible;
                     OpenAnswerInput.Visibility = Visibility.Collapsed;
                     break;
@@ -75,9 +74,10 @@ namespace wazniak_forever
             // Check the answer
             List<string> choiceList = MultipleChoiceAnswerInput.SelectedItems as List<string>;
             AnswerList<string> ans = new AnswerList<string>(choiceList);
+            SingleAnswer<string> textAns = new SingleAnswer<string>(OpenAnswerInput.Text);
 
-            ans.Text = OpenAnswerInput.Text;
-            bool[] feedback = App.ViewModel.CurrentExercise.Check(ans);
+
+            /*bool[] feedback = App.ViewModel.CurrentSolution.Check(ans);
 
             //DEBUG
             for (int i = 0; i < feedback.Length; i++)
@@ -144,7 +144,7 @@ namespace wazniak_forever
                 
             ExplanationPanel.Visibility = Visibility.Visible;
             ExplanationHeader.Text = headerBuilder.ToString();
-            Explanation.Text = builder.ToString();
+            Explanation.Text = builder.ToString();*/
 
             // Let's show a proper button
             if (App.ViewModel.CurrentQuestionNumber == App.ViewModel.Exercises.Count - 1)
@@ -169,16 +169,16 @@ namespace wazniak_forever
             // Extract next question
             App.ViewModel.CurrentQuestionNumber++;
             App.ViewModel.CurrentExercise = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber];
-            var currentExercise = App.ViewModel.CurrentExercise;
-            if (App.ViewModel.CurrentExercise.Type == ExerciseType.MultipleChoice)
-                App.ViewModel.UserChoices = ((MultipleChoiceExercise)App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber]).Choices;
-            switch (currentExercise.Type)
+            App.ViewModel.CurrentSolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber];
+            if (App.ViewModel.CurrentSolution.Answer.Type == SolutionType.Multiple)
+                App.ViewModel.UserChoices = (App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber]).Solution.Choices;
+            switch (App.ViewModel.CurrentSolution.Answer.Type)
             {
-                case ExerciseType.Open:
+                case SolutionType.Open:
                     MultipleChoiceAnswerInput.Visibility = Visibility.Collapsed;
                     OpenAnswerInput.Visibility = Visibility.Visible;
                     break;
-                case ExerciseType.MultipleChoice:
+                case SolutionType.Multiple:
                     MultipleChoiceAnswerInput.Visibility = Visibility.Visible;
                     MultipleChoiceAnswerInput.IsSelectionEnabled = true;
                     OpenAnswerInput.Visibility = Visibility.Collapsed;
