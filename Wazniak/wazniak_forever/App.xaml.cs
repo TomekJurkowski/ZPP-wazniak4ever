@@ -23,9 +23,9 @@ namespace wazniak_forever
         public static PhoneApplicationFrame RootFrame { get; private set; }
 
         public static MobileServiceClient MobileService = new MobileServiceClient(
-            "https://wazniak-forever.azure-mobile.net/",
-            "uaychyZiwJPIdMZaiMsYPhMfcQXDCN36"
-            );
+            "https://clarifier.azure-mobile.net/",
+            "QDgknqkjpjxNvyJlrQvBoFjHvhXDaa88"
+        );
 
         private static SampleViewModel viewModel;
         public static SampleViewModel ViewModel

@@ -36,7 +36,7 @@ namespace wazniak_forever
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
             var sampleItem = new SampleItem { Text = TodoInput.Text };
-            App.ViewModel.AddSampleItem(sampleItem); ;
+            //App.ViewModel.AddSampleItem(sampleItem); ;
         }
 
         /*private void CheckBoxComplete_Checked(object sender, RoutedEventArgs e)
@@ -49,12 +49,12 @@ namespace wazniak_forever
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            App.ViewModel.LoadCollectionsFromDatabase();
+            //App.ViewModel.LoadCollectionsFromDatabase();
         }
 
         private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
         {
-            App.ViewModel.LoadCollectionsFromDatabase();
+            //App.ViewModel.LoadCollectionsFromDatabase();
         }
     }
 }

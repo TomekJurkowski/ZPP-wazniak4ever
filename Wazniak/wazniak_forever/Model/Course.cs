@@ -1,13 +1,20 @@
-﻿using System.Collections;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace wazniak_forever.Model
 {
+    public class DatabaseContext
+    {
+        public IMobileServiceTable<Subject> Subjects = App.MobileService.GetTable<Subject>();
+    }
+
     public class Subject
     {
+        public int ID;
         public string Name { get; private set; }
-
+        public string Description { get; set; }
         public Subject(string Name)
         {
             this.Name = Name;

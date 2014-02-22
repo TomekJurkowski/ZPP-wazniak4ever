@@ -17,10 +17,9 @@ namespace WazniakWebsite.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            modelBuilder.Entity<SampleItem>().ToTable("SampleItem", "wazniak_forever");
-            modelBuilder.Entity<Subject>().ToTable("Subject", "wazniak_forever");
-            modelBuilder.Entity<Task>().ToTable("Task", "wazniak_forever");
-            modelBuilder.Entity<Answer>().ToTable("Answer", "wazniak_forever");
+            modelBuilder.Entity<Subject>().ToTable("Subject", "clarifier");
+            modelBuilder.Entity<Task>().ToTable("Task", "clarifier");
+            modelBuilder.Entity<Answer>().ToTable("Answer", "clarifier");
         }
 
         public DbSet<MathematicalTask> MathematicalTasks { get; set; }

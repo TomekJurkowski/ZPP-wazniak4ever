@@ -9,11 +9,11 @@ namespace wazniak_forever.ViewModel
 {
     public class SampleViewModel : INotifyPropertyChanged
     {
-        private SampleItemContext _sampleDB;
+        private DatabaseContext db;
 
         public SampleViewModel()
         {
-            _sampleDB = new SampleItemContext();
+            db = new DatabaseContext();
 
             CheckForNetworkAvailability();
         }
@@ -266,10 +266,10 @@ namespace wazniak_forever.ViewModel
         }
         #endregion
 
-        public async void LoadCollectionsFromDatabase()
+        /*public async void LoadCollectionsFromDatabase()
         {
             AllSampleItems = await _sampleDB.Items.ToCollectionAsync();
-        }
+        }*/
 
         public void CheckForNetworkAvailability()
         {
@@ -287,19 +287,9 @@ namespace wazniak_forever.ViewModel
             };
         }
 
-        public void LoadAllCourses()
+        public async void LoadAllCourses()
         {
-            AllCourses = new List<Subject>()
-            {
-                new Subject("Algorithms I"),
-                new Subject("Algorithms II"),
-                new Subject("Databases"),
-                new Subject("Operating Systems"),
-                new Subject("Linear Algebra I"),
-                new Subject("Linear Algebra II"),
-                new Subject("Linear Algebra III"),
-                new Subject("Numerical Analysis")
-            };
+            AllCourses = await db.Subjects.ToListAsync();
         }
 
         public void LoadDownloadedCourses()
@@ -320,7 +310,7 @@ namespace wazniak_forever.ViewModel
             };
         }
 
-        public async void AddSampleItem(SampleItem newSampleItem)
+        /*public async void AddSampleItem(SampleItem newSampleItem)
         {
             await _sampleDB.Items.InsertAsync(newSampleItem);
             AllSampleItems.Add(newSampleItem);
@@ -331,6 +321,6 @@ namespace wazniak_forever.ViewModel
         {
             await _sampleDB.Items.DeleteAsync(removedSampleitem);
             AllSampleItems.Remove(removedSampleitem);
-        }
+        }*/
     }
 }
