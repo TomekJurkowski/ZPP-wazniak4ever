@@ -33,9 +33,11 @@ namespace WazniakWebsite.Controllers
             return View(mathematicaltask);
         }
 
-        // GET: /MathematicalTask/Create
-        public ActionResult Create()
+        // GET: /MathematicalTask/Create//SubjectName/5
+        public ActionResult Create(string subjectName, int subjectId)
         {
+            ViewBag.SubjectName = subjectName;
+            ViewBag.SubjectId = subjectId;
             return View();
         }
 

@@ -7,6 +7,10 @@ namespace WazniakWebsite.Models
         [Key]
         public int ID { get; set; }
 
+        [Required]
+        [StringLength(50)]
+        public string Title { get; set; }
+
         public int SubjectID { get; set; }
         
         public int AnswerID { get; set; }

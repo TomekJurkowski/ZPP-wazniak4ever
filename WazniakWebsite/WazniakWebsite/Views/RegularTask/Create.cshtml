@@ -4,6 +4,15 @@
     ViewBag.Title = "Create";
 }
 
+@section HeadScripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $("#SubjectID").val("@ViewBag.SubjectId");
+        });
+    </script>
+}
+
 <h2 class="PurpleText">Create</h2>
 
 
@@ -12,9 +21,10 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4 class="PurpleText">Regular exercise</h4>
+        <h4 class="PurpleText">Create regular exercise and add it to the <b><i>@ViewBag.SubjectName</i></b> subject.</h4>
         <hr />
         @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.SubjectID)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })

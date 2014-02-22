@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Details";
 }
+
 @section HeadScripts
 {
     <style>
@@ -22,17 +23,16 @@
                 animated: 'fade',
                 placement: 'bottom'
             });
-            
-            $("#createExerciseBtn").click(function () {
-                if ($('input[name="optionsRadios"]:checked').val() == "option1") {
-                    window.location = '/RegularTask';
-                }
-                else {
-                    window.location = '/MathematicalTask';
-                }
-            });
-
         });
+        
+        function addNewTask(name, id) {
+            if ($('input[name="optionsRadios"]:checked').val() == "option1") {
+                window.location = '/RegularTask/Create/' + name + '/' + id;
+            }
+            else {
+                window.location = '/MathematicalTask/Create/' + name + '/' + id;
+            }
+        }
     </script>
 }
 
@@ -126,7 +126,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Dismiss</button>
-                    <button type="button" class="btn PurpleBtn" id="createExerciseBtn">Create exercise</button>
+                    <button type="button" class="btn PurpleBtn" id="createExerciseBtn" onclick="addNewTask('@Model.Name', '@Model.ID')">Create exercise</button>
                 </div>
             </div>
         </div>

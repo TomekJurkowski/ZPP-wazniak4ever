@@ -2,9 +2,9 @@ namespace WazniakWebsite.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations;
-    using WazniakWebsite.Models;
+    using Models;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<WazniakWebsite.DAL.SchoolContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<DAL.SchoolContext>
     {
         public Configuration()
         {

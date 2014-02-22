@@ -1,5 +1,6 @@
 namespace WazniakWebsite.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
     public partial class InitialCreate : DbMigration
@@ -10,7 +11,7 @@ namespace WazniakWebsite.Migrations
                 "wazniak_forever.Answer",
                 c => new
                     {
-                        ID = c.Int(nullable: false, identity: true),
+                        TaskID = c.Int(nullable: false),
                         A = c.String(),
                         B = c.String(),
                         C = c.String(),
@@ -20,18 +21,33 @@ namespace WazniakWebsite.Migrations
                         Text = c.String(),
                         Discriminator = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => t.ID);
+                .PrimaryKey(t => t.TaskID)
+                .ForeignKey("wazniak_forever.Task", t => t.TaskID)
+                .Index(t => t.TaskID);
             
             CreateTable(
                 "wazniak_forever.Task",
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(maxLength: 50),
+                        Title = c.String(nullable: false, maxLength: 50),
+                        SubjectID = c.Int(nullable: false),
+                        AnswerID = c.Int(nullable: false),
                         Text = c.String(),
-                        Title1 = c.String(maxLength: 50),
                         Text1 = c.String(),
                         Discriminator = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("wazniak_forever.Subject", t => t.SubjectID, cascadeDelete: true)
+                .Index(t => t.SubjectID);
+            
+            CreateTable(
+                "wazniak_forever.Subject",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false, maxLength: 50),
+                        Description = c.String(),
                     })
                 .PrimaryKey(t => t.ID);
             
@@ -45,22 +61,16 @@ namespace WazniakWebsite.Migrations
                     })
                 .PrimaryKey(t => t.ID);
             
-            CreateTable(
-                "wazniak_forever.Subject",
-                c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false, maxLength: 50),
-                        Description = c.String(),
-                    })
-                .PrimaryKey(t => t.ID);
-            
         }
         
         public override void Down()
         {
-            DropTable("wazniak_forever.Subject");
+            DropForeignKey("wazniak_forever.Task", "SubjectID", "wazniak_forever.Subject");
+            DropForeignKey("wazniak_forever.Answer", "TaskID", "wazniak_forever.Task");
+            DropIndex("wazniak_forever.Task", new[] { "SubjectID" });
+            DropIndex("wazniak_forever.Answer", new[] { "TaskID" });
             DropTable("wazniak_forever.SampleItem");
+            DropTable("wazniak_forever.Subject");
             DropTable("wazniak_forever.Task");
             DropTable("wazniak_forever.Answer");
         }

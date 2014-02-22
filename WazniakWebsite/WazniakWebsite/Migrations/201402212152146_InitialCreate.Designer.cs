@@ -7,13 +7,13 @@ namespace WazniakWebsite.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.1-21010")]
-    public sealed partial class ModelRelationsAdded : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ModelRelationsAdded));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201402181624447_ModelRelationsAdded"; }
+            get { return "201402212152146_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

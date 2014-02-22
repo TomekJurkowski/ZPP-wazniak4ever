@@ -26,17 +26,23 @@
             width: 100% !important;
         }
     </style>
+    
+    <script type="text/javascript">
+        $(function() {
+            $("#SubjectID").val("@ViewBag.SubjectId");
+        });
+    </script>
 
     <script type="text/javascript">
-        $(function () {
+        $(function() {
             var h = $("#Text").height();
-            $("#MathPreview").css("min-height", function () {
+            $("#MathPreview").css("min-height", function() {
                 return h;
             });
-            $("#MathBuffer").css("min-height", function () {
+            $("#MathBuffer").css("min-height", function() {
                 return h;
             });
-        })
+        });
     </script>
 
     <script type="text/x-mathjax-config">
@@ -141,9 +147,10 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4 class="PurpleText">Exercise consisting of mathematical expressions</h4>
+        <h4 class="PurpleText">Create exercise containing mathematical expressions and add it to the <b><i>@ViewBag.SubjectName</i></b> subject.</h4>
         <hr />
         @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.SubjectID)
         
         <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
