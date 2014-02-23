@@ -52,6 +52,18 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        private List<Option> _courseOptions;
+
+        public List<Option> CourseOptions
+        {
+            get { return _courseOptions; }
+            set
+            {
+                _courseOptions = value;
+                NotifyPropertyChanged("CourseOptions");
+            }
+        }
+
         private List<Subject> _allCourses;
 
         public List<Subject> AllCourses
@@ -284,6 +296,15 @@ namespace wazniak_forever.ViewModel
                 new Option(OptionType.MyCourses, true, "Courses", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Downloads, false, "Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Settings, false, "Settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
+            };
+        }
+
+        public void LoadCoursePage()
+        {
+            CourseOptions = new List<Option>()
+            {
+                new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
         }
 
