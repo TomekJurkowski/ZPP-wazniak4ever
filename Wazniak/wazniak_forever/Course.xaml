@@ -73,7 +73,7 @@
                                     />
 
                             <TextBlock Text="{Binding Name}" 
-                                        FontSize="48"
+                                        FontSize="42"
                                         VerticalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>

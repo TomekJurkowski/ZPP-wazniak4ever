@@ -304,6 +304,7 @@ namespace wazniak_forever.ViewModel
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.AddToMyCourses, false, "Add to my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
         }

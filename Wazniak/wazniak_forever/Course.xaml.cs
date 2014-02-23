@@ -42,18 +42,12 @@ namespace wazniak_forever
                         var navTo = string.Format("/Exercise.xaml?courseName={0}", CourseName.Text);
                         (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
                         break;
+                    case OptionType.AddToMyCourses:
+                        break;
                     case OptionType.Download:
                         break;
                 }
             }
         }
-
-        /*
-        private void StartCourse_Click(object sender, RoutedEventArgs e)
-        {
-            var navTo = string.Format("/Exercise.xaml?courseName={0}", CourseName.Text);
-            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
-        }
-         */
     }
 }
