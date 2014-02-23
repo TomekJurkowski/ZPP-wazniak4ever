@@ -10,6 +10,13 @@ namespace WazniakWebsite.Controllers
 {
     public class RegularTaskController : Controller
     {
+        // CONSTANTS representing what kind of Answer is the Task in relationship with
+        private const string NO_ANSWER = "no_ans";
+        private const string SINGLE_VALUE_ANSWER = "single_val_ans";
+        private const string TEXT_ANSWER = "text_ans";
+        private const string SINGLE_CHOICE_ANSWER = "single_cho_ans";
+        private const string MULTIPLE_CHOICE_ANSWER = "multi_cho_ans";
+
         private SchoolContext db = new SchoolContext();
 
         // GET: /RegularTask/
@@ -39,6 +46,12 @@ namespace WazniakWebsite.Controllers
             ViewBag.SubjectName = subjectName;
             ViewBag.SubjectId = subjectId;
 
+            ViewBag.NoAnswer = NO_ANSWER;
+            ViewBag.SingleValueAnswer = SINGLE_VALUE_ANSWER;
+            ViewBag.TextAnswer = TEXT_ANSWER;
+            ViewBag.SingleChoiceAnswer = SINGLE_CHOICE_ANSWER;
+            ViewBag.MultipleChoiceAnswer = MULTIPLE_CHOICE_ANSWER;
+
             return View();
         }
 
@@ -47,13 +60,33 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,Title,Text")] RegularTask regulartask)
+        public ActionResult Create([Bind(Include="ID,Title,Text")] RegularTask regulartask, string answerType)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     db.RegularTasks.Add(regulartask);
+                    switch (answerType)
+                    {
+                        case SINGLE_VALUE_ANSWER:
+
+                            break;
+                        case TEXT_ANSWER:
+
+                            break;
+                        case SINGLE_CHOICE_ANSWER:
+
+                            break;
+                        case MULTIPLE_CHOICE_ANSWER:
+
+                            break;
+                        default:
+                            //TODO: error
+
+                            break;
+                    }
+
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }

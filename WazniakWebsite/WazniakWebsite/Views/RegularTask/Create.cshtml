@@ -1,4 +1,4 @@
-﻿@using System.Web.UI.HtmlControls
+﻿@using System.Web.UI.WebControls
 @model WazniakWebsite.Models.RegularTask
 
 @{
@@ -8,20 +8,48 @@
 @section HeadScripts
 {
     <script type="text/javascript">
-        $(function() {
-            $("#SubjectID").val("@ViewBag.SubjectId");
+    $(function () {
+        $("#SubjectID").val("@ViewBag.SubjectId");
 
-            $('.nav-pills a').on('click', function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
+        $("#answerTypeInput").hide();
+
+        $('.nav-pills a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
             
-            $("#tooltip1,#tooltip2,#tooltip3,#tooltip4").tooltip({
-                animated: 'fade',
-                placement: 'bottom'
-            });
+            switch ($(this).attr('id')) {
+                case "tooltip1":
+                    $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                    break;
+                case "tooltip2":
+                    $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                    break;
+                case "tooltip3":
+                    $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                    break;
+                case "tooltip4":
+                    $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                    break;
+            }
+
+
+            goToByScroll();
         });
-    </script>
+
+        $("#tooltip1,#tooltip2,#tooltip3,#tooltip4").tooltip({
+            animated: 'fade',
+            placement: 'bottom'
+        });
+    });
+
+    function goToByScroll() {
+        // Scroll
+        $("html,body").animate(
+            { scrollTop: $("#pill_content").offset().top },
+            'slow');
+    }
+
+</script>
     
     <style>
         textarea {
@@ -62,6 +90,37 @@
             </div>
         </div>
 
+        <br />
+        <h4 class="PurpleText">What kind of Answer do you want for this Exercise?</h4>
+        <br />
+
+        <ul class="nav nav-pills">
+            <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
+            <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
+            <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+            <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
+        </ul>
+
+        <br />
+
+        <div class="pill-content" id="pill_content">
+            
+            <input id="answerTypeInput" type="text" name="selectedCourses" value="@ViewBag.NoAnswer" />
+
+            <div class="pill-pane fade" id="SingleValueAnswer_pill">
+                <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
+            </div>
+            <div class="pill-pane fade" id="TextAnswer_pill">
+                <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+            </div>
+            <div class="pill-pane fade" id="AbcdAnswer_pill">
+                <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
+            </div>
+            <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
+                <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn PurpleBtn" />
@@ -69,28 +128,6 @@
         </div>
     </div>
 }
-
-<ul class="nav nav-pills">
-    <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
-    <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
-    <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
-    <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
-</ul>
-<br />
-<div class="pill-content">
-    <div class="pill-pane fade" id="SingleValueAnswer_pill">
-        <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
-    </div>
-    <div class="pill-pane fade" id="TextAnswer_pill">
-        <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
-    </div>
-    <div class="pill-pane fade" id="AbcdAnswer_pill">
-        <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
-    </div>
-    <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
-        <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
-    </div>
-</div>
 
 <hr />
 <div>
