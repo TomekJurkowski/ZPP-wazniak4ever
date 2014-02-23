@@ -97,6 +97,9 @@
     </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Course.xaml.cs">
+      <DependentUpon>Course.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CourseSelection.xaml.cs">
       <DependentUpon>CourseSelection.xaml</DependentUpon>
     </Compile>
@@ -135,6 +138,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Course.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CourseSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
