@@ -114,3 +114,7 @@ a:focus {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#660066', endColorstr='#9900cc', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 }
+
+.well {
+    background-color: #FFCCFF;
+}

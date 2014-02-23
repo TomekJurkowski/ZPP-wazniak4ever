@@ -1,5 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -16,6 +18,11 @@ namespace WazniakWebsite.Controllers
         private const string TEXT_ANSWER = "text_ans";
         private const string SINGLE_CHOICE_ANSWER = "single_cho_ans";
         private const string MULTIPLE_CHOICE_ANSWER = "multi_cho_ans";
+
+        // CONSTANTS representing a statement that should be printed to the user if he has not filled the form properly
+        private const string NO_ANSWER_PICKED_STATEMENT = "You must create an answer for your exercise!";
+        private const string SINGLE_VALUE_STATEMENT = "You must provide a value for the Single Value Answer.";
+        private const string TEXT_STATEMENT = "You must provide some text for the Text Answer.";
 
         private SchoolContext db = new SchoolContext();
 
@@ -40,8 +47,7 @@ namespace WazniakWebsite.Controllers
             return View(regulartask);
         }
 
-        // GET: /RegularTask/Create/SubjectName/5
-        public ActionResult Create(string subjectName, int subjectId)
+        private void FillTheViewBag(string subjectName, int subjectId, string previousAns = NO_ANSWER)
         {
             ViewBag.SubjectName = subjectName;
             ViewBag.SubjectId = subjectId;
@@ -52,6 +58,14 @@ namespace WazniakWebsite.Controllers
             ViewBag.SingleChoiceAnswer = SINGLE_CHOICE_ANSWER;
             ViewBag.MultipleChoiceAnswer = MULTIPLE_CHOICE_ANSWER;
 
+            ViewBag.PreviouslySelectedAnswer = previousAns;
+        }
+
+        // GET: /RegularTask/Create/SubjectName/5
+        public ActionResult Create(string subjectName, int subjectId)
+        {
+            FillTheViewBag(subjectName, subjectId);
+
             return View();
         }
 
@@ -60,7 +74,8 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,Title,Text")] RegularTask regulartask, string answerType)
+        public ActionResult Create([Bind(Include = "ID,Title,Text")] RegularTask regulartask, string subjectName, int subjectId,
+            string answerType, string value, string text)
         {
             try
             {
@@ -70,9 +85,29 @@ namespace WazniakWebsite.Controllers
                     switch (answerType)
                     {
                         case SINGLE_VALUE_ANSWER:
+                            if (String.IsNullOrEmpty(value))
+                            {
+                                // Reload page with proper statement
+                                ViewBag.SingleValueStatement = SINGLE_VALUE_STATEMENT;
+                                FillTheViewBag(subjectName, subjectId, SINGLE_VALUE_ANSWER);
+
+                                return View(regulartask);
+                            }
+
+                            // Create new SingleValueAnswer
 
                             break;
                         case TEXT_ANSWER:
+                            if (String.IsNullOrEmpty(text))
+                            {
+                                // Reload page with proper statement
+                                ViewBag.TextStatement = TEXT_STATEMENT;
+                                FillTheViewBag(subjectName, subjectId, TEXT_ANSWER);
+
+                                return View(regulartask);
+                            }
+
+                            // Create new TextAnswer
 
                             break;
                         case SINGLE_CHOICE_ANSWER:
@@ -82,9 +117,11 @@ namespace WazniakWebsite.Controllers
 
                             break;
                         default:
-                            //TODO: error
+                            // No answer has been selected - let's remind the user that he has to pick one
+                            ViewBag.NoAnswerPickedStatement = NO_ANSWER_PICKED_STATEMENT;
+                            FillTheViewBag(subjectName, subjectId);
 
-                            break;
+                            return View(regulartask);
                     }
 
                     db.SaveChanges();
@@ -98,6 +135,8 @@ namespace WazniakWebsite.Controllers
                     "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
+
+            FillTheViewBag(subjectName, subjectId);
             return View(regulartask);
         }
 
