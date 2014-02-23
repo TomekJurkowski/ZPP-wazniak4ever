@@ -77,7 +77,7 @@ namespace wazniak_forever.Model
     public abstract class Solution
     {
         public int ExerciseID { get; set; }
-        public List<string> Choices { get; set; } // UGLY
+        public List<string> Choices { get; set; }
         public AnswerType Answer { get; set; }
         public Exercise Exercise { get; set; }
     }

@@ -95,6 +95,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SolutionMultipleChoice.xaml.cs">
+      <DependentUpon>SolutionMultipleChoice.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SolutionSingleChoice.xaml.cs">
+      <DependentUpon>SolutionSingleChoice.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SolutionSingleValue.xaml.cs">
+      <DependentUpon>SolutionSingleValue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SolutionText.xaml.cs">
+      <DependentUpon>SolutionText.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Course.xaml.cs">
@@ -138,6 +150,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Controls\SolutionMultipleChoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SolutionSingleChoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SolutionSingleValue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SolutionText.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Course.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
