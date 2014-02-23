@@ -20,6 +20,6 @@ namespace wazniak_forever.Model
 
     public class SampleItemContext 
     {
-        public IMobileServiceTable<SampleItem> Items = App.MobileService.GetTable<SampleItem>();
+        //public IMobileServiceTable<SampleItem> Items = App.MobileService.GetTable<SampleItem>();
     }
 }

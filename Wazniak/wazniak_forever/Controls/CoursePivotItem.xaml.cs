@@ -23,8 +23,9 @@ namespace wazniak_forever.Controls
             BindingOperations.SetBinding(AllCoursesList, LongListSelector.ItemsSourceProperty, myBinding);
         }
 
-        private string MY_COURSES_NAME = "MyCourses";
-        private string ALL_COURSES_NAME = "AllCourses";
+        private const string MY_COURSES_NAME = "MyCourses";
+        private const string ALL_COURSES_NAME = "AllCourses";
+        private const string NEW_COURSES_NAME = "New";
 
         private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -42,8 +43,19 @@ namespace wazniak_forever.Controls
         {
             System.Diagnostics.Debug.WriteLine(CourseSearch.Text);
             List<Subject> SearchList = App.ViewModel.DownloadedCourses;
-            if (this.Name == MY_COURSES_NAME) SearchList = App.ViewModel.MyCourses;
-            else if (this.Name == ALL_COURSES_NAME) SearchList = App.ViewModel.AllCourses;
+            System.Diagnostics.Debug.WriteLine(this.Name);
+            switch (this.Name)
+            {
+                case MY_COURSES_NAME:
+                    SearchList = App.ViewModel.MyCourses;
+                    break;
+                case ALL_COURSES_NAME:
+                    SearchList = App.ViewModel.AllCourses;
+                    break;
+                case NEW_COURSES_NAME:
+                    SearchList = App.ViewModel.NewCourses;
+                    break;
+            }
             AllCoursesList.ItemsSource = SearchList.
                 Where(course => course.Name.IndexOf(CourseSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0)
                 .ToList();

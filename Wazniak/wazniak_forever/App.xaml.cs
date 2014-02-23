@@ -22,10 +22,7 @@ namespace wazniak_forever
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
 
-        public static MobileServiceClient MobileService = new MobileServiceClient(
-            "https://clarifier.azure-mobile.net/",
-            "QDgknqkjpjxNvyJlrQvBoFjHvhXDaa88"
-        );
+        
 
         private static SampleViewModel viewModel;
         public static SampleViewModel ViewModel

@@ -100,6 +100,18 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        private List<Subject> _newCourses;
+
+        public List<Subject> NewCourses
+        {
+            get { return _newCourses; }
+            set
+            {
+                _newCourses = value;
+                NotifyPropertyChanged("NewCourses");
+            }
+        }
+
         private bool _areDownloads;
 
         public bool AreDownloads
@@ -332,6 +344,11 @@ namespace wazniak_forever.ViewModel
             };
         }
 
+        public void LoadNewCourses()
+        {
+            NewCourses = new List<Subject>();
+        }
+
         /*public async void AddSampleItem(SampleItem newSampleItem)
         {
             await _sampleDB.Items.InsertAsync(newSampleItem);
@@ -344,5 +361,7 @@ namespace wazniak_forever.ViewModel
             await _sampleDB.Items.DeleteAsync(removedSampleitem);
             AllSampleItems.Remove(removedSampleitem);
         }*/
+
+        
     }
 }

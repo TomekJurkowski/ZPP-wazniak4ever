@@ -2,12 +2,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace wazniak_forever.Model
 {
     public class DatabaseContext
     {
-        public IMobileServiceTable<Subject> Subjects = App.MobileService.GetTable<Subject>();
+        public static MobileServiceClient MobileService = new MobileServiceClient(
+            "https://clarifier.azure-mobile.net/",
+            "QDgknqkjpjxNvyJlrQvBoFjHvhXDaa88"
+        );
+
+        public IMobileServiceTable<Subject> Subjects = MobileService.GetTable<Subject>();
+
+        /**public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
+            Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
+            "offlineMode.db"), true);
+
+        public async void Initialize()
+        {
+            await Connect.CreateTableAsync<Subject>();
+        }
+
+        public async Task<IEnumerable<Subject>> LoadSubjectsOffline()
+        {
+            return await Connect.Table<Subject>().ToListAsync();
+        }
+
+        public async void SaveSubjectLocally(Subject newSubject)
+        {
+            await Connect.InsertAsync(newSubject);
+        }
+
+        public async void SyncLocalDatabase()
+        {
+            var localSubjects = Connect.Table<Subject>();
+            var orderedSubjects = await from lSubject in localSubjects
+                               orderby lSubject.LastUpdated descending
+                               select lSubject;
+            var earliest = await orderedSubjects.FirstOrDefaultAsync();
+            var updated =
+               earliest != null ? earliest.LastUpdated : DateTime.MinValue;
+
+            var updatedSubjects =
+              await (from subject in MobileService.GetTable<Subject>()
+                     where subject.LastUpdated > updated
+                     select subject).ToListAsync();
+            foreach (var s in updatedSubjects)
+            {
+                if (localSubjects.Any(x => x.ID == s.ID)) await Connect.UpdateAsync(s);
+            }
+        }*/
+
     }
 
     public class Subject
