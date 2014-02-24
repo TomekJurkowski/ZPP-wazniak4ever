@@ -20,14 +20,7 @@ namespace wazniak_forever.Controls
             DataContext = App.ViewModel;
         }
 
-        public void AddContent(Control AnswerControl)
-        {
-            Grid.SetRow(AnswerControl, 3);
-            AnswerControl.Visibility = Visibility.Visible;
-            LayoutRoot.Children.Add(AnswerControl);
-        }
-
-        public void MakeVisible()
+        public void NextExerciseVisible()
         {
             SubmitAnswer.Visibility = Visibility.Visible;
             NextQuestion.Visibility = Visibility.Collapsed;
@@ -36,6 +29,7 @@ namespace wazniak_forever.Controls
 
         public void SubmitAnswerClick(StringBuilder headerBuilder, StringBuilder builder)
         {
+            SubmitAnswer.Visibility = Visibility.Collapsed;
             ExplanationPanel.Visibility = Visibility.Visible;
             ExplanationHeader.Text = headerBuilder.ToString();
             Explanation.Text = builder.ToString();
@@ -53,9 +47,13 @@ namespace wazniak_forever.Controls
 
         private void NextQuestion_Click(object sender, RoutedEventArgs e)
         {
+            NextExerciseVisible();
             // Extract next question
             App.ViewModel.CurrentQuestionNumber++;
-            if (App.ViewModel.CurrentSolution.Answer.Type == SolutionType.Multiple)
+            App.ViewModel.CurrentExercise = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber];
+            App.ViewModel.CurrentSolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber];
+            SolutionType NextType = App.ViewModel.CurrentSolution.Answer.Type;
+            if (NextType == SolutionType.Multiple || NextType == SolutionType.Single)
                 App.ViewModel.UserChoices = (App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber]).Solution.Choices;
             string navTo;
             switch (App.ViewModel.CurrentSolution.Answer.Type)
@@ -86,12 +84,6 @@ namespace wazniak_forever.Controls
 
             StatisticContent.Text = builder.ToString();
             StatisticContent.Visibility = Visibility.Visible;
-        }
-
-        private void Return_Click(object sender, RoutedEventArgs e)
-        {
-            /*MultipleChoiceAnswerInput.SelectedItems.Clear();
-            NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));*/
         }
 
     }

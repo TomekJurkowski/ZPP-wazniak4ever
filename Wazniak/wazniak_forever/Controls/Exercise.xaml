@@ -7,13 +7,14 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    d:DesignHeight="480" d:DesignWidth="480">
+    d:DesignHeight="750" d:DesignWidth="480">
 
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="160"/>
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="220"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -56,7 +57,7 @@
                        Visibility="Collapsed"/>
 
         <StackPanel x:Name="ExplanationPanel"
-                        Grid.Row="3"
+                        Grid.Row="4"
                         Margin="15,10,15,10"
                         Visibility="Collapsed">
             <TextBlock x:Name="ExplanationHeader"
@@ -73,8 +74,8 @@
                            Foreground="{StaticResource MenuItemColor}"/>
         </StackPanel>
 
-        <StackPanel 
-                Grid.Row="4"
+        <Grid
+                Grid.Row="5"
                 VerticalAlignment="Bottom" 
                 HorizontalAlignment="Stretch">
             <Button 
@@ -104,9 +105,8 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Center"
-                    Click="Return_Click"
                     Visibility="Collapsed">Back</Button>
-        </StackPanel>
+        </Grid>
         
     </Grid>
 </UserControl>

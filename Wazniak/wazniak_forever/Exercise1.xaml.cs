@@ -59,7 +59,6 @@ namespace wazniak_forever
                 webString = streamReader.ReadToEnd();
             }
             webString = webString.Insert(webString.IndexOf("<body>") + "<body>".Length, newString);
-            System.Diagnostics.Debug.WriteLine(webString);
             WebBrowser.NavigateToString(webString);
         }
 
@@ -105,11 +104,7 @@ namespace wazniak_forever
                 bool temp = true;
                 
                 
-            }
-                
-            ExplanationPanel.Visibility = Visibility.Visible;
-            ExplanationHeader.Text = headerBuilder.ToString();
-            Explanation.Text = builder.ToString();*/
+            }*/
 
             // Let's show a proper button
             if (App.ViewModel.CurrentQuestionNumber == App.ViewModel.Exercises.Count - 1)

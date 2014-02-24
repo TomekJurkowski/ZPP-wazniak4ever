@@ -170,11 +170,11 @@ namespace wazniak_forever.Model
 
     public class MultipleChoiceSolution : Solution
     {
-        public MultipleChoiceSolution(int _id, List<string> _choices, List<string> _answers, Exercise _ex)
+        public MultipleChoiceSolution(int _id, List<string> _choices, List<bool> _answers, Exercise _ex)
         {
             ExerciseID = _id;
             Choices = _choices;
-            Answer = new AnswerList<string>(_answers);
+            Answer = new AnswerList<bool>(_answers);
             Answer.Type = SolutionType.Multiple;
             Exercise = _ex;
         }

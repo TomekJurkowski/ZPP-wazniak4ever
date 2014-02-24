@@ -235,9 +235,8 @@ namespace wazniak_forever.ViewModel
                         "second choice",
                         "third choice"
                     },
-                    new List<string>() {
-                        "second choice",
-                        "third choice"
+                    new List<bool>() {
+                        false, true, false
                     },
                     Exercises[0]
                 ),
@@ -263,9 +262,8 @@ namespace wazniak_forever.ViewModel
                         "another second choice",
                         "another third choice"
                     },
-                    new List<string>() {
-                        "another first choice",
-                        "another third choice"
+                    new List<bool>() {
+                        true, false, true
                     },
                     Exercises[4]
                 ),
