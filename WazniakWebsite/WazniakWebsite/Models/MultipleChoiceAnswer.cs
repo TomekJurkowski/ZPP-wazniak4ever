@@ -10,7 +10,7 @@ namespace WazniakWebsite.Models
         public List<string> ChoiceList { get; set; }
 
         [Required]
-        public List<string> AnswerList { get; set; }
+        public List<bool> AnswerList { get; set; }
 
         public override string Overview()
         {

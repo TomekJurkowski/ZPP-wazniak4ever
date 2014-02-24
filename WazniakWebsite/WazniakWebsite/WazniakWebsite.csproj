@@ -171,6 +171,10 @@
     <Compile Include="Migrations\201402242021097_TaskModelWithNewMethod.Designer.cs">
       <DependentUpon>201402242021097_TaskModelWithNewMethod.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201402242121100_MultipleChoiceAnswerStringToBool.cs" />
+    <Compile Include="Migrations\201402242121100_MultipleChoiceAnswerStringToBool.Designer.cs">
+      <DependentUpon>201402242121100_MultipleChoiceAnswerStringToBool.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbcdAnswer.cs" />
     <Compile Include="Models\MathematicalTask.cs" />
@@ -258,6 +262,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201402242021097_TaskModelWithNewMethod.resx">
       <DependentUpon>201402242021097_TaskModelWithNewMethod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201402242121100_MultipleChoiceAnswerStringToBool.resx">
+      <DependentUpon>201402242121100_MultipleChoiceAnswerStringToBool.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
