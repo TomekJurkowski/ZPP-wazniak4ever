@@ -21,5 +21,10 @@ namespace WazniakWebsite.Models
         [Required(ErrorMessage = "You have to specify the correct answer")]
         [Range(0, 3, ErrorMessage = "The field 'Correct Answer' must be between 0 and 3, where 0 stands for A and 3 stands for D")]
         public int CorrectAnswer { get; set; }
+
+        public override string Overview()
+        {
+            return "SingleChoiceAnswer with the " + CorrectAnswer + " option correct.";
+        }
     }
 }

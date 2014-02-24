@@ -82,7 +82,6 @@ namespace WazniakWebsite.Controllers
                 if (ModelState.IsValid)
                 {
                     regulartask.SubjectID = subjectId;
-                    db.RegularTasks.Add(regulartask);
                     switch (answerType)
                     {
                         case SINGLE_VALUE_ANSWER:
@@ -96,7 +95,10 @@ namespace WazniakWebsite.Controllers
                             }
 
                             // Create new SingleValueAnswer
+                            var singleValueAnswer = new SingleValueAnswer(regulartask.ID, value);
+                            db.SingleValueAnswers.Add(singleValueAnswer);
 
+                            db.RegularTasks.Add(regulartask);
                             break;
                         case TEXT_ANSWER:
                             if (String.IsNullOrEmpty(text))
@@ -109,13 +111,23 @@ namespace WazniakWebsite.Controllers
                             }
 
                             // Create new TextAnswer
+                            var textAnswer = new TextAnswer(regulartask.ID, text);
+                            db.TextAnswers.Add(textAnswer);
 
+
+                            db.RegularTasks.Add(regulartask);
                             break;
                         case SINGLE_CHOICE_ANSWER:
 
+
+
+                            db.RegularTasks.Add(regulartask);
                             break;
                         case MULTIPLE_CHOICE_ANSWER:
 
+
+
+                            db.RegularTasks.Add(regulartask);
                             break;
                         default:
                             // No answer has been selected - let's remind the user that he has to pick one
