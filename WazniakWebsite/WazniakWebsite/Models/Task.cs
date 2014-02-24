@@ -17,5 +17,10 @@ namespace WazniakWebsite.Models
         
         public virtual Answer Answer { get; set; }
 
+        public virtual string className()
+        {
+            return "Task";
+        }
+
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
@@ -27,10 +25,10 @@ namespace WazniakWebsite.Controllers
         private SchoolContext db = new SchoolContext();
 
         // GET: /RegularTask/
-        public ActionResult Index()
-        {
-            return View(db.RegularTasks.ToList());
-        }
+        //public ActionResult Index()
+        //{
+        //    return View(db.RegularTasks.ToList());
+        //}
 
         // GET: /RegularTask/Details/5
         public ActionResult Details(int? id)
@@ -39,7 +37,9 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            RegularTask regulartask = db.RegularTasks.Find(id);
+
+            var regulartask = db.RegularTasks.Find(id);
+        
             if (regulartask == null)
             {
                 return HttpNotFound();
@@ -74,14 +74,13 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,Text")] RegularTask regulartask, string subjectName, int subjectId,
+        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] RegularTask regulartask, string subjectName, int subjectId,
             string answerType, string value, string text)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    regulartask.SubjectID = subjectId;
                     switch (answerType)
                     {
                         case SINGLE_VALUE_ANSWER:
@@ -147,7 +146,6 @@ namespace WazniakWebsite.Controllers
                 ModelState.AddModelError("",
                     "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-
 
             FillTheViewBag(subjectName, subjectId);
             return View(regulartask);

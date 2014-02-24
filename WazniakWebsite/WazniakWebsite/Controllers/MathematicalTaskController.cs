@@ -1,6 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
@@ -10,13 +10,25 @@ namespace WazniakWebsite.Controllers
 {
     public class MathematicalTaskController : Controller
     {
+        // CONSTANTS representing what kind of Answer is the Task in relationship with
+        private const string NO_ANSWER = "no_ans";
+        private const string SINGLE_VALUE_ANSWER = "single_val_ans";
+        private const string TEXT_ANSWER = "text_ans";
+        private const string SINGLE_CHOICE_ANSWER = "single_cho_ans";
+        private const string MULTIPLE_CHOICE_ANSWER = "multi_cho_ans";
+
+        // CONSTANTS representing a statement that should be printed to the user if he has not filled the form properly
+        private const string NO_ANSWER_PICKED_STATEMENT = "You must create an answer for your exercise!";
+        private const string SINGLE_VALUE_STATEMENT = "You must provide a value for the Single Value Answer.";
+        private const string TEXT_STATEMENT = "You must provide some text for the Text Answer.";
+
         private SchoolContext db = new SchoolContext();
 
         // GET: /MathematicalTask/
-        public ActionResult Index()
-        {
-            return View(db.MathematicalTasks.ToList());
-        }
+        //public ActionResult Index()
+        //{
+        //    return View(db.MathematicalTasks.ToList());
+        //}
 
         // GET: /MathematicalTask/Details/5
         public ActionResult Details(int? id)
@@ -25,7 +37,9 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
+
+            var mathematicaltask = db.MathematicalTasks.Find(id);
+            
             if (mathematicaltask == null)
             {
                 return HttpNotFound();
@@ -33,11 +47,25 @@ namespace WazniakWebsite.Controllers
             return View(mathematicaltask);
         }
 
-        // GET: /MathematicalTask/Create//SubjectName/5
-        public ActionResult Create(string subjectName, int subjectId)
+        private void FillTheViewBag(string subjectName, int subjectId, string previousAns = NO_ANSWER)
         {
             ViewBag.SubjectName = subjectName;
             ViewBag.SubjectId = subjectId;
+
+            ViewBag.NoAnswer = NO_ANSWER;
+            ViewBag.SingleValueAnswer = SINGLE_VALUE_ANSWER;
+            ViewBag.TextAnswer = TEXT_ANSWER;
+            ViewBag.SingleChoiceAnswer = SINGLE_CHOICE_ANSWER;
+            ViewBag.MultipleChoiceAnswer = MULTIPLE_CHOICE_ANSWER;
+
+            ViewBag.PreviouslySelectedAnswer = previousAns;
+        }
+
+        // GET: /MathematicalTask/Create//SubjectName/5
+        public ActionResult Create(string subjectName, int subjectId)
+        {
+            FillTheViewBag(subjectName, subjectId);
+
             return View();
         }
 
@@ -46,15 +74,70 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,Title,Text")] MathematicalTask mathematicaltask)
+        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask, string subjectName, int subjectId,
+            string answerType, string value, string text)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    switch (answerType)
+                    {
+                        case SINGLE_VALUE_ANSWER:
+                            if (String.IsNullOrEmpty(value))
+                            {
+                                // Reload page with proper statement
+                                ViewBag.SingleValueStatement = SINGLE_VALUE_STATEMENT;
+                                FillTheViewBag(subjectName, subjectId, SINGLE_VALUE_ANSWER);
+
+                                return View(mathematicaltask);
+                            }
+
+                            // Create new SingleValueAnswer
+                            var singleValueAnswer = new SingleValueAnswer(mathematicaltask.ID, value);
+                            db.SingleValueAnswers.Add(singleValueAnswer);
+
+                            db.MathematicalTasks.Add(mathematicaltask);
+                            break;
+                        case TEXT_ANSWER:
+                            if (String.IsNullOrEmpty(text))
+                            {
+                                // Reload page with proper statement
+                                ViewBag.TextStatement = TEXT_STATEMENT;
+                                FillTheViewBag(subjectName, subjectId, TEXT_ANSWER);
+
+                                return View(mathematicaltask);
+                            }
+
+                            // Create new TextAnswer
+                            var textAnswer = new TextAnswer(mathematicaltask.ID, text);
+                            db.TextAnswers.Add(textAnswer);
+
+
+                            db.MathematicalTasks.Add(mathematicaltask);
+                            break;
+                        case SINGLE_CHOICE_ANSWER:
+
+
+
+                            db.MathematicalTasks.Add(mathematicaltask);
+                            break;
+                        case MULTIPLE_CHOICE_ANSWER:
+
+
+
+                            db.MathematicalTasks.Add(mathematicaltask);
+                            break;
+                        default:
+                            // No answer has been selected - let's remind the user that he has to pick one
+                            ViewBag.NoAnswerPickedStatement = NO_ANSWER_PICKED_STATEMENT;
+                            FillTheViewBag(subjectName, subjectId);
+
+                            return View(mathematicaltask);
+                    }
                     db.MathematicalTasks.Add(mathematicaltask);
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Subject", new { id = subjectId });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -64,6 +147,7 @@ namespace WazniakWebsite.Controllers
                     "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
+            FillTheViewBag(subjectName, subjectId);
             return View(mathematicaltask);
         }
 

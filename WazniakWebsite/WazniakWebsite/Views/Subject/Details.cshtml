@@ -1,5 +1,4 @@
-﻿@using Microsoft.Ajax.Utilities
-@model WazniakWebsite.Models.Subject
+﻿@model WazniakWebsite.Models.Subject
 
 @{
     ViewBag.Title = "Details";
@@ -32,6 +31,14 @@
             }
             else {
                 window.location = '/MathematicalTask/Create/' + name + '/' + id;
+            }
+        }
+        
+        function goToTaskDetails(taskType, id) {
+            if (taskType == "RegularTask") {
+                window.location = '/RegularTask/Details/' + id;
+            } else if (taskType == "MathematicalTask") {
+                window.location = '/MathematicalTask/Details/' + id;
             }
         }
     </script>
@@ -69,18 +76,19 @@
             <br />
 
             <dt>
-                @Html.DisplayNameFor(model => model.Tasks)
+                Exercises
             </dt>
 
             <dd>
-                <table class="table">
+                <br />
+                <table class="table table-hover">
                     <tr>
                         <th>Exercise title</th>
                         <th>Solution</th>
                     </tr>
                     @foreach (var item in Model.Tasks)
                     {
-                        <tr>
+                        <tr onclick="goToTaskDetails('@item.className()', @item.ID)">
                             <td>
                                 @Html.DisplayFor(modelItem => item.Title)
                             </td>

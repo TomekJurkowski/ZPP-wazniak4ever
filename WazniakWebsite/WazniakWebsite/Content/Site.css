@@ -118,3 +118,8 @@ a:focus {
 .well {
     background-color: #FFCCFF;
 }
+
+.table-hover > tbody > tr:hover > td{
+    background-color: #FFCCFF;
+    cursor: pointer;
+}

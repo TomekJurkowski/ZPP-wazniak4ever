@@ -28,9 +28,72 @@
     </style>
     
     <script type="text/javascript">
-        $(function() {
+
+        function selectPreviousAnswer() {
+            switch ("@ViewBag.PreviouslySelectedAnswer") {
+                case "@ViewBag.SingleValueAnswer":
+                    $("#tooltip1").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                    break;
+                case "@ViewBag.TextAnswer":
+                    $("#tooltip2").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                    break;
+                case "@ViewBag.SingleChoiceAnswer":
+                    $("#tooltip3").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                    break;
+                case "@ViewBag.MultipleValueAnswer":
+                    $("#tooltip4").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                    break;
+            }
+        }
+
+        $(function () {
             $("#SubjectID").val("@ViewBag.SubjectId");
+            
+            selectPreviousAnswer();
+
+            $("#answerTypeInput").hide();
+            $("#subjectName").hide();
+            $("#subjectId").hide();
+
+            $('.nav-pills a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+
+                switch ($(this).attr('id')) {
+                    case "tooltip1":
+                        $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                        break;
+                    case "tooltip2":
+                        $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                        break;
+                    case "tooltip3":
+                        $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                        break;
+                    case "tooltip4":
+                        $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                        break;
+                }
+
+                goToByScroll();
+            });
+
+            $("#tooltip1,#tooltip2,#tooltip3,#tooltip4").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
         });
+        
+        function goToByScroll() {
+            // Scroll
+            $("html,body").animate(
+                { scrollTop: $("#pill_content").offset().top },
+                'slow');
+        }
+        
     </script>
 
     <script type="text/javascript">
@@ -187,6 +250,68 @@
                 <div id="MathBuffer" class="well-lg alert lightPurpleBackground" style="visibility:hidden; position:absolute; top:0; left: 0"></div>   
             </div>
         </div>
+        
+        <br />
+        <h4 class="PurpleText">What kind of Answer do you want for this Exercise?</h4>
+        <br />
+        
+        <ul class="nav nav-pills">
+            <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
+            <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
+            <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+            <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
+        </ul>
+
+        <br />
+
+        <div class="pill-content" id="pill_content">
+
+            <input id="answerTypeInput" type="text" name="answerType" value="@ViewBag.NoAnswer" />
+            <input id="subjectName" type="text" name="answerType" value="@ViewBag.SubjectName" />
+            <input id="subjectId" type="number" name="answerType" value="@ViewBag.SubjectId" />
+
+            <div class=" pill-pane fade" id="SingleValueAnswer_pill">
+                <div class="well">
+                    <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
+                </div>
+
+                <br />
+
+                <input class="form-control" id="valueInput" type="text" name="value" />
+                <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
+            </div>
+
+            <div class="pill-pane fade" id="TextAnswer_pill">
+                <div class="well">
+                    <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+                </div>
+
+                <br />
+
+                <textarea class="form-control" id="textInput" name="text" rows="8"></textarea>
+                <span class="field-validation-error">@ViewBag.TextStatement</span>
+            </div>
+
+            <div class="pill-pane fade" id="AbcdAnswer_pill">
+                <div class="well">
+                    <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
+                </div>
+
+                <br />
+
+            </div>
+
+            <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
+                <div class="well">
+                    <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
+                </div>
+
+                <br />
+
+            </div>
+        </div>
+
+        <br />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -201,9 +326,6 @@
 }
 
 <hr />
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
