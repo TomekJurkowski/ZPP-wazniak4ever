@@ -18,15 +18,23 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
-        <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>                
+            </Grid.RowDefinitions>
+            <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="3">
+            
+        </controls:Exercise>
+        
             <toolkit:LongListMultiSelector
-                    x:Name="MultipleChoiceAnswerInput" 
-                    Grid.Row="3"
-                    Margin="20,30,30,20"
-                    Visibility="Collapsed"
+                    x:Name="MultipleChoiceAnswerInput"
+                    Height="200"
+                    Visibility="Visible"
                     ItemsSource="{Binding UserChoices}"
                     LayoutMode="List"
-                    IsSelectionEnabled="True">
+                    IsSelectionEnabled="True"
+                    Grid.Row="1">
                 <toolkit:LongListMultiSelector.ItemTemplate>
                     <DataTemplate>
                         <TextBlock x:Name="Choice"
@@ -37,7 +45,6 @@
                     </DataTemplate>
                 </toolkit:LongListMultiSelector.ItemTemplate>
             </toolkit:LongListMultiSelector>
-        </controls:Exercise>
-    </Grid>
+        </Grid>
     </ScrollViewer>
 </phone:PhoneApplicationPage>

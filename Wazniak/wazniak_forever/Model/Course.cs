@@ -95,8 +95,6 @@ namespace wazniak_forever.Model
 
     public abstract class AnswerType
     {
-        public virtual bool Equals(AnswerType other) { return true; } // UGLY
-        public bool[] GetFeedback(AnswerType other) { return null; }
         public SolutionType Type { get; set; }
     }
 

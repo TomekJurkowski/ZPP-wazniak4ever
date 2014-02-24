@@ -18,10 +18,11 @@ namespace wazniak_forever
 
         public MultipleChoiceSolution MySolution { get; set; }
 
-        public ExerciseMultipleChoice(Solution s)
+        public ExerciseMultipleChoice()
         {
             InitializeComponent();
-            //MySolution = s as MultipleChoiceSolution;
+            DataContext = App.ViewModel;
+            MySolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber] as MultipleChoiceSolution;
             AddEvents(ExControl);
         }
 
@@ -34,7 +35,7 @@ namespace wazniak_forever
         protected override void OnBackKeyPress(CancelEventArgs e)
         {
             base.OnBackKeyPress(e);
-            MultipleChoiceAnswerInput.SelectedItems.Clear();
+            //MultipleChoiceAnswerInput.SelectedItems.Clear();
         }
 
         private void AddEvents(Controls.Exercise ExControl)
@@ -49,8 +50,9 @@ namespace wazniak_forever
         {
             ExControl.MakeVisible();
             List<string> choiceList = MultipleChoiceAnswerInput.SelectedItems as List<string>;
+            System.Diagnostics.Debug.WriteLine(choiceList.Count);
             AnswerList<string> ans = new AnswerList<string>(choiceList);
-            bool[] feedback = ans.GetFeedback(MySolution.Answer);
+            bool[] feedback = ans.GetFeedback(MySolution.Answer as AnswerList<string>);
             StringBuilder headerBuilder = new StringBuilder();
             StringBuilder builder = new StringBuilder();
             bool correctAnswer = true;

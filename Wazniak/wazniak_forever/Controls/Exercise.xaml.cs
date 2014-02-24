@@ -17,6 +17,14 @@ namespace wazniak_forever.Controls
         public Exercise()
         {
             InitializeComponent();
+            DataContext = App.ViewModel;
+        }
+
+        public void AddContent(Control AnswerControl)
+        {
+            Grid.SetRow(AnswerControl, 3);
+            AnswerControl.Visibility = Visibility.Visible;
+            LayoutRoot.Children.Add(AnswerControl);
         }
 
         public void MakeVisible()
