@@ -8,13 +8,19 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-namespace wazniak_forever.Controls
+namespace wazniak_forever
 {
-    public partial class SolutionMultipleChoice : UserControl
+    public partial class ExerciseMultipleChoice : PhoneApplicationPage
     {
-        public SolutionMultipleChoice()
+        public ExerciseMultipleChoice()
         {
             InitializeComponent();
+            CreateMultipleChoiceExercise();
+        }
+
+        private void CreateMultipleChoiceExercise()
+        {
+
         }
     }
 }

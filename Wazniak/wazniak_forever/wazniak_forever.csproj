@@ -95,17 +95,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SolutionMultipleChoice.xaml.cs">
-      <DependentUpon>SolutionMultipleChoice.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SolutionSingleChoice.xaml.cs">
-      <DependentUpon>SolutionSingleChoice.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SolutionSingleValue.xaml.cs">
-      <DependentUpon>SolutionSingleValue.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SolutionText.xaml.cs">
-      <DependentUpon>SolutionText.xaml</DependentUpon>
+    <Compile Include="Controls\Exercise.xaml.cs">
+      <DependentUpon>Exercise.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
@@ -120,6 +111,18 @@
     </Compile>
     <Compile Include="Exercise.xaml.cs">
       <DependentUpon>Exercise.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExerciseMultipleChoice.xaml.cs">
+      <DependentUpon>ExerciseMultipleChoice.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExerciseOpen.xaml.cs">
+      <DependentUpon>ExerciseOpen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExerciseSingleChoice.xaml.cs">
+      <DependentUpon>ExerciseSingleChoice.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExerciseSingleValue.xaml.cs">
+      <DependentUpon>ExerciseSingleValue.xaml</DependentUpon>
     </Compile>
     <Compile Include="Feedback.xaml.cs">
       <DependentUpon>Feedback.xaml</DependentUpon>
@@ -150,19 +153,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="Controls\SolutionMultipleChoice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SolutionSingleChoice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SolutionSingleValue.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SolutionText.xaml">
+    <Page Include="Controls\Exercise.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -179,6 +170,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Exercise.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExerciseMultipleChoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExerciseOpen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExerciseSingleChoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExerciseSingleValue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

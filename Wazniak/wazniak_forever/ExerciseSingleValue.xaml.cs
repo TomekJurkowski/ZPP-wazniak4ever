@@ -8,11 +8,11 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-namespace wazniak_forever.Controls
+namespace wazniak_forever
 {
-    public partial class SolutionSingleValue : UserControl
+    public partial class ExerciseSingleValue : PhoneApplicationPage
     {
-        public SolutionSingleValue()
+        public ExerciseSingleValue()
         {
             InitializeComponent();
         }
