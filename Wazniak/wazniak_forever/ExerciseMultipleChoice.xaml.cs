@@ -17,14 +17,14 @@ namespace wazniak_forever
     public partial class ExerciseMultipleChoice : PhoneApplicationPage
     {
 
-        public MultipleChoiceSolution MySolution { get; set; }
+        //public MultipleChoiceSolution MySolution { get; set; }
 
         public ExerciseMultipleChoice()
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            MySolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber] as MultipleChoiceSolution;
-            AddEvents(ExControl);
+            //MySolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber] as MultipleChoiceSolution;
+            AddEvents();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -32,14 +32,14 @@ namespace wazniak_forever
             base.OnNavigatedTo(e);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
         }
-
+        
         protected override void OnBackKeyPress(CancelEventArgs e)
         {
             base.OnBackKeyPress(e);
             MultipleChoiceAnswerInput.SelectedItems.Clear();
         }
 
-        private void AddEvents(Controls.Exercise ExControl)
+        private void AddEvents()
         {
             ExControl.SubmitAnswer.Click += new RoutedEventHandler(SubmitAnswer_Click);
             ExControl.Return.Click += new RoutedEventHandler(Return_Click);
@@ -69,7 +69,7 @@ namespace wazniak_forever
             if (choiceList.Count == 0) return;
             AnswerList<bool> ans = new AnswerList<bool>(choiceList);
             bool correctAnswer = true;
-            bool[] feedback = ans.GetFeedback(MySolution.Answer as AnswerList<bool>);
+            bool[] feedback = ans.GetFeedback(App.ViewModel.CurrentSolution.Answer as AnswerList<bool>);
             StringBuilder headerBuilder = new StringBuilder();
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < feedback.Length; ++i)
@@ -111,7 +111,7 @@ namespace wazniak_forever
         private void Return_Click(object sender, RoutedEventArgs e)
         {
             MultipleChoiceAnswerInput.SelectedItems.Clear();
-            NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
+            ExControl.ReturnClick();
         }
     }
 }

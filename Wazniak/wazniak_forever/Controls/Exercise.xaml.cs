@@ -86,5 +86,10 @@ namespace wazniak_forever.Controls
             StatisticContent.Visibility = Visibility.Visible;
         }
 
+        public void ReturnClick()
+        {
+            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
+        }
+
     }
 }
