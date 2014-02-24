@@ -81,6 +81,7 @@ namespace WazniakWebsite.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    regulartask.SubjectID = subjectId;
                     db.RegularTasks.Add(regulartask);
                     switch (answerType)
                     {
@@ -125,7 +126,7 @@ namespace WazniakWebsite.Controllers
                     }
 
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Subject", new { id = subjectId });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
