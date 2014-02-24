@@ -24,8 +24,8 @@ namespace wazniak_forever
 
         
 
-        private static SampleViewModel viewModel;
-        public static SampleViewModel ViewModel
+        private static ClarifierViewModel viewModel;
+        public static ClarifierViewModel ViewModel
         {
             get { return viewModel; }
         }
@@ -67,7 +67,7 @@ namespace wazniak_forever
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
-            viewModel = new SampleViewModel();
+            viewModel = new ClarifierViewModel();
 
         }
 

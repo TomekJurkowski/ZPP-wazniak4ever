@@ -16,8 +16,27 @@
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
-        
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
+        <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}">
+            <toolkit:LongListMultiSelector
+                    x:Name="MultipleChoiceAnswerInput" 
+                    Grid.Row="3"
+                    Margin="20,30,30,20"
+                    Visibility="Collapsed"
+                    ItemsSource="{Binding UserChoices}"
+                    LayoutMode="List"
+                    IsSelectionEnabled="True">
+                <toolkit:LongListMultiSelector.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock x:Name="Choice"
+                                   Foreground="{StaticResource MenuItemColor}"
+                                   Text="{Binding}" 
+                                   TextWrapping="Wrap"
+                                   FontSize="30"/>
+                    </DataTemplate>
+                </toolkit:LongListMultiSelector.ItemTemplate>
+            </toolkit:LongListMultiSelector>
+        </controls:Exercise>
     </Grid>
 
 </phone:PhoneApplicationPage>

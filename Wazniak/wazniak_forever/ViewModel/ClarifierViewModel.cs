@@ -7,11 +7,11 @@ using wazniak_forever.Model;
 
 namespace wazniak_forever.ViewModel
 {
-    public class SampleViewModel : INotifyPropertyChanged
+    public class ClarifierViewModel : INotifyPropertyChanged
     {
         private DatabaseContext db;
 
-        public SampleViewModel()
+        public ClarifierViewModel()
         {
             db = new DatabaseContext();
 
@@ -127,7 +127,6 @@ namespace wazniak_forever.ViewModel
         #region ExerciseSolving
 
         private int _currentQuestionNumber;
-
         public int CurrentQuestionNumber
         {
             get { return _currentQuestionNumber; }
@@ -135,6 +134,17 @@ namespace wazniak_forever.ViewModel
             {
                 _currentQuestionNumber = value;
                 NotifyPropertyChanged("CurrentQuestionNumber");
+            }
+        }
+
+        private int _correctAnswers;
+        public int CorrectAnswers
+        {
+            get { return _correctAnswers; }
+            set
+            {
+                _correctAnswers = value;
+                NotifyPropertyChanged("CorrectAnswers");
             }
         }
 
