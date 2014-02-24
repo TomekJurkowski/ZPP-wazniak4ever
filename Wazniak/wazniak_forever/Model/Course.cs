@@ -16,7 +16,7 @@ namespace wazniak_forever.Model
 
         public IMobileServiceTable<Subject> Subjects = MobileService.GetTable<Subject>();
 
-        /**public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
+        /*public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
             Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
             "offlineMode.db"), true);
 

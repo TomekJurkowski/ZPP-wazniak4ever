@@ -205,6 +205,7 @@ namespace wazniak_forever
 
         private void Return_Click(object sender, RoutedEventArgs e)
         {
+            MultipleChoiceAnswerInput.SelectedItems.Clear();
             NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
         }
 

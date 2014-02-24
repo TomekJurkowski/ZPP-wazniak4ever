@@ -35,8 +35,8 @@ namespace wazniak_forever
 
         private void LoadPivot()
         {
-            MainPivot.Items.Add(CreatePivotItem("New", "New"));
             MainPivot.Items.Add(CreatePivotItem("My Courses", "MyCourses"));
+            MainPivot.Items.Add(CreatePivotItem("New", "New"));
             MainPivot.Items.Add(CreatePivotItem("All Courses", "AllCourses"));
             MainPivot.Items.Add(CreatePivotItem("Downloads", "DownloadedCourses"));
         }
