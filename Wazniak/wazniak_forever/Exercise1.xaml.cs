@@ -11,12 +11,12 @@ using Windows.Storage;
 
 namespace wazniak_forever
 {
-    public partial class Exercise : PhoneApplicationPage
+    public partial class Exercise1 : PhoneApplicationPage
     {
         private int correctAnswers;
         private int wrongAnswers;
 
-        public Exercise()
+        public Exercise1()
         {
             InitializeComponent();
             correctAnswers = 0;

@@ -39,7 +39,7 @@ namespace wazniak_forever
                     break;
                 case SolutionType.Multiple:
                     navTo = string.Format("/ExerciseMultipleChoice.xaml?courseName={0}", CourseName.Text);
-                    (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
+                    (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.Relative));
                     break;
             }
         }

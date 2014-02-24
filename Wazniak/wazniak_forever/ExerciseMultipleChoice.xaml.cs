@@ -21,7 +21,7 @@ namespace wazniak_forever
         public ExerciseMultipleChoice(Solution s)
         {
             InitializeComponent();
-            MySolution = s as MultipleChoiceSolution;
+            //MySolution = s as MultipleChoiceSolution;
             AddEvents(ExControl);
         }
 
