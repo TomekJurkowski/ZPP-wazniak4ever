@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WazniakWebsite.Models
@@ -14,6 +15,12 @@ namespace WazniakWebsite.Models
 
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Last Update Date")]
+        public DateTime LastUpdated { get; set; }
 
         public virtual ICollection<Task> Tasks { get; set; }
     }

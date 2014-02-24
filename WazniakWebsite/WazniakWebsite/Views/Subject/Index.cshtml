@@ -56,6 +56,9 @@
         <th>
             Description
         </th>
+        <th>
+            Last Updated Time
+        </th>
         <th></th>
     </tr>
 
@@ -69,6 +72,9 @@
                 <span class="shortDisplay">
                     @Html.DisplayFor(modelItem => item.Description)
                 </span>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdated)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "PurpleText" }) |

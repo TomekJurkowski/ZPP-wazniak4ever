@@ -86,6 +86,7 @@ namespace WazniakWebsite.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    subject.LastUpdated = DateTime.Today;
                     db.Subjects.Add(subject);
                     db.SaveChanges();
                     return RedirectToAction("Index");
