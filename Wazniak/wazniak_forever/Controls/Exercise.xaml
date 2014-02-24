@@ -55,6 +55,24 @@
                        Foreground="{StaticResource MenuItemColor}"
                        Visibility="Collapsed"/>
 
+        <StackPanel x:Name="ExplanationPanel"
+                        Grid.Row="3"
+                        Margin="15,10,15,10"
+                        Visibility="Collapsed">
+            <TextBlock x:Name="ExplanationHeader"
+                           FontSize="30"
+                           HorizontalAlignment="Center"
+                           Margin="0,15,0,15"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource MenuItemColor}"/>
+
+            <TextBlock x:Name="Explanation" 
+                           FontSize="25"
+                           Margin="0,15,0,15"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource MenuItemColor}"/>
+        </StackPanel>
+
         <StackPanel 
                 Grid.Row="4"
                 VerticalAlignment="Bottom" 
@@ -63,8 +81,7 @@
                     x:Name="SubmitAnswer"
                     Height="100"
                     Width="200"
-                    HorizontalAlignment="Left"
-                    Click="SubmitAnswer_Click">Submit</Button>
+                    HorizontalAlignment="Left">Submit</Button>
 
             <Button 
                     x:Name="NextQuestion"

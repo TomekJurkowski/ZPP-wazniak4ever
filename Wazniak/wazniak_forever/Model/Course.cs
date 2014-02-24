@@ -91,11 +91,12 @@ namespace wazniak_forever.Model
 
     #region Solutions
 
-    public enum SolutionType { Open, Multiple, Single }
+    public enum SolutionType { Open, Value, Multiple, Single }
 
     public abstract class AnswerType
     {
         public virtual bool Equals(AnswerType other) { return true; } // UGLY
+        public bool[] GetFeedback(AnswerType other) { return null; }
         public SolutionType Type { get; set; }
     }
 
@@ -110,12 +111,28 @@ namespace wazniak_forever.Model
     {
         public List<T> value { get; set; }
         public AnswerList(List<T> _value) { value = _value; }
-        public bool Equals(AnswerList<T> other)
+        public bool[] GetFeedback(AnswerList<T> other)
         {
-            if (value.Count != other.value.Count) return false;
+            if (other == null || value.Count <= 0) return null;
+            bool[] result = new bool[value.Count];
+            if (value.Count != other.value.Count)
+            {
+                result[0] = false;
+                return result;
+            }
             for (int i = 0; i < value.Count; i++)
             {
-                if (!value[i].Equals(other.value[i])) return false;
+                if (value[i].Equals(other.value[i])) result[i] = true;
+                else result[i] = false;
+            }
+            return result;
+        }
+
+        public bool Equals(AnswerList<T> other)
+        {
+            foreach (bool b in GetFeedback(other))
+            {
+                if (!b) return false;
             }
             return true;
         }
@@ -148,7 +165,7 @@ namespace wazniak_forever.Model
             ExerciseID = _id;
             Choices = null;
             Answer = new SingleAnswer<string>(_answer);
-            Answer.Type = SolutionType.Open;
+            Answer.Type = SolutionType.Value;
             Exercise = _ex;
         }
     }

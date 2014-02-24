@@ -22,7 +22,6 @@ namespace wazniak_forever
             correctAnswers = 0;
             wrongAnswers = 0;
             DataContext = App.ViewModel;
-            App.ViewModel.LoadExercises();
             switch (App.ViewModel.CurrentSolution.Answer.Type)
             {
                 case SolutionType.Open:
@@ -64,7 +63,7 @@ namespace wazniak_forever
             WebBrowser.NavigateToString(webString);
         }
 
-        private void SubmitAnswer_Click(object sender, RoutedEventArgs e)
+        private void SubmitAnswerClick(object sender, RoutedEventArgs e)
         {
             // Hide unnecessary elements
             SubmitAnswer.Visibility = Visibility.Collapsed;
@@ -77,14 +76,11 @@ namespace wazniak_forever
             SingleAnswer<string> textAns = new SingleAnswer<string>(OpenAnswerInput.Text);
 
 
-            /*bool[] feedback = App.ViewModel.CurrentSolution.Check(ans);
+            /*
 
-            //DEBUG
-            for (int i = 0; i < feedback.Length; i++)
-                System.Diagnostics.Debug.WriteLine(feedback[i]);
-            //DEBUG
 
             // Show the correct answer and explanation, if provided
+            bool[] feedback = App.ViewModel.CurrentSolution.Check(ans);
             StringBuilder headerBuilder = new StringBuilder();
             StringBuilder builder = new StringBuilder();
             if (feedback.Length == 1)
@@ -107,39 +103,8 @@ namespace wazniak_forever
             else
             {
                 bool temp = true;
-                for (int i = 0; i < feedback.Length; ++i)
-                {
-                    if (!feedback[i])
-                    {
-                        temp = false;
-                        break;
-                    }
-                }
-                if (temp)
-                {
-                    correctAnswers++;
-                    headerBuilder.Append("Correct!");
-                    builder.Append("");
-                }
-                else
-                {
-                    wrongAnswers++;
-                    headerBuilder.Append("You're wrong :-(");
-                    builder.Append("Explanation:\n\n");
-                    for (int i = 0; i < feedback.Length; ++i)
-                    {
-                        builder.Append(i + 1);
-                        if (feedback[i])
-                        {
-                            builder.Append("). ok\n");
-                        }
-                        else
-                        {
-                            builder.Append("). Wrong:").Append(((MultipleChoiceExercise)App.ViewModel.CurrentExercise).Solutions[i].Explanation);
-                            builder.AppendLine();
-                        }
-                    }
-                }
+                
+                
             }
                 
             ExplanationPanel.Visibility = Visibility.Visible;

@@ -24,7 +24,24 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
-            //CourseDescription.Text = Convert.ToString(NavigationContext.QueryString["courseDescription"]);
+        }
+
+        private void SelectExercise()
+        {
+            App.ViewModel.LoadExercises();
+            if (App.ViewModel.Solutions.Count <= 0) return;
+            string navTo;
+            switch (App.ViewModel.Solutions[0].Answer.Type)
+            {
+                case SolutionType.Open:
+                    navTo = string.Format("/ExerciseOpen.xaml?courseName={0}", CourseName.Text);
+                    (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
+                    break;
+                case SolutionType.Multiple:
+                    navTo = string.Format("/ExerciseMultipleChoice.xaml?courseName={0}", CourseName.Text);
+                    (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
+                    break;
+            }
         }
 
         private void CoursePageOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -39,8 +56,7 @@ namespace wazniak_forever
                 switch (option.Type)
                 {
                     case OptionType.Start:
-                        var navTo = string.Format("/Exercise.xaml?courseName={0}", CourseName.Text);
-                        (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
+                        SelectExercise();
                         break;
                     case OptionType.AddToMyCourses:
                         break;

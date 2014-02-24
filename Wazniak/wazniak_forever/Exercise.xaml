@@ -16,7 +16,8 @@
     shell:SystemTray.IsVisible="True">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <!--LayoutRoot is the root grid where all page content is placed-->
+    
+    <!--LayoutRoot is the root grid where all page content is placed-->
         <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -114,7 +115,7 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Left"
-                    Click="SubmitAnswer_Click">Submit</Button>
+                    Click="SubmitAnswerClick">Submit</Button>
 
                 <Button 
                     x:Name="NextQuestion"

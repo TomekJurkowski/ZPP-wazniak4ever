@@ -137,7 +137,7 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private int _correctAnswers;
+        private int _correctAnswers = 0;
         public int CorrectAnswers
         {
             get { return _correctAnswers; }

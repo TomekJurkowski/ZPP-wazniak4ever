@@ -15,6 +15,7 @@
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
         <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}">
@@ -38,5 +39,5 @@
             </toolkit:LongListMultiSelector>
         </controls:Exercise>
     </Grid>
-
+    </ScrollViewer>
 </phone:PhoneApplicationPage>
