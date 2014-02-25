@@ -15,6 +15,9 @@ namespace wazniak_forever.Model
         );
 
         public IMobileServiceTable<Subject> Subjects = MobileService.GetTable<Subject>();
+        public IMobileServiceTable<Task> Tasks = MobileService.GetTable<Task>();
+        public IMobileServiceTable<Answer> Answers = MobileService.GetTable<Answer>();
+        public IMobileServiceTable<TaskAnswer> TasksWithAnswers = MobileService.GetTable<TaskAnswer>();
 
         /*public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
             Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
@@ -57,6 +60,46 @@ namespace wazniak_forever.Model
 
     }
 
+    #region Azure Adapters
+
+    public class TaskAnswer
+    {
+        public int ID { get; set; }
+        public string Title { get; set; }
+        public int SubjectID { get; set; }
+        public string TaskText { get; set; }
+        public string Text1 { get; set; }
+        public string TaskDiscriminator { get; set; }
+        public int TaskID { get; set; }
+        public string Value { get; set; }
+        public string AnswerText { get; set; }
+        public string AnswerDiscriminator { get; set; }
+    }
+
+    public class Task
+    {
+        public int ID { get; set; }
+        public string Title { get; set; }
+        public int SubjectID { get; set; }
+        public Subject Subject { get; set; }
+        public Answer Answer { get; set; }
+        public string Text { get; set; }
+        public string Text1 { get; set; }
+        public string Discriminator { get; set; }
+    }
+
+    public class Answer
+    {
+        public int TaskID { get; set; }
+        public virtual Task Task { get; set; }
+        public string Value { get; set; }
+        public string Text { get; set; }
+        public string Discriminator { get; set; }
+    }
+
+    #endregion
+
+
     public class Subject
     {
         public int ID;
@@ -66,7 +109,7 @@ namespace wazniak_forever.Model
         public Subject(string Name)
         {
             this.Name = Name;
-        }
+        }      
     }
 
     public abstract class Exercise
@@ -82,13 +125,25 @@ namespace wazniak_forever.Model
     public class RegularExercise : Exercise
     {
         public string Question { get; set; }
+
+        public RegularExercise() {}
+
+        public RegularExercise(int id, int subjectId, int solutionId, 
+            string title, string question, Subject subject, Solution solution)
+        {
+            ID = id;
+            SubjectID = subjectId;
+            Title = title;
+            Question = question;
+            Subject = subject;
+            Solution = solution;
+        }
     }
 
     public class MathExercise : Exercise
     {
         public Image Question { get; set; }
     }
-
 
     #region Solutions
 

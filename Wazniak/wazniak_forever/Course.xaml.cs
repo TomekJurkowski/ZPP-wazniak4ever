@@ -24,12 +24,15 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
+            App.ViewModel.CurrentCourseID = Convert.ToInt32(NavigationContext.QueryString["courseID"]);
         }
 
-        private void SelectExercise()
+        private async void SelectExercise()
         {
-            App.ViewModel.LoadExercises();
+            await App.ViewModel.LoadExercises();
+            System.Diagnostics.Debug.WriteLine("Hello");
             if (App.ViewModel.Solutions.Count <= 0) return;
+            System.Diagnostics.Debug.WriteLine(App.ViewModel.Solutions[0].Answer.Type);
             string navTo;
             switch (App.ViewModel.Solutions[0].Answer.Type)
             {

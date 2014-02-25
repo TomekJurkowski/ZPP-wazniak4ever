@@ -1,6 +1,7 @@
 ﻿using Microsoft.Phone.Net.NetworkInformation;
 using Microsoft.WindowsAzure.MobileServices;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using wazniak_forever.Model;
@@ -169,6 +170,7 @@ namespace wazniak_forever.ViewModel
                 NotifyPropertyChanged("CurrentSolution");
             }
         }
+        public int CurrentCourseID { get; set; }
 
         private List<RegularExercise> _exercises;
         public List<RegularExercise> Exercises
@@ -204,8 +206,61 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        public void LoadExercises()
+        private Solution prepareSolution(Answer ans)
         {
+            return null;
+        }
+
+        public async System.Threading.Tasks.Task LoadExercises()
+        {
+            /*var exercises = await db.Tasks.Where(task => task.SubjectID == CurrentCourseID)
+                .ToListAsync();
+            var exerciseIds = exercises.Select(task => task.ID).ToList();*/
+
+            var tasksWithAnswers = await db.TasksWithAnswers.ToListAsync();
+
+            System.Diagnostics.Debug.WriteLine(tasksWithAnswers.Count);
+            /*var exerciseAnswer = from exercise in exercises
+                                 join answer in answers on exercise.ID equals answer.TaskID
+                                 select new { exercise, answer };*/
+
+            Exercises = new List<RegularExercise>();
+            Solutions = new List<Solution>();
+
+            foreach (var task in tasksWithAnswers)
+            {
+                Solution solution = null;
+
+                System.Diagnostics.Debug.WriteLine(task.Title);
+
+                switch (task.AnswerDiscriminator) 
+                {
+                    case "SingleValueAnswer":
+                        solution = new SingleValueSolution(task.TaskID, task.Value, null);
+                        break;
+                    case "TextAnswer":
+                        solution = new TextSolution(task.TaskID, task.AnswerText, null);
+                        break;
+                }
+
+                Solutions.Add(solution);
+
+                System.Diagnostics.Debug.WriteLine(task.AnswerDiscriminator);
+
+                switch (task.TaskDiscriminator)
+                {
+                    case "RegularTask":
+                        var ex = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
+                            task.Title, task.Text1, 
+                            AllCourses.Where(course => course.ID == CurrentCourseID).First(),
+                            solution);
+                        solution.Exercise = ex;
+                        Exercises.Add(ex);
+                        break;
+                }                      
+            }
+            System.Diagnostics.Debug.WriteLine("Finished");
+            /*
             Exercises = new List<RegularExercise>();
             string[] questions = new string[6] 
             { 
@@ -274,12 +329,13 @@ namespace wazniak_forever.ViewModel
                 )
             };
 
-            for (int i = 0; i < 6; i++) Exercises[i].Solution = Solutions[i];
+            for (int i = 0; i < 6; i++) Exercises[i].Solution = Solutions[i];*/
 
             CurrentQuestionNumber = 0;
             CurrentExercise = Exercises[0];
             CurrentSolution = Solutions[0];
             UserChoices = Exercises[0].Solution.Choices;
+
         }
 
         #endregion
