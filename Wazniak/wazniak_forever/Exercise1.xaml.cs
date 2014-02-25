@@ -74,38 +74,6 @@ namespace wazniak_forever
             AnswerList<string> ans = new AnswerList<string>(choiceList);
             SingleAnswer<string> textAns = new SingleAnswer<string>(OpenAnswerInput.Text);
 
-
-            /*
-
-
-            // Show the correct answer and explanation, if provided
-            bool[] feedback = App.ViewModel.CurrentSolution.Check(ans);
-            StringBuilder headerBuilder = new StringBuilder();
-            StringBuilder builder = new StringBuilder();
-            if (feedback.Length == 1)
-            {
-                System.Diagnostics.Debug.WriteLine("jestem tu");
-                if (feedback[0])
-                {
-                    correctAnswers++;
-                    headerBuilder.Append("Correct!");
-                    builder.Append("");
-                }
-                else
-                {
-                    wrongAnswers++;
-                    headerBuilder.Append("You're wrong :-(");
-                    builder.Append("Explanation:\n\n")
-                        .Append(((OpenExercise) App.ViewModel.CurrentExercise).Solution.Explanation);
-                }
-            }
-            else
-            {
-                bool temp = true;
-                
-                
-            }*/
-
             // Let's show a proper button
             if (App.ViewModel.CurrentQuestionNumber == App.ViewModel.Exercises.Count - 1)
             {

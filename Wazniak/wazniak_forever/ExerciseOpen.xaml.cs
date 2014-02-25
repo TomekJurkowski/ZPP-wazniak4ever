@@ -4,10 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Navigation;
 using System.ComponentModel;
+using System.Text;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using wazniak_forever.Model;
 
 namespace wazniak_forever
 {
@@ -17,6 +20,7 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
+            ExControl.setExplanationRow(3);
             AddEvents();
         }
 
@@ -29,20 +33,26 @@ namespace wazniak_forever
         protected override void OnBackKeyPress(CancelEventArgs e)
         {
             base.OnBackKeyPress(e);
+            if (NavigationService.CanGoBack)
+            {
+                e.Cancel = true;
+                NavigationService.RemoveBackEntry();
+                NavigationService.GoBack();
+            }
         }
 
         private void AddEvents()
         {
             ExControl.SubmitAnswer.Click += new RoutedEventHandler(SubmitAnswer_Click);
-            ExControl.Return.Click += new RoutedEventHandler(Return_Click);
         }
 
         private void SubmitAnswer_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void Return_Click(object sender, RoutedEventArgs e)
-        {
+            StringBuilder headerBuilder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
+            headerBuilder.Append("Answer:\n");
+            builder.Append((App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
+            ExControl.SubmitAnswerClick(headerBuilder, builder);
         }
     }
 }

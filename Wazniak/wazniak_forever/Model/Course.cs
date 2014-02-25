@@ -62,6 +62,7 @@ namespace wazniak_forever.Model
         public int ID;
         public string Name { get; private set; }
         public string Description { get; set; }
+        public System.DateTime LastUpdated { get; set; }
         public Subject(string Name)
         {
             this.Name = Name;

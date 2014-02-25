@@ -42,7 +42,6 @@ namespace wazniak_forever
         private void AddEvents()
         {
             ExControl.SubmitAnswer.Click += new RoutedEventHandler(SubmitAnswer_Click);
-            ExControl.Return.Click += new RoutedEventHandler(Return_Click);
         }
 
         private List<bool> parseToList(IList toBeParsed)
@@ -66,6 +65,7 @@ namespace wazniak_forever
         {
             ExControl.NextExerciseVisible();
             List<bool> choiceList = parseToList(MultipleChoiceAnswerInput.SelectedItems);
+            MultipleChoiceAnswerInput.SelectedItems.Clear();
             if (choiceList.Count == 0) return;
             AnswerList<bool> ans = new AnswerList<bool>(choiceList);
             bool correctAnswer = true;
@@ -106,12 +106,6 @@ namespace wazniak_forever
             }
             MultipleChoiceAnswerInput.Visibility = Visibility.Collapsed;
             ExControl.SubmitAnswerClick(headerBuilder, builder);
-        }
-
-        private void Return_Click(object sender, RoutedEventArgs e)
-        {
-            MultipleChoiceAnswerInput.SelectedItems.Clear();
-            ExControl.ReturnClick();
         }
     }
 }

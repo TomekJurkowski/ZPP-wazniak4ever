@@ -20,6 +20,15 @@ namespace wazniak_forever.Controls
             DataContext = App.ViewModel;
         }
 
+        public void setExplanationRow(int row) 
+        {
+            if (row < 6)
+            {
+                Grid.SetRow(ExplanationPanel, row);
+                LayoutRoot.RowDefinitions[row].Height = GridLength.Auto;
+            }
+        }
+
         public void NextExerciseVisible()
         {
             SubmitAnswer.Visibility = Visibility.Visible;
@@ -34,7 +43,6 @@ namespace wazniak_forever.Controls
             ExplanationHeader.Text = headerBuilder.ToString();
             Explanation.Text = builder.ToString();
 
-            // Let's show a proper button
             if (App.ViewModel.CurrentQuestionNumber == App.ViewModel.Exercises.Count - 1)
             {
                 Finish.Visibility = Visibility.Visible;
@@ -86,7 +94,7 @@ namespace wazniak_forever.Controls
             StatisticContent.Visibility = Visibility.Visible;
         }
 
-        public void ReturnClick()
+        public void Return_Click(object sender, RoutedEventArgs e)
         {
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
         }
