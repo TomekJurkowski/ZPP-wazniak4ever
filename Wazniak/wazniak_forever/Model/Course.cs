@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.IO;
 using System.Threading.Tasks;
+using SQLite;
 
 namespace wazniak_forever.Model
 {
@@ -19,7 +20,7 @@ namespace wazniak_forever.Model
         public IMobileServiceTable<Answer> Answers = MobileService.GetTable<Answer>();
         public IMobileServiceTable<TaskAnswer> TasksWithAnswers = MobileService.GetTable<TaskAnswer>();
 
-        /*public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
+        public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
             Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
             "offlineMode.db"), true);
 
@@ -41,12 +42,12 @@ namespace wazniak_forever.Model
         public async void SyncLocalDatabase()
         {
             var localSubjects = Connect.Table<Subject>();
-            var orderedSubjects = await from lSubject in localSubjects
+            var orderedSubjects = from lSubject in localSubjects
                                orderby lSubject.LastUpdated descending
                                select lSubject;
             var earliest = await orderedSubjects.FirstOrDefaultAsync();
             var updated =
-               earliest != null ? earliest.LastUpdated : DateTime.MinValue;
+               earliest != null ? earliest.LastUpdated : System.DateTime.MinValue;
 
             var updatedSubjects =
               await (from subject in MobileService.GetTable<Subject>()
@@ -54,9 +55,9 @@ namespace wazniak_forever.Model
                      select subject).ToListAsync();
             foreach (var s in updatedSubjects)
             {
-                if (localSubjects.Any(x => x.ID == s.ID)) await Connect.UpdateAsync(s);
+                if ((await localSubjects.ToListAsync()).Find(x => x.ID == s.ID) != null) await Connect.UpdateAsync(s);
             }
-        }*/
+        }
 
     }
 
@@ -102,10 +103,13 @@ namespace wazniak_forever.Model
 
     public class Subject
     {
-        public int ID;
-        public string Name { get; private set; }
+        [PrimaryKey, AutoIncrement]
+        public int ID { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public System.DateTime LastUpdated { get; set; }
+        public Subject() { }
+
         public Subject(string Name)
         {
             this.Name = Name;
