@@ -23,8 +23,9 @@ namespace wazniak_forever
         {
             App.ViewModel.LoadMyCourses();
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading all courses...", App.ViewModel.LoadAllCourses);
+            await App.ViewModel.PerformTimeConsumingProcess(this, "Loading new courses...", App.ViewModel.LoadNewCourses);
             //App.ViewModel.LoadAllCourses();
-            App.ViewModel.LoadNewCourses();
+            //App.ViewModel.LoadNewCourses();
         }
 
         private PivotItem CreatePivotItem(string header, string name)
@@ -42,7 +43,7 @@ namespace wazniak_forever
         private void LoadPivot()
         {
             MainPivot.Items.Add(CreatePivotItem("My Courses", "MyCourses"));
-            MainPivot.Items.Add(CreatePivotItem("New", "New"));
+            MainPivot.Items.Add(CreatePivotItem("New", "NewCourses"));
             MainPivot.Items.Add(CreatePivotItem("All Courses", "AllCourses"));
             MainPivot.Items.Add(CreatePivotItem("Downloads", "DownloadedCourses"));
         }

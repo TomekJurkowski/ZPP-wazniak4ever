@@ -409,9 +409,10 @@ namespace wazniak_forever.ViewModel
             };
         }
 
-        public void LoadNewCourses()
+        public async System.Threading.Tasks.Task LoadNewCourses()
         {
-            NewCourses = new List<Subject>();
+            List<Subject> subjects = await db.Subjects.ToListAsync();
+            NewCourses = subjects.OrderByDescending(x => x.LastUpdated).Take(10).ToList();
         }
 
         public void SetProgressIndicator(System.Windows.DependencyObject depObject, string text)
