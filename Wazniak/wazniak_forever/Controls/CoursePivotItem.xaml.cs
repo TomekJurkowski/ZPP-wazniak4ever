@@ -25,7 +25,7 @@ namespace wazniak_forever.Controls
 
         private const string MY_COURSES_NAME = "MyCourses";
         private const string ALL_COURSES_NAME = "AllCourses";
-        private const string NEW_COURSES_NAME = "New";
+        private const string NEW_COURSES_NAME = "NewCourses";
 
         private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
