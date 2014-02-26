@@ -14,11 +14,17 @@ namespace wazniak_forever
             if (App.ViewModel.AreDownloads) MainPivot.Items.Add(CreatePivotItem("Downloads", "DownloadedCourses"));
             else
             {
-                App.ViewModel.LoadMyCourses();
-                App.ViewModel.LoadAllCourses();
-                App.ViewModel.LoadNewCourses();
+                LoadFromAzure();
                 LoadPivot();
             }
+        }
+
+        private async void LoadFromAzure()
+        {
+            App.ViewModel.LoadMyCourses();
+            await App.ViewModel.PerformTimeConsumingProcess(this, "Loading all courses...", App.ViewModel.LoadAllCourses);
+            //App.ViewModel.LoadAllCourses();
+            App.ViewModel.LoadNewCourses();
         }
 
         private PivotItem CreatePivotItem(string header, string name)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using wazniak_forever.Model;
+using Microsoft.Phone.Shell;
 
 namespace wazniak_forever.ViewModel
 {
@@ -385,7 +386,7 @@ namespace wazniak_forever.ViewModel
             };
         }
 
-        public async void LoadAllCourses()
+        public async System.Threading.Tasks.Task LoadAllCourses()
         {
             AllCourses = await db.Subjects.ToListAsync();
         }
@@ -411,6 +412,43 @@ namespace wazniak_forever.ViewModel
         public void LoadNewCourses()
         {
             NewCourses = new List<Subject>();
+        }
+
+        public void SetProgressIndicator(System.Windows.DependencyObject depObject, string text)
+        {
+            ProgressIndicator progressIndicator = new ProgressIndicator()
+            {
+                IsVisible = false,
+                IsIndeterminate = false,
+
+                Text = text
+            };
+
+            SystemTray.SetProgressIndicator(depObject, progressIndicator);
+        }
+
+        public void ActivateProgressForTimeConsumingProcess(System.Windows.DependencyObject depObject)
+        {
+            SystemTray.GetProgressIndicator(depObject).IsVisible = true;
+            SystemTray.GetProgressIndicator(depObject).IsIndeterminate = true;
+        }
+
+        public void DeactivateProgressForTimeConsumingProcess(System.Windows.DependencyObject depObject)
+        {
+            SystemTray.GetProgressIndicator(depObject).IsVisible = false;
+            SystemTray.GetProgressIndicator(depObject).IsIndeterminate = false;
+        }
+
+        public async System.Threading.Tasks.Task PerformTimeConsumingProcess(
+            System.Windows.DependencyObject depObject, string actionDescr, 
+            Func<System.Threading.Tasks.Task> Method)
+        {
+            SetProgressIndicator(depObject, actionDescr);
+            ActivateProgressForTimeConsumingProcess(depObject);
+            await Method();
+            DeactivateProgressForTimeConsumingProcess(depObject);
+            System.Diagnostics.Debug.WriteLine("Finished job!!!");
+
         }
 
         /*public async void AddSampleItem(SampleItem newSampleItem)
