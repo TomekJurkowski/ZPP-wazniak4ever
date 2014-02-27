@@ -392,6 +392,16 @@ namespace wazniak_forever.ViewModel
             };
         }
 
+        public void LoadDownloadedCoursePage()
+        {
+            CourseOptions = new List<Option>()
+            {
+                new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.AddToMyCourses, false, "Add to my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Update, true, "Update", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
+            };
+        }
+
         public async System.Threading.Tasks.Task LoadAllCourses()
         {
             AllCourses = await db.Subjects.ToListAsync();

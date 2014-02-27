@@ -41,15 +41,25 @@ namespace wazniak_forever.Model
             return await Connect.Table<Subject>().ToListAsync();
         }
 
-        public async void SaveSubjectLocally(Subject newSubject)
+        public async System.Threading.Tasks.Task SaveSubjectLocally(
+            System.Windows.DependencyObject depObject, string actionDescr, Subject newSubject)
         {
             try
             {
+                App.ViewModel.SetProgressIndicator(depObject, actionDescr);
+                App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
                 await Connect.InsertAsync(newSubject);
+                App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
             }
             catch 
             {
                 System.Diagnostics.Debug.WriteLine("Subject is already in the local database.");            }
+        }
+
+        public async Task<bool> CheckIfSubjectSavedLocally(Subject subject)
+        {
+            var result = await Connect.Table<Subject>().Where(x => x.ID == subject.ID).ToListAsync();
+            return (result.Count > 0);
         }
 
         public async void SyncLocalDatabase()

@@ -23,7 +23,8 @@ namespace wazniak_forever
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            LoadFromAzure();
+            if (App.ViewModel.OnlineMode)
+                LoadFromAzure();
             LoadFromLocalDatabase();
         }
 

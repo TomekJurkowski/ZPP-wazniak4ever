@@ -20,11 +20,23 @@ namespace wazniak_forever
             App.ViewModel.LoadCoursePage();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
             App.ViewModel.CurrentCourseID = Convert.ToInt32(NavigationContext.QueryString["courseID"]);
+            bool subjectSavedLocally = true;
+            if (App.ViewModel.OnlineMode)
+            {
+                Subject currentCourse = App.ViewModel.AllCourses.Find(x => x.ID == App.ViewModel.CurrentCourseID);
+                subjectSavedLocally = await App.ViewModel.db.CheckIfSubjectSavedLocally(currentCourse);
+            }
+            if (subjectSavedLocally)
+            {
+                App.ViewModel.LoadDownloadedCoursePage();
+                System.Diagnostics.Debug.WriteLine("Subject already saved");
+            }
+            else System.Diagnostics.Debug.WriteLine("Subject NOT saved");
         }
 
         private async void SelectExercise()
@@ -68,8 +80,11 @@ namespace wazniak_forever
                         break;
                     case OptionType.Download:
                         Subject currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
-                        App.ViewModel.db.SaveSubjectLocally(currentCourse);
+                        await App.ViewModel.db.SaveSubjectLocally(this, "Downloading course...", currentCourse);
                         System.Diagnostics.Debug.WriteLine("Subject saved locally " + currentCourse.Name);
+                        App.ViewModel.LoadDownloadedCoursePage();
+                        break;
+                    case OptionType.Update:
                         break;
                 }
             }
