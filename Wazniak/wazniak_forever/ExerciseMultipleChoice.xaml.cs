@@ -17,13 +17,10 @@ namespace wazniak_forever
     public partial class ExerciseMultipleChoice : PhoneApplicationPage
     {
 
-        //public MultipleChoiceSolution MySolution { get; set; }
-
         public ExerciseMultipleChoice()
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            //MySolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber] as MultipleChoiceSolution;
             AddEvents();
         }
 

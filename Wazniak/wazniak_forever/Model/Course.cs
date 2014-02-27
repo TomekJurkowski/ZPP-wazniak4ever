@@ -19,6 +19,8 @@ namespace wazniak_forever.Model
         public IMobileServiceTable<Task> Tasks = MobileService.GetTable<Task>();
         public IMobileServiceTable<Answer> Answers = MobileService.GetTable<Answer>();
         public IMobileServiceTable<TaskAnswer> TasksWithAnswers = MobileService.GetTable<TaskAnswer>();
+        public IMobileServiceTable<UserSubject> UsersAndSubjects = MobileService.GetTable<UserSubject>();
+        public IMobileServiceTable<UserFullSubject> MySubjects = MobileService.GetTable<UserFullSubject>();
 
         public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
             Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
@@ -74,6 +76,21 @@ namespace wazniak_forever.Model
 
     #region Azure Adapters
 
+    public class UserFullSubject
+    {
+        public string UserID { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public System.DateTime LastUpdated { get; set; }
+    }
+
+    public class UserSubject
+    {
+        public string UserID { get; set; }
+        public int SubjectID { get; set; }
+    }
+
     public class TaskAnswer
     {
         public int ID { get; set; }
@@ -124,7 +141,16 @@ namespace wazniak_forever.Model
         public Subject(string Name)
         {
             this.Name = Name;
-        }      
+        }
+
+        public Subject(int id, string name, 
+            string description, System.DateTime lastUpdated)
+        {
+            ID = id;
+            Name = name;
+            Description = description;
+            LastUpdated = lastUpdated;
+        }
     }
 
     public abstract class Exercise

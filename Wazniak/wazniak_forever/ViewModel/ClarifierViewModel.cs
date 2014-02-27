@@ -406,14 +406,37 @@ namespace wazniak_forever.ViewModel
             };*/
         }
 
-        public void LoadMyCourses()
+        public async void LoadMyCourses()
         {
+            /*var mySubjects = await db.MySubjects
+                .Where(user => user.UserID == DatabaseContext.MobileService.CurrentUser.UserId)
+                .ToListAsync();
+
+            MyCourses = new List<Subject>();
+
+            mySubjects.ForEach(subject =>
+            {
+                MyCourses.Add(new Subject(subject.ID, subject.Name, 
+                    subject.Description, subject.LastUpdated));
+            });*/
+             
+
             MyCourses = new List<Subject>()
             {
                 new Subject("Algorithms I"),
                 new Subject("Algorithms II"),
                 new Subject("Databases")
             };
+        }
+
+        public async void AddToMyCourses(int subjectId)
+        {
+            await db.UsersAndSubjects.InsertAsync(
+                new UserSubject
+                {
+                    UserID = DatabaseContext.MobileService.CurrentUser.UserId,
+                    SubjectID = subjectId
+                });
         }
 
         public async System.Threading.Tasks.Task LoadNewCourses()
