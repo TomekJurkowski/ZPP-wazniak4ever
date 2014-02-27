@@ -37,6 +37,7 @@ namespace wazniak_forever
                 System.Diagnostics.Debug.WriteLine("Subject already saved");
             }
             else System.Diagnostics.Debug.WriteLine("Subject NOT saved");
+
         }
 
         private async void SelectExercise()
@@ -57,6 +58,10 @@ namespace wazniak_forever
                     break;
                 case SolutionType.Multiple:
                     navTo = string.Format("/ExerciseMultipleChoice.xaml?courseName={0}", CourseName.Text);
+                    (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.Relative));
+                    break;
+                case SolutionType.Value:
+                    navTo = string.Format("/ExerciseSingleValue.xaml?courseName={0}", CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.Relative));
                     break;
             }

@@ -8,8 +8,24 @@ using SQLite;
 
 namespace wazniak_forever.Model
 {
+    public enum AuthenticationProviderType { Microsoft, Facebook, Google, Twitter }
+
+    public class AuthenticationProvider
+    {
+        public AuthenticationProviderType Type { get; set; }
+        public string Name { get; set; }
+
+        public AuthenticationProvider(AuthenticationProviderType type, string name)
+        {
+            Type = type;
+            Name = name;
+        }
+    }
+
     public class DatabaseContext
     {
+        public MobileServiceUser User { get; set; }
+
         public static MobileServiceClient MobileService = new MobileServiceClient(
             "https://clarifier.azure-mobile.net/",
             "QDgknqkjpjxNvyJlrQvBoFjHvhXDaa88"
@@ -53,9 +69,9 @@ namespace wazniak_forever.Model
             }
             catch 
             {
-                System.Diagnostics.Debug.WriteLine("Subject is already in the local database.");            }
+                System.Diagnostics.Debug.WriteLine("Subject is already in the local database.");            
+            }
         }
-
         public async Task<bool> CheckIfSubjectSavedLocally(Subject subject)
         {
             var result = await Connect.Table<Subject>().Where(x => x.ID == subject.ID).ToListAsync();

@@ -47,6 +47,13 @@ namespace wazniak_forever
                         App.ViewModel.AreDownloads = true;
                         NavigationService.Navigate(new Uri("/CourseSelection.xaml", UriKind.RelativeOrAbsolute));
                         break;
+                    case OptionType.Login:
+                        NavigationService.Navigate(new Uri("/LoginPage.xaml", UriKind.RelativeOrAbsolute));
+                        break;
+                    case OptionType.Logout:
+                        App.ViewModel.Logout();
+                        NavigationService.Navigate(new Uri("/MainMenu.xaml?Refresh=true", UriKind.RelativeOrAbsolute));
+                        break;
                 }
             }
         }

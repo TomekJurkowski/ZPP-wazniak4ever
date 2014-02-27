@@ -74,6 +74,10 @@ namespace wazniak_forever.Controls
                     navTo = string.Format("/ExerciseMultipleChoice.xaml?courseName={0}", CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
                     break;
+                case SolutionType.Value:
+                    navTo = string.Format("/ExerciseSingleValue.xaml?courseName={0}", CourseName.Text);
+                    (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
+                    break;
             }
         }
 

@@ -17,6 +17,7 @@ namespace wazniak_forever
         public ExerciseSingleValue()
         {
             InitializeComponent();
+            AddEvents();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

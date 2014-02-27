@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using wazniak_forever.Model;
 using Microsoft.Phone.Shell;
+using System.Windows;
 
 namespace wazniak_forever.ViewModel
 {
@@ -51,6 +52,20 @@ namespace wazniak_forever.ViewModel
             {
                 _allOptions = value;
                 NotifyPropertyChanged("AllOptions");
+            }
+        }
+
+        
+
+        private List<AuthenticationProvider> _authenticationProviders;
+
+        public List<AuthenticationProvider> AuthenticationProviders
+        {
+            get { return _authenticationProviders; }
+            set
+            {
+                _authenticationProviders = value;
+                NotifyPropertyChanged("AuthenticationProviders");
             }
         }
 
@@ -380,7 +395,66 @@ namespace wazniak_forever.ViewModel
                 new Option(OptionType.Downloads, false, "Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Settings, false, "Settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
             };
+
+            if (db.User != null)
+            {
+                AllOptions.Add(new Option(OptionType.Logout, true, "Sign out", new Uri("", UriKind.RelativeOrAbsolute)));
+            } else 
+            {
+                AllOptions.Add(new Option(OptionType.Login, true, "Sign in", new Uri("", UriKind.RelativeOrAbsolute)));
+            }
         }
+
+        #region Authentication
+
+        public void LoadAuthenticationProviders()
+        {
+            AuthenticationProviders = new List<AuthenticationProvider>()
+            {
+                new AuthenticationProvider(AuthenticationProviderType.Microsoft, "Microsoft"),
+                new AuthenticationProvider(AuthenticationProviderType.Google, "Google"),
+                new AuthenticationProvider(AuthenticationProviderType.Facebook, "Facebook"),
+                new AuthenticationProvider(AuthenticationProviderType.Twitter, "Twitter")
+            };
+        }
+
+        public async System.Threading.Tasks.Task Authenticate(MobileServiceAuthenticationProvider provider)
+        {
+            if (db.User == null)
+            {
+                string message;
+                try
+                {
+                    db.User = await DatabaseContext.MobileService
+                        .LoginAsync(provider);
+                    message =
+                        string.Format("You are now logged in - {0}", db.User.UserId);
+                }
+                catch (InvalidOperationException)
+                {
+                    message = "Error";
+                }
+                MessageBox.Show(message);
+            }
+            
+        }
+
+        public void Logout() {
+            try
+            {
+                if (DatabaseContext.MobileService.CurrentUser != null 
+                    && DatabaseContext.MobileService.CurrentUser.UserId != null)
+                     DatabaseContext.MobileService.Logout();
+                db.User = null;
+            }
+            catch (InvalidOperationException iopEx)
+            {
+                MessageBox.Show(string.Format("Error Occured: \n {0}", iopEx.ToString()));
+            }
+        }
+    
+
+        #endregion
 
         public void LoadCoursePage()
         {
@@ -401,6 +475,7 @@ namespace wazniak_forever.ViewModel
                 new Option(OptionType.Update, true, "Update", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
         }
+
 
         public async System.Threading.Tasks.Task LoadAllCourses()
         {
