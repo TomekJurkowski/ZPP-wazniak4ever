@@ -30,9 +30,11 @@ namespace wazniak_forever
         private async void SelectExercise()
         {
             //await App.ViewModel.LoadExercises();
+            System.Diagnostics.Debug.WriteLine("Beginning of SelectExercise()");
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", App.ViewModel.LoadExercises);
             System.Diagnostics.Debug.WriteLine("Hello");
             if (App.ViewModel.Solutions.Count <= 0) return;
+            System.Diagnostics.Debug.WriteLine("Solutions.Count > 0");
             System.Diagnostics.Debug.WriteLine(App.ViewModel.Solutions[0].Answer.Type);
             string navTo;
             switch (App.ViewModel.Solutions[0].Answer.Type)
@@ -48,7 +50,7 @@ namespace wazniak_forever
             }
         }
 
-        private void CoursePageOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CoursePageOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Option option = CoursePageOptions.SelectedItem as Option;
             CoursePageOptions.SelectedItem = null;
@@ -65,6 +67,9 @@ namespace wazniak_forever
                     case OptionType.AddToMyCourses:
                         break;
                     case OptionType.Download:
+                        Subject currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
+                        App.ViewModel.db.SaveSubjectLocally(currentCourse);
+                        System.Diagnostics.Debug.WriteLine("Subject saved locally " + currentCourse.Name);
                         break;
                 }
             }

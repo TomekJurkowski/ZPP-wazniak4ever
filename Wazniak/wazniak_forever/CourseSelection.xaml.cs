@@ -1,5 +1,6 @@
 ﻿using Microsoft.Phone.Controls;
 using System.Windows;
+using System.Windows.Navigation;
 using wazniak_forever.Controls;
 
 namespace wazniak_forever
@@ -10,13 +11,25 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            App.ViewModel.LoadDownloadedCourses();
+            LoadFromLocalDatabase();
             if (App.ViewModel.AreDownloads) MainPivot.Items.Add(CreatePivotItem("Downloads", "DownloadedCourses"));
             else
             {
                 LoadFromAzure();
                 LoadPivot();
             }
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            LoadFromAzure();
+            LoadFromLocalDatabase();
+        }
+
+        private async void LoadFromLocalDatabase()
+        {
+            await App.ViewModel.PerformTimeConsumingProcess(this, "Loading downloaded courses...", App.ViewModel.LoadDownloadedCourses);
         }
 
         private async void LoadFromAzure()

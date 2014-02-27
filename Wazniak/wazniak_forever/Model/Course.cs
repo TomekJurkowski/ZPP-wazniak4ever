@@ -29,14 +29,25 @@ namespace wazniak_forever.Model
             await Connect.CreateTableAsync<Subject>();
         }
 
-        public async Task<IEnumerable<Subject>> LoadSubjectsOffline()
+        public async void Drop()
+        {
+            await Connect.DropTableAsync<Subject>();
+        }
+
+        public async Task<List<Subject>> LoadSubjectsOffline()
         {
             return await Connect.Table<Subject>().ToListAsync();
         }
 
         public async void SaveSubjectLocally(Subject newSubject)
         {
-            await Connect.InsertAsync(newSubject);
+            try
+            {
+                await Connect.InsertAsync(newSubject);
+            }
+            catch 
+            {
+                System.Diagnostics.Debug.WriteLine("Subject is already in the local database.");            }
         }
 
         public async void SyncLocalDatabase()
@@ -103,7 +114,7 @@ namespace wazniak_forever.Model
 
     public class Subject
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey]
         public int ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

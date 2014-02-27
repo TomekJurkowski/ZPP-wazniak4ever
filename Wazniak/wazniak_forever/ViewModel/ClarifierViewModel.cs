@@ -11,7 +11,7 @@ namespace wazniak_forever.ViewModel
 {
     public class ClarifierViewModel : INotifyPropertyChanged
     {
-        private DatabaseContext db;
+        public DatabaseContext db { get; set; }
 
         public ClarifierViewModel()
         {
@@ -218,9 +218,10 @@ namespace wazniak_forever.ViewModel
                 .ToListAsync();
             var exerciseIds = exercises.Select(task => task.ID).ToList();*/
 
+            System.Diagnostics.Debug.WriteLine("Beginning of LoadExercises()");
             var tasksWithAnswers = await db.TasksWithAnswers.ToListAsync();
 
-            System.Diagnostics.Debug.WriteLine(tasksWithAnswers.Count);
+            System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
             /*var exerciseAnswer = from exercise in exercises
                                  join answer in answers on exercise.ID equals answer.TaskID
                                  select new { exercise, answer };*/
@@ -230,9 +231,11 @@ namespace wazniak_forever.ViewModel
 
             foreach (var task in tasksWithAnswers)
             {
+                System.Diagnostics.Debug.WriteLine("Beginning of foreach");
+                
                 Solution solution = null;
 
-                System.Diagnostics.Debug.WriteLine(task.Title);
+                System.Diagnostics.Debug.WriteLine("task title: " + task.Title);
 
                 switch (task.AnswerDiscriminator) 
                 {
@@ -246,17 +249,20 @@ namespace wazniak_forever.ViewModel
 
                 Solutions.Add(solution);
 
-                System.Diagnostics.Debug.WriteLine(task.AnswerDiscriminator);
+                System.Diagnostics.Debug.WriteLine("answer discriminator: " + task.AnswerDiscriminator);
 
                 switch (task.TaskDiscriminator)
                 {
                     case "RegularTask":
+                        System.Diagnostics.Debug.WriteLine("RegularTask");
                         var ex = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
                             task.Title, task.Text1, 
                             AllCourses.Where(course => course.ID == CurrentCourseID).First(),
                             solution);
+                        System.Diagnostics.Debug.WriteLine("Regular Exercise ex created");
                         solution.Exercise = ex;
                         Exercises.Add(ex);
+                        System.Diagnostics.Debug.WriteLine("Regular Exercise added to exercises");
                         break;
                 }                      
             }
@@ -391,12 +397,13 @@ namespace wazniak_forever.ViewModel
             AllCourses = await db.Subjects.ToListAsync();
         }
 
-        public void LoadDownloadedCourses()
+        public async System.Threading.Tasks.Task LoadDownloadedCourses()
         {
-            DownloadedCourses = new List<Subject>()
+            DownloadedCourses = await db.LoadSubjectsOffline();
+            /*DownloadedCourses = new List<Subject>()
             {
                 new Subject("Databases")
-            };
+            };*/
         }
 
         public void LoadMyCourses()

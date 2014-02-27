@@ -18,6 +18,9 @@ namespace wazniak_forever
             InitializeComponent();
             DataContext = App.ViewModel;
             App.ViewModel.LoadMenu();
+            //App.ViewModel.db.Drop();
+            App.ViewModel.db.Initialize();
+            System.Diagnostics.Debug.WriteLine("database context initialized");
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
