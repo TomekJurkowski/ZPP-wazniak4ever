@@ -456,14 +456,26 @@ namespace wazniak_forever.ViewModel
 
         #endregion
 
+        private void CheckCourseOwnership()
+        {
+            if (MyCourses.Any(course => course.ID == CurrentCourseID))
+            {
+                CourseOptions.Add(new Option(OptionType.DeleteFromMyCourses, false, "Delete from my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
+            }
+            else
+            {
+                CourseOptions.Add(new Option(OptionType.AddToMyCourses, false, "Add to my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
+            }
+        }
+
         public void LoadCoursePage()
         {
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.AddToMyCourses, false, "Add to my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
+            CheckCourseOwnership();
         }
 
         public void LoadDownloadedCoursePage()
@@ -471,9 +483,9 @@ namespace wazniak_forever.ViewModel
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.AddToMyCourses, false, "Add to my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Update, true, "Update", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
+            CheckCourseOwnership();
         }
 
 
@@ -491,37 +503,55 @@ namespace wazniak_forever.ViewModel
             };*/
         }
 
+        private List<UserSubject> _userSubjectMappings;
+
         public async void LoadMyCourses()
         {
-            /*var mySubjects = await db.MySubjects
+            var mySubjects = await db.MySubjects
                 .Where(user => user.UserID == DatabaseContext.MobileService.CurrentUser.UserId)
                 .ToListAsync();
 
             MyCourses = new List<Subject>();
+            _userSubjectMappings = new List<UserSubject>();
 
             mySubjects.ForEach(subject =>
             {
                 MyCourses.Add(new Subject(subject.ID, subject.Name, 
                     subject.Description, subject.LastUpdated));
-            });*/
+                _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID, subject.ID));
+            });
              
 
-            MyCourses = new List<Subject>()
+            /*MyCourses = new List<Subject>()
             {
                 new Subject("Algorithms I"),
                 new Subject("Algorithms II"),
                 new Subject("Databases")
-            };
+            };*/
         }
 
-        public async void AddToMyCourses(int subjectId)
+        public async System.Threading.Tasks.Task AddToMyCourses()
         {
             await db.UsersAndSubjects.InsertAsync(
                 new UserSubject
                 {
                     UserID = DatabaseContext.MobileService.CurrentUser.UserId,
-                    SubjectID = subjectId
+                    SubjectID = CurrentCourseID
                 });
+            MyCourses.Add(AllCourses.Find(course => course.ID == CurrentCourseID));
+            LoadCoursePage();  
+        }
+
+        public async System.Threading.Tasks.Task DeleteFromMyCourses()
+        {
+            var deletedMapping = _userSubjectMappings.Find(mapping =>
+                mapping.SubjectID == CurrentCourseID
+                && mapping.UserID == db.User.UserId);
+
+            await db.UsersAndSubjects.DeleteAsync(deletedMapping);
+            _userSubjectMappings.Remove(deletedMapping);
+            MyCourses.Remove(MyCourses.Find(course => course.ID == CurrentCourseID));
+            LoadCoursePage();  
         }
 
         public async System.Threading.Tasks.Task LoadNewCourses()

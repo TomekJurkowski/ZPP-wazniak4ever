@@ -82,6 +82,10 @@ namespace wazniak_forever
                         SelectExercise();
                         break;
                     case OptionType.AddToMyCourses:
+                        await App.ViewModel.PerformTimeConsumingProcess(this, "Adding to your courses...", App.ViewModel.AddToMyCourses);                                             
+                        break;
+                    case OptionType.DeleteFromMyCourses:
+                        await App.ViewModel.PerformTimeConsumingProcess(this, "Deleting from your courses...", App.ViewModel.DeleteFromMyCourses);          
                         break;
                     case OptionType.Download:
                         Subject currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);

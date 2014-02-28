@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.IO;
 using System.Threading.Tasks;
 using SQLite;
+using Newtonsoft.Json;
 
 namespace wazniak_forever.Model
 {
@@ -106,6 +107,7 @@ namespace wazniak_forever.Model
     {
         public string UserID { get; set; }
         public int ID { get; set; }
+        public string MappingID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public System.DateTime LastUpdated { get; set; }
@@ -113,8 +115,18 @@ namespace wazniak_forever.Model
 
     public class UserSubject
     {
+        public string Id { get; set; }
         public string UserID { get; set; }
         public int SubjectID { get; set; }
+
+        public UserSubject(string id, string userID, int subjectID)
+        {
+            Id = id;
+            UserID = userID;
+            SubjectID = subjectID;
+        }
+
+        public UserSubject() { }
     }
 
     public class TaskAnswer
