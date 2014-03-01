@@ -6,24 +6,22 @@
 
 @section HeadScripts
 {
-    <style>
+        <style>
         .radio {
             margin-top: 30px;
             margin-bottom: 30px;
         }
         #prompt {
-            margin-top: 0px;
+            margin-top: 0;
             margin-bottom: 50px;
+        }
+
+        dt {
+            color: #660066;
         }
     </style>
 
     <script type="text/javascript">
-        $(function () {
-            $("#tooltip1,#tooltip2").tooltip({
-                animated: 'fade',
-                placement: 'bottom'
-            });
-        });
         
         function addNewTask(name, id) {
             if ($('input[name="optionsRadios"]:checked').val() == "option1") {
@@ -41,6 +39,14 @@
                 window.location = '/MathematicalTask/Details/' + id;
             }
         }
+
+        $(function () {
+            $("#tooltip1,#tooltip2").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
+        });
+
     </script>
 }
 
@@ -84,6 +90,7 @@
             </dd>
 
             <br />
+            <br />
 
             <dt>
                 Exercises
@@ -91,10 +98,30 @@
 
             <dd>
                 <br />
+                <br />
+            
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label class="control-label PurpleText">Find exercise by title:</label>
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Search" class="btn PurpleBtn">
+                    </div>
+                </div>
+                
+                <br />
+
                 <table class="table table-hover">
-                    <tr>
-                        <th>Exercise title</th>
-                        <th>Solution</th>
+                    <tr class="PurpleText">
+                        <th>
+                            @Html.ActionLink("Exercise title", "Details", new { sortOrder = ViewBag.SortParam, currentFilter = ViewBag.CurrentFilter })
+                        </th>
+                        <th>
+                            Solution
+                        </th>
                     </tr>
                     @foreach (var item in Model.Tasks)
                     {

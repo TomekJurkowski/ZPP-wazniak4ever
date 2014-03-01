@@ -39,17 +39,10 @@ namespace WazniakWebsite.Controllers
             }
 
             // Put the results in correct order
-            if (sortOrder == "Name_desc")
-            {
-                subjects = subjects.OrderByDescending(s => s.Name);
-            }
-            else
-            {
-                subjects = subjects.OrderBy(s => s.Name);
-            }
+            subjects = sortOrder == "Name_desc" ? subjects.OrderByDescending(s => s.Name) : subjects.OrderBy(s => s.Name);
 
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
+            const int pageSize = 12;
+            var pageNumber = (page ?? 1);
 
             return View(subjects.ToPagedList(pageNumber, pageSize));
         }
@@ -61,7 +54,7 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Subject subject = db.Subjects.Find(id);
+            var subject = db.Subjects.Find(id);
             if (subject == null)
             {
                 return HttpNotFound();
@@ -167,7 +160,7 @@ namespace WazniakWebsite.Controllers
         {
             try
             {
-                Subject subject = db.Subjects.Find(id);
+                var subject = db.Subjects.Find(id);
                 db.Subjects.Remove(subject);
                 db.SaveChanges();
             }
