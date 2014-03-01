@@ -25,5 +25,10 @@ namespace WazniakWebsite.Models
             }
             return Text;
         }
+
+        public override string ToString()
+        {
+            return Text;
+        }
     }
 }

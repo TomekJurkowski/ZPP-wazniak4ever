@@ -100,7 +100,9 @@
             //  The callback function is set up below, after the Preview object is set up.
             //
             Update: function () {
-                if (this.timeout) { clearTimeout(this.timeout) }
+                if (this.timeout) {
+                    clearTimeout(this.timeout);
+                }
                 this.timeout = setTimeout(this.callback, this.delay);
             },
 
@@ -159,7 +161,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Title, new { @class = "form-control text-box" })
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
         </div>
@@ -177,7 +179,7 @@
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
             <div class="col-md-10">
-                <textarea class="text-box form-control" id="Text" name="Text" rows="8" onkeyup="Preview.Update()"></textarea>
+                <textarea class="form-control" id="Text" name="Text" rows="8" onkeyup="Preview.Update()"></textarea>
                 <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
             </div>
         </div>
@@ -185,8 +187,8 @@
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="Text">Preview</label>
             <div class="col-md-10">
-                <div id="MathPreview" class="well-large alert lightPurpleBackground"></div>
-                <div id="MathBuffer" class="well-large alert lightPurpleBackground" style="visibility:hidden; position:absolute; top:0; left: 0"></div>
+                <div id="MathPreview" class="well-lg alert lightPurpleBackground"></div>
+                <div id="MathBuffer" class="well-lg alert lightPurpleBackground" style="visibility:hidden; position:absolute; top:0; left: 0"></div>
             </div>
         </div>
 
@@ -204,7 +206,7 @@
 
 <hr />
 <div>
-    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { @class = "PurpleText" })
+    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { })
 </div>
 
 @section Scripts {

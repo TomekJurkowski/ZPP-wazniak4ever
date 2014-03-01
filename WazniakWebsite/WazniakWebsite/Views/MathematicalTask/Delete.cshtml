@@ -36,7 +36,7 @@
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
         <div class="form-group">
-            <div class="form-actions no-color col-md-offset-2 col-md-10">
+            <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Delete" class="btn PurpleBtn" />
             </div>
         </div>
@@ -45,5 +45,5 @@
 
 <hr />
 <div>
-    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { @class = "PurpleText" })
+    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { })
 </div>

@@ -26,5 +26,10 @@ namespace WazniakWebsite.Models
         {
             return "SingleChoiceAnswer with the " + CorrectAnswer + " option correct.";
         }
+
+        public override string ToString()
+        {
+            return "SingleChoiceAnswer with the " + CorrectAnswer + " option correct.";
+        }
     }
 }

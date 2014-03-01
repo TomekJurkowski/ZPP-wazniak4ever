@@ -8,12 +8,21 @@
 
 <hr />
 <div class="form-horizontal">
-    
+        
     <div class="form-group">
-        @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
+        <label class="control-label col-md-2 PurpleText">Subject</label>
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground">
+                @Html.DisplayFor(model => model.Subject.Name)
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2 PurpleText">Exercise Title</label>
         <div class="col-md-10">
             <div class="alert lightPurpleBackground text-center">
-                @Html.DisplayFor(model => model.Title)
+                <b>@Html.DisplayFor(model => model.Title)</b>
             </div>
         </div>
     </div>
@@ -26,11 +35,20 @@
             </div>
         </div>
     </div>
+    
+    <div class="form-group">
+        <label class="control-label col-md-2 PurpleText">Exercise Solution</label>
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground">
+                @Model.Answer.ToString()
+            </div>
+        </div>
+    </div>
 
 </div>
 
 <hr />
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { @class = "PurpleText" })
+    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { })
 </div>
