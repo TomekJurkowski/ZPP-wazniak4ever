@@ -75,7 +75,7 @@ namespace WazniakWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask, string subjectName, int subjectId,
-            string answerType, string value, string text)
+            string answerType, string valueAns, string textAns)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace WazniakWebsite.Controllers
                     switch (answerType)
                     {
                         case SINGLE_VALUE_ANSWER:
-                            if (String.IsNullOrEmpty(value))
+                            if (String.IsNullOrEmpty(valueAns))
                             {
                                 // Reload page with proper statement
                                 ViewBag.SingleValueStatement = SINGLE_VALUE_STATEMENT;
@@ -94,13 +94,13 @@ namespace WazniakWebsite.Controllers
                             }
 
                             // Create new SingleValueAnswer
-                            var singleValueAnswer = new SingleValueAnswer(mathematicaltask.ID, value);
+                            var singleValueAnswer = new SingleValueAnswer(mathematicaltask.ID, valueAns);
                             db.SingleValueAnswers.Add(singleValueAnswer);
 
                             db.MathematicalTasks.Add(mathematicaltask);
                             break;
                         case TEXT_ANSWER:
-                            if (String.IsNullOrEmpty(text))
+                            if (String.IsNullOrEmpty(textAns))
                             {
                                 // Reload page with proper statement
                                 ViewBag.TextStatement = TEXT_STATEMENT;
@@ -110,9 +110,8 @@ namespace WazniakWebsite.Controllers
                             }
 
                             // Create new TextAnswer
-                            var textAnswer = new TextAnswer(mathematicaltask.ID, text);
+                            var textAnswer = new TextAnswer(mathematicaltask.ID, textAns);
                             db.TextAnswers.Add(textAnswer);
-
 
                             db.MathematicalTasks.Add(mathematicaltask);
                             break;
