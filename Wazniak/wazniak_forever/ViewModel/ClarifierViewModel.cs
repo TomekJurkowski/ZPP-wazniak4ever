@@ -462,11 +462,11 @@ namespace wazniak_forever.ViewModel
             {
                 if (MyCourses.Any(course => course.ID == CurrentCourseID))
                 {
-                    CourseOptions.Add(new Option(OptionType.DeleteFromMyCourses, false, "Delete from my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
+                    CourseOptions.Add(new Option(OptionType.DeleteFromMyCourses, false, "Delete from My Courses", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
                 }
                 else
                 {
-                    CourseOptions.Add(new Option(OptionType.AddToMyCourses, false, "Add to my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
+                    CourseOptions.Add(new Option(OptionType.AddToMyCourses, false, "Add to My Courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
                 }
             }
         }
@@ -477,7 +477,7 @@ namespace wazniak_forever.ViewModel
             {
                 CourseOptions.RemoveAll(option => option.Type == OptionType.Download);
                 CourseOptions.Add(new Option(OptionType.Update, true, "Update", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)));
-                CourseOptions.Add(new Option(OptionType.DeleteFromDownloads, true, "Delete from Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)));
+                CourseOptions.Add(new Option(OptionType.DeleteFromDownloads, true, "Delete from Downloads", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
             }
         }
 

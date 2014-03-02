@@ -84,10 +84,10 @@ namespace wazniak_forever
                         SelectExercise();
                         break;
                     case OptionType.AddToMyCourses:
-                        await App.ViewModel.PerformTimeConsumingProcess(this, "Adding to your courses...", App.ViewModel.AddToMyCourses);                                             
+                        await App.ViewModel.PerformTimeConsumingProcess(this, "Adding to My Courses...", App.ViewModel.AddToMyCourses);                                             
                         break;
                     case OptionType.DeleteFromMyCourses:
-                        await App.ViewModel.PerformTimeConsumingProcess(this, "Deleting from your courses...", App.ViewModel.DeleteFromMyCourses);          
+                        await App.ViewModel.PerformTimeConsumingProcess(this, "Deleting from My Courses...", App.ViewModel.DeleteFromMyCourses);          
                         break;
                     case OptionType.Download:
                         Subject currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
@@ -99,7 +99,7 @@ namespace wazniak_forever
                         break;
                     case OptionType.DeleteFromDownloads:
                         currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
-                        await App.ViewModel.db.DeleteSubjectFromDownloads(this, "Deleting course...", currentCourse);
+                        await App.ViewModel.db.DeleteSubjectFromDownloads(this, "Deleting from Downloads...", currentCourse);
                         System.Diagnostics.Debug.WriteLine("Subject deleted " + currentCourse.Name);
                         App.ViewModel.LoadCoursePage();
                         break;
