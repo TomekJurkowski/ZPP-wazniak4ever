@@ -17,7 +17,7 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            App.ViewModel.LoadCoursePage();
+            
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -25,6 +25,8 @@ namespace wazniak_forever
             base.OnNavigatedTo(e);
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
             App.ViewModel.CurrentCourseID = Convert.ToInt32(NavigationContext.QueryString["courseID"]);
+            App.ViewModel.LoadCoursePage();
+            /*
             bool subjectSavedLocally = true;
             if (App.ViewModel.OnlineMode)
             {
@@ -37,7 +39,7 @@ namespace wazniak_forever
                 System.Diagnostics.Debug.WriteLine("Subject already saved");
             }
             else System.Diagnostics.Debug.WriteLine("Subject NOT saved");
-
+            */
         }
 
         private async void SelectExercise()
@@ -91,9 +93,15 @@ namespace wazniak_forever
                         Subject currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
                         await App.ViewModel.db.SaveSubjectLocally(this, "Downloading course...", currentCourse);
                         System.Diagnostics.Debug.WriteLine("Subject saved locally " + currentCourse.Name);
-                        App.ViewModel.LoadDownloadedCoursePage();
+                        App.ViewModel.LoadCoursePage();
                         break;
                     case OptionType.Update:
+                        break;
+                    case OptionType.DeleteFromDownloads:
+                        currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
+                        await App.ViewModel.db.DeleteSubjectFromDownloads(this, "Deleting course...", currentCourse);
+                        System.Diagnostics.Debug.WriteLine("Subject deleted " + currentCourse.Name);
+                        App.ViewModel.LoadCoursePage();
                         break;
                 }
             }

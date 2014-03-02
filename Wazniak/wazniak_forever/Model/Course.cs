@@ -73,6 +73,17 @@ namespace wazniak_forever.Model
                 System.Diagnostics.Debug.WriteLine("Subject is already in the local database.");            
             }
         }
+
+        public async System.Threading.Tasks.Task DeleteSubjectFromDownloads(
+            System.Windows.DependencyObject depObject, string actionDescr, Subject subject)
+        {
+            App.ViewModel.SetProgressIndicator(depObject, actionDescr);
+            App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
+            await Connect.DeleteAsync(subject);
+            App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
+            App.ViewModel.LoadDownloadedCourses();
+        }
+
         public async Task<bool> CheckIfSubjectSavedLocally(Subject subject)
         {
             var result = await Connect.Table<Subject>().Where(x => x.ID == subject.ID).ToListAsync();

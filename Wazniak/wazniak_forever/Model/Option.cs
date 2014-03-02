@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace wazniak_forever.Model
 {
-    public enum OptionType { MyCourses, Downloads, 
-        Settings, Start, AddToMyCourses, Download, 
-        Login, Logout, Update, DeleteFromMyCourses }
+    public enum OptionType
+    {
+        MyCourses, Downloads,
+        Settings, Start, AddToMyCourses, Download,
+        Login, Logout, Update, DeleteFromMyCourses,
+        DeleteFromDownloads
+    }
 
     public class Option
     {

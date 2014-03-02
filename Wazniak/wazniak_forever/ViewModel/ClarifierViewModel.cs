@@ -458,26 +458,42 @@ namespace wazniak_forever.ViewModel
 
         private void CheckCourseOwnership()
         {
-            if (MyCourses.Any(course => course.ID == CurrentCourseID))
+            if (db.User != null)
             {
-                CourseOptions.Add(new Option(OptionType.DeleteFromMyCourses, false, "Delete from my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
-            }
-            else
-            {
-                CourseOptions.Add(new Option(OptionType.AddToMyCourses, false, "Add to my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
+                if (MyCourses.Any(course => course.ID == CurrentCourseID))
+                {
+                    CourseOptions.Add(new Option(OptionType.DeleteFromMyCourses, false, "Delete from my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
+                }
+                else
+                {
+                    CourseOptions.Add(new Option(OptionType.AddToMyCourses, false, "Add to my courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
+                }
             }
         }
 
-        public void LoadCoursePage()
+        private void LoadDownloadedCourseOptions()
         {
+            if (DownloadedCourses.Any(course => course.ID == CurrentCourseID))
+            {
+                CourseOptions.RemoveAll(option => option.Type == OptionType.Download);
+                CourseOptions.Add(new Option(OptionType.Update, true, "Update", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)));
+                CourseOptions.Add(new Option(OptionType.DeleteFromDownloads, true, "Delete from Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)));
+            }
+        }
+
+        public async void LoadCoursePage()
+        {
+            await LoadDownloadedCourses();
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
+            LoadDownloadedCourseOptions();
             CheckCourseOwnership();
         }
 
+        /*
         public void LoadDownloadedCoursePage()
         {
             CourseOptions = new List<Option>()
@@ -487,7 +503,7 @@ namespace wazniak_forever.ViewModel
             };
             CheckCourseOwnership();
         }
-
+        */
 
         public async System.Threading.Tasks.Task LoadAllCourses()
         {
