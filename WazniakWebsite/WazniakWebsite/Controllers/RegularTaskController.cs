@@ -210,10 +210,13 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            RegularTask regulartask = db.RegularTasks.Find(id);
+            var regulartask = db.RegularTasks.Find(id);
+            var x = regulartask.Answer;
+            db.Answers.Remove(regulartask.Answer);
             db.RegularTasks.Remove(regulartask);
+
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Subject");
         }
 
         protected override void Dispose(bool disposing)

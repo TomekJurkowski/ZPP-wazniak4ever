@@ -41,7 +41,7 @@ input[type="checkbox"].input-validation-error {
     display: none;
 }
 
-.PurpleText {
+.PurpleText, .PurpleColor {
     color: #660066;
 }
 
@@ -121,7 +121,10 @@ a:focus {
     background-color: #FFCCFF;
 }
 
-.table-hover > tbody > tr:hover > td{
+.table-hover > tbody > tr:hover > td {
     background-color: #FFCCFF;
-    cursor: pointer;
 }
+
+ .clickable {
+    cursor: pointer;     
+ }

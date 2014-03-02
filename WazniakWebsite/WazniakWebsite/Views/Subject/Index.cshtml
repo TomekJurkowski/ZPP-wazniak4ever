@@ -19,7 +19,21 @@
         .form-group {
             margin-right: 30px;
         }
-    </style> 
+    </style>
+    
+    <script type="text/javascript">
+        function editExercise(id) {
+            window.location = '/Subject/Edit/' + id;
+        }
+
+        function deleteExercise(id) {
+            window.location = '/Subject/Delete/' + id;
+        }
+
+        function goToExerciseDetails(id) {
+            window.location = '/Subject/Details/' + id;
+        }
+    </script>
 }
 
 <h2 class="PurpleText">Subjects</h2>
@@ -45,7 +59,7 @@
 
 <br />
 
-<table class="table table-striped lightPurpleBackground">
+<table class="table table-hover">
     <tr class="PurpleText">
         <th>
             @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.SortParam, currentFilter = ViewBag.CurrentFilter })
@@ -57,13 +71,14 @@
             Last Updated Time
         </th>
         <th></th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
         <tr>
-            <td>
-                @Html.ActionLink(item.Name, "Details", new { id = item.ID }, new { @class = "PurpleText" })
+            <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 <span class="shortDisplay">
@@ -74,8 +89,10 @@
                 @Html.DisplayFor(modelItem => item.LastUpdated)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "PurpleText" }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "PurpleText" })
+                <span id="tooltipEdit" class="glyphicon glyphicon-edit PurpleColor clickable" title="Edit" onclick="editExercise('@item.ID')"></span>
+            </td>
+            <td>
+                <span id="tooltipRemove" class="glyphicon glyphicon-trash PurpleColor clickable" title="Delete" onclick="deleteExercise('@item.ID')"></span>
             </td>
         </tr>
     }

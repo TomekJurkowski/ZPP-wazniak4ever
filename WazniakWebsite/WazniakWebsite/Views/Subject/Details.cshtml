@@ -26,6 +26,13 @@
     </style>
 
     <script type="text/javascript">
+        function editTask(id, className) {
+            window.location = '/' + className +'/Edit/' + id;
+        }
+
+        function deleteTask(id, className) {
+            window.location = '/' + className + '/Delete/' + id;
+        }
 
         function addNewTask(name, id) {
             if ($('input[name="optionsRadios"]:checked').val() == "option1") {
@@ -45,9 +52,13 @@
         }
 
         $(function () {
-            $("#tooltip1,#tooltip2").tooltip({
+            $("#tooltip1,#tooltip2,[id^='tooltipEdit']").tooltip({
                 animated: 'fade',
                 placement: 'bottom'
+            });
+            $("[id^='tooltipRemove']").tooltip({
+                animated: 'fade',
+                placement: 'top'
             });
         });
 
@@ -128,11 +139,14 @@
                     <th>
                         Solution
                     </th>
+                    <th></th>
+                    <th></th>
                 </tr>
+
                 @foreach (var item in (IPagedList<WazniakWebsite.Models.Task>)ViewBag.Tasks)
                 {
-                    <tr onclick="goToTaskDetails('@item.className()', @item.ID)">
-                        <td>
+                    <tr>
+                        <td  class="clickable" onclick="goToTaskDetails('@item.className()', @item.ID)">
                             @Html.DisplayFor(modelItem => item.Title)
                         </td>
                         <td>
@@ -142,6 +156,12 @@
                                     @item.Answer.Overview()
                                 }
                             }
+                        </td>
+                        <td>
+                            <span id="tooltipEdit" class="glyphicon glyphicon-edit PurpleColor clickable" title="Edit" onclick="editTask('@item.ID', '@item.className()')"></span>
+                        </td>
+                        <td>
+                            <span id="tooltipRemove" class="glyphicon glyphicon-trash PurpleColor clickable" title="Delete" onclick="deleteTask('@item.ID', '@item.className()')"></span>
                         </td>
                     </tr>                    
                 }
