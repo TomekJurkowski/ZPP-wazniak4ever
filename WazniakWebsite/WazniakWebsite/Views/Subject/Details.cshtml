@@ -1,4 +1,7 @@
 ﻿@model WazniakWebsite.Models.Subject
+@using PagedList
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Details";
@@ -6,11 +9,12 @@
 
 @section HeadScripts
 {
-        <style>
+    <style>
         .radio {
             margin-top: 30px;
             margin-bottom: 30px;
         }
+
         #prompt {
             margin-top: 0;
             margin-bottom: 50px;
@@ -22,7 +26,7 @@
     </style>
 
     <script type="text/javascript">
-        
+
         function addNewTask(name, id) {
             if ($('input[name="optionsRadios"]:checked').val() == "option1") {
                 window.location = '/RegularTask/Create/' + name + '/' + id;
@@ -31,7 +35,7 @@
                 window.location = '/MathematicalTask/Create/' + name + '/' + id;
             }
         }
-        
+
         function goToTaskDetails(taskType, id) {
             if (taskType == "RegularTask") {
                 window.location = '/RegularTask/Details/' + id;
@@ -50,56 +54,57 @@
     </script>
 }
 
-    <h2 class="PurpleText">Subject details</h2>
+<h2 class="PurpleText">Subject details</h2>
 
-    <div>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
 
-            <br />
+        <dd><br/></dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
             
-            <br />
+        <dd><br /></dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.LastUpdated)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.LastUpdated)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.LastUpdated)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.LastUpdated)
+        </dd>
 
-            <br />
+        <dd><br /></dd>
 
-            <dd>
-                <input type="button" value="Add new Exercise" class="btn PurpleBtn" data-toggle="modal" data-target="#addExerciseModal" />
-            </dd>
+        <dd>
+            <input type="button" value="Add new Exercise" class="btn PurpleBtn" data-toggle="modal" data-target="#addExerciseModal" />
+        </dd>
 
-            <br />
-            <br />
+        <dd><br /><br /></dd>
 
-            <dt>
-                Exercises
-            </dt>
+        <dt>
+            Exercises
+        </dt>
 
-            <dd>
-                <br />
-                <br />
+        <dd>
+            <br/>
+            <br/>
             
+            @using (Html.BeginForm())
+            {
                 <div class="form-inline">
                     <div class="form-group">
                         <label class="control-label PurpleText">Find exercise by title:</label>
@@ -110,75 +115,82 @@
                     <div class="form-group">
                         <input type="submit" value="Search" class="btn PurpleBtn">
                     </div>
-                </div>
-                
-                <br />
+                </div>    
+            }
 
-                <table class="table table-hover">
-                    <tr class="PurpleText">
-                        <th>
-                            @Html.ActionLink("Exercise title", "Details", new { sortOrder = ViewBag.SortParam, currentFilter = ViewBag.CurrentFilter })
-                        </th>
-                        <th>
-                            Solution
-                        </th>
-                    </tr>
-                    @foreach (var item in Model.Tasks)
-                    {
-                        <tr onclick="goToTaskDetails('@item.className()', @item.ID)">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Title)
-                            </td>
-                            <td>
-                                @{
-                                    if (item.Answer != null)
-                                    {
-                                        @item.Answer.Overview()
-                                    }
+            <br/>
+
+            <table class="table table-hover">
+                <tr class="PurpleText">
+                    <th>
+                        @Html.ActionLink("Exercise title", "Details", new { sortOrder = ViewBag.SortParam, currentFilter = ViewBag.CurrentFilter })
+                    </th>
+                    <th>
+                        Solution
+                    </th>
+                </tr>
+                @foreach (var item in (IPagedList<WazniakWebsite.Models.Task>)ViewBag.Tasks)
+                {
+                    <tr onclick="goToTaskDetails('@item.className()', @item.ID)">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @{
+                                if (item.Answer != null)
+                                {
+                                    @item.Answer.Overview()
                                 }
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </dd>
+                            }
+                        </td>
+                    </tr>                    
+                }
+            </table>
+            
+            Page @(ViewBag.Tasks.PageCount < ViewBag.Tasks.PageNumber ? 0 : ViewBag.Tasks.PageNumber) of @ViewBag.Tasks.PageCount
 
-        </dl>
-    </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+            @Html.PagedListPager((IPagedList)ViewBag.Tasks, page => Url.Action("Details", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+        </dd>
+    </dl>
+</div>
 
-    <!-- addExerciseModal -->
-    <div class="modal fade" id="addExerciseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 class="modal-title PurpleText" id="myModalLabel">Choose the exercise that you want to create:</h3>
+<hr />
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<!-- addExerciseModal -->
+<div class="modal fade" id="addExerciseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title PurpleText" id="myModalLabel">Choose the exercise that you want to create:</h3>
+            </div>
+            <div class="modal-body">
+                <h5 class="PurpleText" id="prompt">Move the mouse over the exercise names, to see a short description.</h5>
+
+                <div class="radio">
+                    <label id="tooltip1" data-toggle="tooltip" title="Typical exercise which content is pure text.">
+                        <input type="radio" name="optionsRadios" id="regularExerciseOption" value="option1" checked>
+                        <h4 class="PurpleText">Regular Exercise</h4>
+                    </label>
                 </div>
-                <div class="modal-body">
-                    <h5 class="PurpleText" id="prompt">Move the mouse over the exercise names, to see a short description.</h5>
 
-                    <div class="radio">
-                        <label id="tooltip1" data-toggle="tooltip" title="Typical exercise which content is pure text.">
-                            <input type="radio" name="optionsRadios" id="regularExerciseOption" value="option1" checked>
-                            <h4 class="PurpleText">Regular Exercise</h4>
-                        </label>
-                    </div>
-
-                    <div class="radio">
-                        <label id="tooltip2" data-toggle="tooltip" title="Exercise that may include special signs, mathematical formulas, etc.">
-                            <input type="radio" name="optionsRadios" id="mathematicalExerciseOption" value="option2">
-                            <h4 class="PurpleText">Mathematical Exercise</h4>
-                        </label>
-                    </div>
-
+                <div class="radio">
+                    <label id="tooltip2" data-toggle="tooltip" title="Exercise that may include special signs, mathematical formulas, etc.">
+                        <input type="radio" name="optionsRadios" id="mathematicalExerciseOption" value="option2">
+                        <h4 class="PurpleText">Mathematical Exercise</h4>
+                    </label>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Dismiss</button>
-                    <button type="button" class="btn PurpleBtn" id="createExerciseBtn" onclick="addNewTask('@Model.Name', '@Model.ID')">Create exercise</button>
-                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Dismiss</button>
+                <button type="button" class="btn PurpleBtn" id="createExerciseBtn" onclick="addNewTask('@Model.Name', '@Model.ID')">Create exercise</button>
             </div>
         </div>
+    </div>
 </div>

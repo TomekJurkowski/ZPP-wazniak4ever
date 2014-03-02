@@ -48,7 +48,7 @@ namespace WazniakWebsite.Controllers
         }
 
         // GET: /Subject/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, string sortOrder, string currentFilter, string searchString, int? page)
         {
             if (id == null)
             {
@@ -59,6 +59,37 @@ namespace WazniakWebsite.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.SortParam = String.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+
+            var tasks = from t in db.Tasks
+                        where t.SubjectID == id
+                        select t;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                tasks = tasks.Where(s => s.Title.ToUpper().Contains(searchString.ToUpper()));
+            }
+
+            // Put the results in correct order
+            tasks = sortOrder == "Name_desc" ? tasks.OrderByDescending(s => s.Title) : tasks.OrderBy(s => s.Title);
+
+            const int pageSize = 12;
+            var pageNumber = (page ?? 1);
+
+            ViewBag.Tasks = tasks.ToPagedList(pageNumber, pageSize);
+
             return View(subject);
         }
 
