@@ -97,8 +97,6 @@ namespace WazniakWebsite.Controllers
                             // Create new SingleValueAnswer
                             var singleValueAnswer = new SingleValueAnswer(regulartask.ID, valueAns);
                             db.SingleValueAnswers.Add(singleValueAnswer);
-
-                            db.RegularTasks.Add(regulartask);
                             break;
                         case TEXT_ANSWER:
                             if (String.IsNullOrEmpty(textAns))
@@ -113,20 +111,16 @@ namespace WazniakWebsite.Controllers
                             // Create new TextAnswer
                             var textAnswer = new TextAnswer(regulartask.ID, textAns);
                             db.TextAnswers.Add(textAnswer);
-
-                            db.RegularTasks.Add(regulartask);
                             break;
                         case SINGLE_CHOICE_ANSWER:
 
 
 
-                            db.RegularTasks.Add(regulartask);
                             break;
                         case MULTIPLE_CHOICE_ANSWER:
 
 
 
-                            db.RegularTasks.Add(regulartask);
                             break;
                         default:
                             // No answer has been selected - let's remind the user that he has to pick one
@@ -136,6 +130,12 @@ namespace WazniakWebsite.Controllers
                             return View(regulartask);
                     }
 
+                    // Update subject time
+                    var sub = db.Subjects.Find(regulartask.SubjectID);
+                    sub.UpdateLastUpdatedTime();
+                    db.Entry(sub).State = EntityState.Modified;
+
+                    db.RegularTasks.Add(regulartask);
                     db.SaveChanges();
                     return RedirectToAction("Details", "Subject", new { id = subjectId });
                 }
@@ -158,7 +158,8 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            RegularTask regulartask = db.RegularTasks.Find(id);
+
+            var regulartask = db.RegularTasks.Find(id);
             if (regulartask == null)
             {
                 return HttpNotFound();
@@ -171,15 +172,20 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="ID,Title,Text")] RegularTask regulartask)
+        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID,SubjectID")] RegularTask regulartask)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    // Update subject time
+                    var sub = db.Subjects.Find(regulartask.SubjectID);
+                    sub.UpdateLastUpdatedTime();
+                    db.Entry(sub).State = EntityState.Modified;
+
                     db.Entry(regulartask).State = EntityState.Modified;
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -198,7 +204,8 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            RegularTask regulartask = db.RegularTasks.Find(id);
+
+            var regulartask = db.RegularTasks.Find(id);
             if (regulartask == null)
             {
                 return HttpNotFound();
@@ -216,6 +223,11 @@ namespace WazniakWebsite.Controllers
 
             try
             {
+                // Update subject time
+                var sub = db.Subjects.Find(regulartask.SubjectID);
+                sub.UpdateLastUpdatedTime();
+                db.Entry(sub).State = EntityState.Modified;
+
                 db.Answers.Remove(regulartask.Answer);
                 db.RegularTasks.Remove(regulartask);
 

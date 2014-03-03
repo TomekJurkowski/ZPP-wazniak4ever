@@ -110,7 +110,8 @@ namespace WazniakWebsite.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    subject.LastUpdated = DateTime.Today;
+                    // Update subject time
+                    subject.UpdateLastUpdatedTime();
                     db.Subjects.Add(subject);
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -151,6 +152,8 @@ namespace WazniakWebsite.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    // Update subject time
+                    subject.UpdateLastUpdatedTime();
                     db.Entry(subject).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");

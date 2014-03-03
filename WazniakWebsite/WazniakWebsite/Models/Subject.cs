@@ -23,5 +23,10 @@ namespace WazniakWebsite.Models
         public DateTime LastUpdated { get; set; }
 
         public virtual ICollection<Task> Tasks { get; set; }
+
+        public void UpdateLastUpdatedTime()
+        {
+            LastUpdated = DateTime.Today;
+        }
     }
 }

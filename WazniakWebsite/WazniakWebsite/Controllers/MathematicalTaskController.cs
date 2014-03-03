@@ -96,8 +96,6 @@ namespace WazniakWebsite.Controllers
                             // Create new SingleValueAnswer
                             var singleValueAnswer = new SingleValueAnswer(mathematicaltask.ID, valueAns);
                             db.SingleValueAnswers.Add(singleValueAnswer);
-
-                            db.MathematicalTasks.Add(mathematicaltask);
                             break;
                         case TEXT_ANSWER:
                             if (String.IsNullOrEmpty(textAns))
@@ -112,20 +110,16 @@ namespace WazniakWebsite.Controllers
                             // Create new TextAnswer
                             var textAnswer = new TextAnswer(mathematicaltask.ID, textAns);
                             db.TextAnswers.Add(textAnswer);
-
-                            db.MathematicalTasks.Add(mathematicaltask);
                             break;
                         case SINGLE_CHOICE_ANSWER:
 
 
 
-                            db.MathematicalTasks.Add(mathematicaltask);
                             break;
                         case MULTIPLE_CHOICE_ANSWER:
 
 
 
-                            db.MathematicalTasks.Add(mathematicaltask);
                             break;
                         default:
                             // No answer has been selected - let's remind the user that he has to pick one
@@ -134,6 +128,12 @@ namespace WazniakWebsite.Controllers
 
                             return View(mathematicaltask);
                     }
+
+                    // Update subject time
+                    var sub = db.Subjects.Find(mathematicaltask.SubjectID);
+                    sub.UpdateLastUpdatedTime();
+                    db.Entry(sub).State = EntityState.Modified;
+
                     db.MathematicalTasks.Add(mathematicaltask);
                     db.SaveChanges();
                     return RedirectToAction("Details", "Subject", new { id = subjectId });
@@ -157,7 +157,8 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
+
+            var mathematicaltask = db.MathematicalTasks.Find(id);
             if (mathematicaltask == null)
             {
                 return HttpNotFound();
@@ -170,15 +171,20 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Text")] MathematicalTask mathematicaltask)
+        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    // Update subject time
+                    var sub = db.Subjects.Find(mathematicaltask.SubjectID);
+                    sub.UpdateLastUpdatedTime();
+                    db.Entry(sub).State = EntityState.Modified;
+
                     db.Entry(mathematicaltask).State = EntityState.Modified;
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -197,7 +203,8 @@ namespace WazniakWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
+
+            var mathematicaltask = db.MathematicalTasks.Find(id);
             if (mathematicaltask == null)
             {
                 return HttpNotFound();
@@ -215,6 +222,11 @@ namespace WazniakWebsite.Controllers
 
             try
             {
+                // Update subject time
+                var sub = db.Subjects.Find(mathematicaltask.SubjectID);
+                sub.UpdateLastUpdatedTime();
+                db.Entry(sub).State = EntityState.Modified;
+
                 db.Answers.Remove(mathematicaltask.Answer);
                 db.MathematicalTasks.Remove(mathematicaltask);
 
