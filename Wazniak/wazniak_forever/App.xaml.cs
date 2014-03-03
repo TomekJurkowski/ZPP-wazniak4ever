@@ -11,6 +11,7 @@ using wazniak_forever.Resources;
 using Microsoft.WindowsAzure.MobileServices;
 using wazniak_forever.Model;
 using wazniak_forever.ViewModel;
+using Microsoft.Phone.Net.NetworkInformation;
 
 namespace wazniak_forever
 {
@@ -75,6 +76,19 @@ namespace wazniak_forever
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            DeviceNetworkInformation.NetworkAvailabilityChanged += (s, ev) =>
+                {
+                    if (DeviceNetworkInformation.IsNetworkAvailable)
+                    {
+                        viewModel.OnlineMode = true;
+                    }
+                    else
+                    {
+                        viewModel.OnlineMode = false;
+                    }
+                    viewModel.NotifyPropertyChanged("AllOptions");
+                    viewModel.NotifyPropertyChanged("CourseOptions");
+                };
         }
 
         // Code to execute when the application is activated (brought to foreground)

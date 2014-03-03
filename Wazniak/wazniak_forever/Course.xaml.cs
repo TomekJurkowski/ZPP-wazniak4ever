@@ -23,6 +23,7 @@ namespace wazniak_forever
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            App.ViewModel.CheckForNetworkAvailability();
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
             App.ViewModel.CurrentCourseID = Convert.ToInt32(NavigationContext.QueryString["courseID"]);
             App.ViewModel.LoadCoursePage();

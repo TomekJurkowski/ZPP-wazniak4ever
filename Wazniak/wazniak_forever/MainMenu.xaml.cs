@@ -25,6 +25,7 @@ namespace wazniak_forever
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            base.OnNavigatedTo(e);
             App.ViewModel.CheckForNetworkAvailability();
         }
 

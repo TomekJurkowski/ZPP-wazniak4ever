@@ -367,7 +367,7 @@ namespace wazniak_forever.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Used to notify the app that a property has changed.
-        private void NotifyPropertyChanged(string propertyName)
+        public void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
             {
@@ -384,7 +384,9 @@ namespace wazniak_forever.ViewModel
         public void CheckForNetworkAvailability()
         {
             //NetworkInterface.GetIsNetworkAvailable()
-            _onlineMode = DeviceNetworkInformation.IsNetworkAvailable;
+            OnlineMode = DeviceNetworkInformation.IsNetworkAvailable;
+            NotifyPropertyChanged("AllOptions");
+            NotifyPropertyChanged("CourseOptions");
         }
 
         public void LoadMenu()
@@ -521,7 +523,7 @@ namespace wazniak_forever.ViewModel
 
         private List<UserSubject> _userSubjectMappings;
 
-        public async void LoadMyCourses()
+        public async System.Threading.Tasks.Task LoadMyCourses()
         {
             var mySubjects = await db.MySubjects
                 .Where(user => user.UserID == DatabaseContext.MobileService.CurrentUser.UserId)

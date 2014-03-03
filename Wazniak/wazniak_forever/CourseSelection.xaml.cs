@@ -35,7 +35,8 @@ namespace wazniak_forever
 
         private async void LoadFromAzure()
         {
-            if (App.ViewModel.db.User != null) App.ViewModel.LoadMyCourses();
+            if (App.ViewModel.db.User != null) 
+                await App.ViewModel.PerformTimeConsumingProcess(this, "Loading My Courses...", App.ViewModel.LoadMyCourses);
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading all courses...", App.ViewModel.LoadAllCourses);
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading new courses...", App.ViewModel.LoadNewCourses);
             //App.ViewModel.LoadAllCourses();
