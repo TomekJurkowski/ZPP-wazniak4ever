@@ -18,7 +18,7 @@
         @Html.HiddenFor(model => model.ID)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
+            @Html.LabelFor(model => model.Title, new { @class = "myLabel control-label col-md-2 PurpleText" })
             <div class="col-md-10">
                 @Html.TextBoxFor(model => model.Title, new { @class = "form-control text-box" })
                 @Html.ValidationMessageFor(model => model.Title)
@@ -28,7 +28,7 @@
         
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Text, new { @class = "control-label col-md-2 PurpleText" })
+            @Html.LabelFor(model => model.Text, new { @class = "myLabel control-label col-md-2 PurpleText" })
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.Text, new { @class = "form-control text-box" })
                 @Html.ValidationMessageFor(model => model.Text)

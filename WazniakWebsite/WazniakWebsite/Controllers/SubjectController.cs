@@ -192,13 +192,22 @@ namespace WazniakWebsite.Controllers
             try
             {
                 var subject = db.Subjects.Find(id);
+
+                var arr = subject.Tasks.ToArray();
+                // Remove all Tasks (with their Answers) that belong to the Subject
+                for (var i = arr.Length - 1; i >= 0; --i)
+                {
+                    db.Answers.Remove(arr[i].Answer);
+                    db.Tasks.Remove(arr[i]);
+                }
+
                 db.Subjects.Remove(subject);
                 db.SaveChanges();
             }
             catch (RetryLimitExceededException /* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+                return RedirectToAction("Delete", new { id, saveChangesError = true });
             }
             
             return RedirectToAction("Index");

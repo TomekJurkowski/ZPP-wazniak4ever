@@ -10,7 +10,7 @@
 <div class="form-horizontal">
 
     <div class="form-group">
-        <label class="control-label col-md-2 PurpleText">Subject</label>
+        <label class="myLabel control-label col-md-2 PurpleText">Subject</label>
         <div class="col-md-10">
             <div class="alert lightPurpleBackground">
                 @Html.DisplayFor(model => model.Subject.Name)
@@ -19,7 +19,7 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label col-md-2 PurpleText">Exercise Title</label>
+        <label class="myLabel control-label col-md-2 PurpleText">Exercise Title</label>
         <div class="col-md-10">
             <div class="alert lightPurpleBackground text-center">
                 <b>@Html.DisplayFor(model => model.Title)</b>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label col-md-2 PurpleText">Exercise Content</label>
+        <label class="myLabel control-label col-md-2 PurpleText">Exercise Content</label>
         <div class="col-md-10">
             <div class="alert lightPurpleBackground">
                 @Html.DisplayFor(model => model.Text)
@@ -37,7 +37,7 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label col-md-2 PurpleText">Exercise Solution</label>
+        <label class="myLabel control-label col-md-2 PurpleText">Exercise Solution</label>
         <div class="col-md-10">
             <div class="alert lightPurpleBackground">
                 @Model.Answer.ToString()
@@ -50,5 +50,6 @@
 <hr />
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.ID }) |
     @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new {})
 </div>
