@@ -16,11 +16,12 @@
             white-space: nowrap;
             overflow: hidden;
         }
+
         .form-group {
             margin-right: 30px;
         }
     </style>
-    
+
     <script type="text/javascript">
         function editExercise(id) {
             window.location = '/Subject/Edit/' + id;
@@ -33,6 +34,17 @@
         function goToExerciseDetails(id) {
             window.location = '/Subject/Details/' + id;
         }
+
+        $(function () {
+            $("[id^='tooltipEdit']").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
+            $("[id^='tooltipRemove']").tooltip({
+                animated: 'fade',
+                placement: 'top'
+            });
+        });
     </script>
 }
 

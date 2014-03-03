@@ -210,10 +210,13 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            MathematicalTask mathematicaltask = db.MathematicalTasks.Find(id);
+            var mathematicaltask = db.MathematicalTasks.Find(id);
+            var subjectId = mathematicaltask.SubjectID;
+            db.Answers.Remove(mathematicaltask.Answer);
             db.MathematicalTasks.Remove(mathematicaltask);
+
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Subject", new { id = subjectId });
         }
 
         protected override void Dispose(bool disposing)

@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Net;
 using System.Web.Mvc;
+using System.Web.Routing;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
 
@@ -211,12 +212,12 @@ namespace WazniakWebsite.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var regulartask = db.RegularTasks.Find(id);
-            var x = regulartask.Answer;
+            var subjectId = regulartask.SubjectID;
             db.Answers.Remove(regulartask.Answer);
             db.RegularTasks.Remove(regulartask);
 
             db.SaveChanges();
-            return RedirectToAction("Index", "Subject");
+            return RedirectToAction("Details", "Subject", new { id = subjectId });
         }
 
         protected override void Dispose(bool disposing)
