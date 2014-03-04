@@ -400,10 +400,10 @@ namespace wazniak_forever.ViewModel
 
             if (db.User != null)
             {
-                AllOptions.Add(new Option(OptionType.Logout, true, "Sign out", new Uri("", UriKind.RelativeOrAbsolute)));
+                AllOptions.Add(new Option(OptionType.Logout, true, "Sign out", new Uri("/Assets/SignOutIcon.png", UriKind.RelativeOrAbsolute)));
             } else 
             {
-                AllOptions.Add(new Option(OptionType.Login, true, "Sign in", new Uri("", UriKind.RelativeOrAbsolute)));
+                AllOptions.Add(new Option(OptionType.Login, true, "Sign in", new Uri("/Assets/SignInIcon.png", UriKind.RelativeOrAbsolute)));
             }
         }
 

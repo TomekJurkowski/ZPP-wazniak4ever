@@ -820,6 +820,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Assets\SettingsIcon.png" />
+    <Content Include="Assets\SignInIcon.png" />
+    <Content Include="Assets\SignOutIcon.png" />
     <Content Include="Assets\StartIcon.png" />
     <Content Include="Assets\tick.png" />
     <Content Include="Assets\ApplicationIcon.png" />
@@ -887,8 +889,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\portable-net45+wp80+win8\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Sqlite, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Sqlite">
       <HintPath>..\packages\sqlite-net-wp8.3.8.3.100\lib\windowsphone8\Sqlite.winmd</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
