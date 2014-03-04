@@ -17,12 +17,6 @@ namespace WazniakWebsite.Controllers
 
         private SchoolContext db = new SchoolContext();
 
-        // GET: /MathematicalTask/
-        //public ActionResult Index()
-        //{
-        //    return View(db.MathematicalTasks.ToList());
-        //}
-
         // GET: /MathematicalTask/Details/5
         public ActionResult Details(int? id)
         {
@@ -156,6 +150,13 @@ namespace WazniakWebsite.Controllers
             {
                 return HttpNotFound();
             }
+
+            var sub = db.Subjects.Find(mathematicaltask.SubjectID);
+
+            // Edit view does not really require the first two arguments to be passed into ViewBag,
+            // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
+            FillTheViewBag(sub.Name, sub.ID, mathematicaltask.Answer.className());
+
             return View(mathematicaltask);
         }
 
@@ -164,14 +165,121 @@ namespace WazniakWebsite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask)
+        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask, int isAnswerChanged, string answerType,
+            string valueAns, string textAns)
         {
+            var sub = db.Subjects.Find(mathematicaltask.SubjectID);
+
             try
             {
                 if (ModelState.IsValid)
                 {
+                    // First let's see if the answer for the task is being changed or not.
+                    // If it's not then we have an easy case to deal with
+                    if (isAnswerChanged == 0)
+                    {
+                        // Update subject time
+                        sub.UpdateLastUpdatedTime();
+                        db.Entry(sub).State = EntityState.Modified;
+
+                        db.Entry(mathematicaltask).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
+                    }
+
+                    // Variable holding answer that belongs to the task
+                    var ans = db.Answers.Find(mathematicaltask.ID);
+
+                    // And now let's cope with the case when the answer is being changed as well as the task.
+                    switch (answerType)
+                    {
+                        case Answer.SINGLE_VALUE_ANSWER:
+                            if (String.IsNullOrEmpty(valueAns))
+                            {
+                                // Reload page with proper statement
+                                ViewBag.SingleValueStatement = SINGLE_VALUE_STATEMENT;
+                                @ViewBag.ReloadPage = 1;
+                                FillTheViewBag(sub.Name, sub.ID, Answer.SINGLE_VALUE_ANSWER);
+
+                                // In this case we want to reload the Edit page with the original MathematicalTask
+                                return View(db.MathematicalTasks.Find(mathematicaltask.ID));
+                            }
+
+                            if (ans.className() == answerType)
+                            {
+                                // We don't have to create a completely new Answer, only update the current one
+                                ((SingleValueAnswer)ans).Value = valueAns;
+                                db.Entry(ans).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                // Delete previous answer and create new SingleValueAnswer
+                                db.Answers.Remove(ans);
+                                db.SaveChanges();
+
+                                var singleValueAnswer = new SingleValueAnswer(mathematicaltask.ID, valueAns);
+                                db.SingleValueAnswers.Add(singleValueAnswer);
+                            }
+
+                            break;
+                        case Answer.TEXT_ANSWER:
+                            if (String.IsNullOrEmpty(textAns))
+                            {
+                                // Reload page with proper statement
+                                ViewBag.TextStatement = TEXT_STATEMENT;
+                                @ViewBag.ReloadPage = 1;
+                                FillTheViewBag(sub.Name, sub.ID, Answer.TEXT_ANSWER);
+
+                                // In this case we want to reload the Edit page with the original MathematicalTask
+                                return View(db.MathematicalTasks.Find(mathematicaltask.ID));
+                            }
+
+                            if (ans.className() == answerType)
+                            {
+                                // We don't have to create a completely new Answer, only update the current one
+                                ((TextAnswer)ans).Text = textAns;
+                                db.Entry(ans).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                // Delete previous answer and create new TextAnswer
+                                db.Answers.Remove(ans);
+                                db.SaveChanges();
+
+                                var textAnswer = new TextAnswer(mathematicaltask.ID, textAns);
+                                db.TextAnswers.Add(textAnswer);
+                            }
+
+                            break;
+                        case Answer.SINGLE_CHOICE_ANSWER:
+
+                            if (mathematicaltask.Answer.className() == answerType)
+                            {
+                                // We don't have to create a completely new Answer, only update the current one
+
+                            }
+                            else
+                            {
+
+                            }
+
+                            break;
+                        case Answer.MULTIPLE_CHOICE_ANSWER:
+
+                            if (mathematicaltask.Answer.className() == answerType)
+                            {
+                                // We don't have to create a completely new Answer, only update the current one
+
+                            }
+                            else
+                            {
+
+                            }
+
+                            break;
+                    }
+
                     // Update subject time
-                    var sub = db.Subjects.Find(mathematicaltask.SubjectID);
                     sub.UpdateLastUpdatedTime();
                     db.Entry(sub).State = EntityState.Modified;
 

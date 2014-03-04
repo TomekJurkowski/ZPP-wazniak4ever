@@ -9,6 +9,11 @@
     <script type="text/javascript">
         
         function selectPreviousAnswer() {
+            if ("@ViewBag.PreviouslySelectedAnswer" != "@Model.Answer.className()" || "@ViewBag.ReloadPage" == "1") {
+                $("#newAnswerCheckbox").prop('checked', true);
+                hideOrShowAnswerPanel();
+            }
+
             switch ("@ViewBag.PreviouslySelectedAnswer") {
                 case "@ViewBag.SingleValueAnswer":
                     $("#tooltip1").tab('show');
@@ -32,8 +37,10 @@
         function hideOrShowAnswerPanel() {
             if ($("#newAnswerCheckbox").is(':checked')) {
                 $("#answerPanel").show("slow");
+                $("#isAnswerChangedInput").val(1);
             } else {
                 $("#answerPanel").hide("slow");
+                $("#isAnswerChangedInput").val(0);
             }
         }
 
@@ -43,8 +50,43 @@
             selectPreviousAnswer();
 
             $("#answerTypeInput").hide();
+            $("#isAnswerChangedInput").hide();
+            
+            $('.nav-pills a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
 
+                switch ($(this).attr('id')) {
+                    case "tooltip1":
+                        $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                        break;
+                    case "tooltip2":
+                        $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                        break;
+                    case "tooltip3":
+                        $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                        break;
+                    case "tooltip4":
+                        $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                        break;
+                }
+
+                goToByScroll();
+            });
+
+            $("#tooltip1,#tooltip2,#tooltip3,#tooltip4").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
         });
+        
+        function goToByScroll() {
+            // Scroll
+            $("html,body").animate(
+                { scrollTop: $("#pill_content").offset().top },
+                'slow');
+        }
+
     </script>
 
     <style>
@@ -58,7 +100,6 @@
 }
 
 <h2 class="PurpleText">Edit</h2>
-
 
 @using (Html.BeginForm())
 {
@@ -96,12 +137,33 @@
         </div>
         
         <div class="form-group">
-            <label class="myLabel control-label col-md-2 PurpleText">Exercise Solution</label>
+            <label class="myLabel control-label col-md-2 PurpleText">Current Exercise Solution</label>
             <div class="col-md-10">
+                <div class="PurpleText">
+                    @{
+                        if (@Model.Answer.className() == ViewBag.TextAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Text Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.SingleValueAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Single Value Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.SingleChoiceAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Single Choice Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.MultipleChoiceAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Multiple Choice Answer':</b></h5>")
+                        }
+                    }
+                    
+                </div>
                 <div class="alert lightPurpleBackground">
                     @Model.Answer.ToString()
                 </div>
-            </div>
+                </div>
         </div>
 
         <br />
@@ -112,6 +174,8 @@
                 <input type="checkbox" id="newAnswerCheckbox" onclick="hideOrShowAnswerPanel()">
             </label>
         </div>
+        
+        <input id="isAnswerChangedInput" type="number" name="isAnswerChanged" value="0" />
         
         <div id="answerPanel" hidden="">
             <br />
@@ -181,7 +245,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn PurpleBtn" />
+                <input type="submit" value="Save changes" class="btn PurpleBtn" />
             </div>
         </div>
     </div>

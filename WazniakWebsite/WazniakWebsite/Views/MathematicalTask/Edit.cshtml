@@ -29,7 +29,98 @@
         #MathBuffer, #MathPreview {
             background-color: #FFCCFF;
         }
+
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
     </style>
+
+    <script type="text/javascript">
+        
+        function selectPreviousAnswer() {
+            if ("@ViewBag.PreviouslySelectedAnswer" != "@Model.Answer.className()" || "@ViewBag.ReloadPage" == "1") {
+                $("#newAnswerCheckbox").prop('checked', true);
+                hideOrShowAnswerPanel();
+            }
+
+            switch ("@ViewBag.PreviouslySelectedAnswer") {
+                case "@ViewBag.SingleValueAnswer":
+                    $("#tooltip1").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                    break;
+                case "@ViewBag.TextAnswer":
+                    $("#tooltip2").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                    break;
+                case "@ViewBag.SingleChoiceAnswer":
+                    $("#tooltip3").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                    break;
+                case "@ViewBag.MultipleValueAnswer":
+                    $("#tooltip4").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                    break;
+            }
+        }
+
+        function hideOrShowAnswerPanel() {
+            if ($("#newAnswerCheckbox").is(':checked')) {
+                $("#answerPanel").show("slow");
+                $("#isAnswerChangedInput").val(1);
+            } else {
+                $("#answerPanel").hide("slow");
+                $("#isAnswerChangedInput").val(0);
+            }
+        }
+
+        $(function () {
+            $("#Text").attr("rows", 8);
+
+            selectPreviousAnswer();
+
+            $("#answerTypeInput").hide();
+            $("#isAnswerChangedInput").hide();
+
+            $('.nav-pills a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+
+                switch ($(this).attr('id')) {
+                    case "tooltip1":
+                        $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                        break;
+                    case "tooltip2":
+                        $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                        break;
+                    case "tooltip3":
+                        $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                        break;
+                    case "tooltip4":
+                        $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                        break;
+                }
+
+                goToByScroll();
+            });
+
+            $("#tooltip1,#tooltip2,#tooltip3,#tooltip4").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
+        });
+
+        function goToByScroll() {
+            // Scroll
+            $("html,body").animate(
+                { scrollTop: $("#pill_content").offset().top },
+                'slow');
+        }
+        
+    </script>
 
     <script type="text/javascript">
         $(function () {
@@ -38,7 +129,7 @@
 
             // set the value of the content
             $("#Text").val("@Model.Text");
-            
+
             var h = $("#Text").height();
             $("#MathPreview").css("min-height", function () {
                 return h;
@@ -153,7 +244,7 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4 class="PurpleText">Change the content of an exercise</h4>
+        <h4 class="PurpleText">Change the mathematical exercise and its answer.</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.ID)
@@ -192,6 +283,113 @@
                 <div id="MathBuffer" class="well-lg alert lightPurpleBackground" style="visibility:hidden; position:absolute; top:0; left: 0"></div>
             </div>
         </div>
+        
+        <div class="form-group">
+            <label class="myLabel control-label col-md-2 PurpleText">Current Exercise Solution</label>
+            <div class="col-md-10">
+                <div class="PurpleText">
+                    @{
+                        if (@Model.Answer.className() == ViewBag.TextAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Text Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.SingleValueAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Single Value Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.SingleChoiceAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Single Choice Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.MultipleChoiceAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Multiple Choice Answer':</b></h5>")
+                        }
+                    }
+
+                </div>
+                <div class="alert lightPurpleBackground">
+                    @Model.Answer.ToString()
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="checkbox col-md-offset-2">
+            <label class="PurpleText">
+                Select the checkbox if you want to change your Solution.
+                <input type="checkbox" id="newAnswerCheckbox" onclick="hideOrShowAnswerPanel()">
+            </label>
+        </div>
+
+        <input id="isAnswerChangedInput" type="number" name="isAnswerChanged" value="0" />
+
+        <div id="answerPanel" hidden="">
+            <br />
+            <h4 class="PurpleText">What kind of Answer do you want for this Exercise?</h4>
+            <br />
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <ul class="nav nav-pills">
+                        <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
+                        <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
+                        <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+                        <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
+                    </ul>
+
+                    <br />
+
+                    <div class="pill-content" id="pill_content">
+
+                        <input id="answerTypeInput" type="text" name="answerType" value="@ViewBag.NoAnswer" />
+
+                        <div class=" pill-pane fade" id="SingleValueAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
+                            </div>
+
+                            <br />
+
+                            <input class="form-control" id="valueInput" type="text" name="valueAns" />
+                            <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
+                        </div>
+
+                        <div class="pill-pane fade" id="TextAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+                            </div>
+
+                            <br />
+
+                            <textarea class="form-control" id="textInput" name="textAns" rows="8"></textarea>
+                            <span class="field-validation-error">@ViewBag.TextStatement</span>
+                        </div>
+
+                        <div class="pill-pane fade" id="AbcdAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
+                            </div>
+
+                            <br />
+
+                        </div>
+
+                        <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
+                            </div>
+
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
