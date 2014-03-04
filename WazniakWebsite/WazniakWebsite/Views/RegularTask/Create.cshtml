@@ -118,59 +118,63 @@
         <h4 class="PurpleText">What kind of Answer do you want for this Exercise?</h4>
         <br />
 
-        <ul class="nav nav-pills">
-            <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
-            <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
-            <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
-            <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
-        </ul>
-
-        <br />
-
-        <div class="pill-content" id="pill_content">
-            
-            <input id="answerTypeInput" type="text" name="answerType" value="@ViewBag.NoAnswer" />
-            <input id="subjectNameInput" type="text" name="subjectName" value="@ViewBag.SubjectName" />
-            <input id="subjectIdInput" type="number" name="subjectId" value="@ViewBag.SubjectId" />
-
-            <div class=" pill-pane fade" id="SingleValueAnswer_pill">
-                <div class="well">
-                    <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
-                </div>
-                
-                <br />
-                
-                <input class="form-control" id="valueInput" type="text" name="valueAns" />
-                <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
-            </div>
-
-            <div class="pill-pane fade" id="TextAnswer_pill">
-                <div class="well">
-                    <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
-                </div>
-
-                <br />
-                
-                <textarea class="form-control" id="textInput" name="textAns" rows="8"></textarea>
-                <span class="field-validation-error">@ViewBag.TextStatement</span>
-            </div>
-
-            <div class="pill-pane fade" id="AbcdAnswer_pill">
-                <div class="well">
-                    <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>                    
-                </div>
-                
-                <br />
-
-            </div>
-
-            <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
-                <div class="well">
-                    <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>                    
-                </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-md-10">
+                <ul class="nav nav-pills">
+                    <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
+                    <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
+                    <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+                    <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
+                </ul>
 
                 <br />
 
+                <div class="pill-content" id="pill_content">
+
+                    <input id="answerTypeInput" type="text" name="answerType" value="@ViewBag.NoAnswer" />
+                    <input id="subjectNameInput" type="text" name="subjectName" value="@ViewBag.SubjectName" />
+                    <input id="subjectIdInput" type="number" name="subjectId" value="@ViewBag.SubjectId" />
+
+                    <div class=" pill-pane fade" id="SingleValueAnswer_pill">
+                        <div class="well">
+                            <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
+                        </div>
+
+                        <br />
+
+                        <input class="form-control" id="valueInput" type="text" name="valueAns" />
+                        <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
+                    </div>
+
+                    <div class="pill-pane fade" id="TextAnswer_pill">
+                        <div class="well">
+                            <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+                        </div>
+
+                        <br />
+
+                        <textarea class="form-control" id="textInput" name="textAns" rows="8"></textarea>
+                        <span class="field-validation-error">@ViewBag.TextStatement</span>
+                    </div>
+
+                    <div class="pill-pane fade" id="AbcdAnswer_pill">
+                        <div class="well">
+                            <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
+                        </div>
+
+                        <br />
+
+                    </div>
+
+                    <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
+                        <div class="well">
+                            <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
+                        </div>
+
+                        <br />
+
+                    </div>
+                </div>
             </div>
         </div>
                 

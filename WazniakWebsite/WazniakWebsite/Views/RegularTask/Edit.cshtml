@@ -4,6 +4,59 @@
     ViewBag.Title = "Edit";
 }
 
+@section HeadScripts
+{
+    <script type="text/javascript">
+        
+        function selectPreviousAnswer() {
+            switch ("@ViewBag.PreviouslySelectedAnswer") {
+                case "@ViewBag.SingleValueAnswer":
+                    $("#tooltip1").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                    break;
+                case "@ViewBag.TextAnswer":
+                    $("#tooltip2").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                    break;
+                case "@ViewBag.SingleChoiceAnswer":
+                    $("#tooltip3").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                    break;
+                case "@ViewBag.MultipleValueAnswer":
+                    $("#tooltip4").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                    break;
+            }
+        }
+
+        function hideOrShowAnswerPanel() {
+            if ($("#newAnswerCheckbox").is(':checked')) {
+                $("#answerPanel").show("slow");
+            } else {
+                $("#answerPanel").hide("slow");
+            }
+        }
+
+        $(function () {
+            $("#Text").attr("rows", 8);
+
+            selectPreviousAnswer();
+
+            $("#answerTypeInput").hide();
+
+        });
+    </script>
+
+    <style>
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    </style>
+}
+
 <h2 class="PurpleText">Edit</h2>
 
 
@@ -12,28 +65,119 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4 class="PurpleText">Change the content of an exercise</h4>
+        <h4 class="PurpleText">Change the exercise and its answer.</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.SubjectID)
+        
+        <div class="form-group">
+            <label class="myLabel2 control-label col-md-2 PurpleText">Subject Name</label>
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.Subject.Name, new { @class = "form-control" })
+                <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
+            </div>
+        </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, new { @class = "myLabel control-label col-md-2 PurpleText" })
+            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Title, new { @class = "form-control text-box" })
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
         </div>
-
         
-
         <div class="form-group">
-            @Html.LabelFor(model => model.Text, new { @class = "myLabel control-label col-md-2 PurpleText" })
+            <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
             <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Text, new { @class = "form-control text-box" })
-                @Html.ValidationMessageFor(model => model.Text)
+                @Html.TextAreaFor(model => model.Text, new { @class = "form-control" })
+                <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
             </div>
         </div>
+        
+        <div class="form-group">
+            <label class="myLabel control-label col-md-2 PurpleText">Exercise Solution</label>
+            <div class="col-md-10">
+                <div class="alert lightPurpleBackground">
+                    @Model.Answer.ToString()
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="checkbox col-md-offset-2">
+            <label class="PurpleText">
+                Select the checkbox if you want to change your Solution.
+                <input type="checkbox" id="newAnswerCheckbox" onclick="hideOrShowAnswerPanel()">
+            </label>
+        </div>
+        
+        <div id="answerPanel" hidden="">
+            <br />
+            <h4 class="PurpleText">What kind of Answer do you want for this Exercise?</h4>
+            <br />
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <ul class="nav nav-pills">
+                        <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
+                        <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
+                        <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+                        <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
+                    </ul>
+
+                    <br />
+
+                    <div class="pill-content" id="pill_content">
+
+                        <input id="answerTypeInput" type="text" name="answerType" value="@ViewBag.NoAnswer" />
+
+                        <div class=" pill-pane fade" id="SingleValueAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
+                            </div>
+
+                            <br />
+
+                            <input class="form-control" id="valueInput" type="text" name="valueAns" />
+                            <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
+                        </div>
+
+                        <div class="pill-pane fade" id="TextAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+                            </div>
+
+                            <br />
+
+                            <textarea class="form-control" id="textInput" name="textAns" rows="8"></textarea>
+                            <span class="field-validation-error">@ViewBag.TextStatement</span>
+                        </div>
+
+                        <div class="pill-pane fade" id="AbcdAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
+                            </div>
+
+                            <br />
+
+                        </div>
+
+                        <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
+                            </div>
+
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

@@ -31,5 +31,10 @@ namespace WazniakWebsite.Models
         {
             return "SingleChoiceAnswer with the " + CorrectAnswer + " option correct.";
         }
+
+        public override string className()
+        {
+            return SINGLE_CHOICE_ANSWER;
+        }
     }
 }

@@ -30,5 +30,10 @@ namespace WazniakWebsite.Models
         {
             return Text;
         }
+
+        public override string className()
+        {
+            return TEXT_ANSWER;
+        }
     }
 }

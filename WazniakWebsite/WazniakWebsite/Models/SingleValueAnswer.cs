@@ -28,5 +28,10 @@ namespace WazniakWebsite.Models
         {
             return Value;
         }
+
+        public override string className()
+        {
+            return SINGLE_VALUE_ANSWER;
+        }
     }
 }

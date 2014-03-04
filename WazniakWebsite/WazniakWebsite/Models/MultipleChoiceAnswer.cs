@@ -31,5 +31,10 @@ namespace WazniakWebsite.Models
 
             return builder.ToString();
         }
+
+        public override string className()
+        {
+            return MULTIPLE_CHOICE_ANSWER;
+        }
     }
 }

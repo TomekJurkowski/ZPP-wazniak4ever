@@ -45,6 +45,11 @@ input[type="checkbox"].input-validation-error {
     padding-top: 15px !important;
 }
 
+.myLabel2 {
+    padding-top: 0 !important;
+    padding-bottom: 7px !important;
+}
+
 .PurpleText, .PurpleColor {
     color: #660066;
 }

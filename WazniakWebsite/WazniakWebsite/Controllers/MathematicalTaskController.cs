@@ -10,13 +10,6 @@ namespace WazniakWebsite.Controllers
 {
     public class MathematicalTaskController : Controller
     {
-        // CONSTANTS representing what kind of Answer is the Task in relationship with
-        private const string NO_ANSWER = "no_ans";
-        private const string SINGLE_VALUE_ANSWER = "single_val_ans";
-        private const string TEXT_ANSWER = "text_ans";
-        private const string SINGLE_CHOICE_ANSWER = "single_cho_ans";
-        private const string MULTIPLE_CHOICE_ANSWER = "multi_cho_ans";
-
         // CONSTANTS representing a statement that should be printed to the user if he has not filled the form properly
         private const string NO_ANSWER_PICKED_STATEMENT = "You must create an answer for your exercise!";
         private const string SINGLE_VALUE_STATEMENT = "You must provide a value for the Single Value Answer.";
@@ -47,16 +40,16 @@ namespace WazniakWebsite.Controllers
             return View(mathematicaltask);
         }
 
-        private void FillTheViewBag(string subjectName, int subjectId, string previousAns = NO_ANSWER)
+        private void FillTheViewBag(string subjectName, int subjectId, string previousAns = Answer.NO_ANSWER)
         {
             ViewBag.SubjectName = subjectName;
             ViewBag.SubjectId = subjectId;
 
-            ViewBag.NoAnswer = NO_ANSWER;
-            ViewBag.SingleValueAnswer = SINGLE_VALUE_ANSWER;
-            ViewBag.TextAnswer = TEXT_ANSWER;
-            ViewBag.SingleChoiceAnswer = SINGLE_CHOICE_ANSWER;
-            ViewBag.MultipleChoiceAnswer = MULTIPLE_CHOICE_ANSWER;
+            ViewBag.NoAnswer = Answer.NO_ANSWER;
+            ViewBag.SingleValueAnswer = Answer.SINGLE_VALUE_ANSWER;
+            ViewBag.TextAnswer = Answer.TEXT_ANSWER;
+            ViewBag.SingleChoiceAnswer = Answer.SINGLE_CHOICE_ANSWER;
+            ViewBag.MultipleChoiceAnswer = Answer.MULTIPLE_CHOICE_ANSWER;
 
             ViewBag.PreviouslySelectedAnswer = previousAns;
         }
@@ -83,12 +76,12 @@ namespace WazniakWebsite.Controllers
                 {
                     switch (answerType)
                     {
-                        case SINGLE_VALUE_ANSWER:
+                        case Answer.SINGLE_VALUE_ANSWER:
                             if (String.IsNullOrEmpty(valueAns))
                             {
                                 // Reload page with proper statement
                                 ViewBag.SingleValueStatement = SINGLE_VALUE_STATEMENT;
-                                FillTheViewBag(subjectName, subjectId, SINGLE_VALUE_ANSWER);
+                                FillTheViewBag(subjectName, subjectId, Answer.SINGLE_VALUE_ANSWER);
 
                                 return View(mathematicaltask);
                             }
@@ -97,12 +90,12 @@ namespace WazniakWebsite.Controllers
                             var singleValueAnswer = new SingleValueAnswer(mathematicaltask.ID, valueAns);
                             db.SingleValueAnswers.Add(singleValueAnswer);
                             break;
-                        case TEXT_ANSWER:
+                        case Answer.TEXT_ANSWER:
                             if (String.IsNullOrEmpty(textAns))
                             {
                                 // Reload page with proper statement
                                 ViewBag.TextStatement = TEXT_STATEMENT;
-                                FillTheViewBag(subjectName, subjectId, TEXT_ANSWER);
+                                FillTheViewBag(subjectName, subjectId, Answer.TEXT_ANSWER);
 
                                 return View(mathematicaltask);
                             }
@@ -111,12 +104,12 @@ namespace WazniakWebsite.Controllers
                             var textAnswer = new TextAnswer(mathematicaltask.ID, textAns);
                             db.TextAnswers.Add(textAnswer);
                             break;
-                        case SINGLE_CHOICE_ANSWER:
+                        case Answer.SINGLE_CHOICE_ANSWER:
 
 
 
                             break;
-                        case MULTIPLE_CHOICE_ANSWER:
+                        case Answer.MULTIPLE_CHOICE_ANSWER:
 
 
 
