@@ -93,15 +93,13 @@ namespace wazniak_forever
                     case OptionType.Download:
                         Subject currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
                         await App.ViewModel.db.SaveSubjectLocally(this, "Downloading course...", currentCourse);
-                        System.Diagnostics.Debug.WriteLine("Subject saved locally " + currentCourse.Name);
                         App.ViewModel.LoadCoursePage();
                         break;
                     case OptionType.Update:
                         break;
                     case OptionType.DeleteFromDownloads:
-                        currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
+                        currentCourse = App.ViewModel.DownloadedCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
                         await App.ViewModel.db.DeleteSubjectFromDownloads(this, "Deleting from Downloads...", currentCourse);
-                        System.Diagnostics.Debug.WriteLine("Subject deleted " + currentCourse.Name);
                         App.ViewModel.LoadCoursePage();
                         break;
                 }

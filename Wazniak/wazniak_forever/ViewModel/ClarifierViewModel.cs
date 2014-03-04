@@ -508,7 +508,7 @@ namespace wazniak_forever.ViewModel
             {
                 CourseOptions.RemoveAll(option => option.Type == OptionType.Download);
                 CourseOptions.Add(new Option(OptionType.Update, true, "Update", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)));
-                CourseOptions.Add(new Option(OptionType.DeleteFromDownloads, true, "Delete from Downloads", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
+                CourseOptions.Add(new Option(OptionType.DeleteFromDownloads, false, "Delete from Downloads", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
             }
         }
 
