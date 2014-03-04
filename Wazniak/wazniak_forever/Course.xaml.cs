@@ -59,12 +59,16 @@ namespace wazniak_forever
                     navTo = string.Format("/ExerciseOpen.xaml?courseName={0}", CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
                     break;
+                case SolutionType.Value:
+                    navTo = string.Format("/ExerciseSingleValue.xaml?courseName={0}", CourseName.Text);
+                    (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.Relative));
+                    break;
                 case SolutionType.Multiple:
                     navTo = string.Format("/ExerciseMultipleChoice.xaml?courseName={0}", CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.Relative));
                     break;
-                case SolutionType.Value:
-                    navTo = string.Format("/ExerciseSingleValue.xaml?courseName={0}", CourseName.Text);
+                case SolutionType.Single:
+                    navTo = string.Format("/ExerciseSingleChoice.xaml?courseName={0}", CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.Relative));
                     break;
             }

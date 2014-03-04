@@ -17,6 +17,7 @@ namespace wazniak_forever
         public ExerciseSingleValue()
         {
             InitializeComponent();
+            ExControl.setExplanationRow(3);
             AddEvents();
         }
 
