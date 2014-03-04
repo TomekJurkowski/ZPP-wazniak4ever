@@ -78,16 +78,7 @@ namespace wazniak_forever
         {
             DeviceNetworkInformation.NetworkAvailabilityChanged += (s, ev) =>
                 {
-                    if (DeviceNetworkInformation.IsNetworkAvailable)
-                    {
-                        viewModel.OnlineMode = true;
-                    }
-                    else
-                    {
-                        viewModel.OnlineMode = false;
-                    }
-                    viewModel.NotifyPropertyChanged("AllOptions");
-                    viewModel.NotifyPropertyChanged("CourseOptions");
+                    ViewModel.CheckForNetworkAvailability();
                 };
         }
 

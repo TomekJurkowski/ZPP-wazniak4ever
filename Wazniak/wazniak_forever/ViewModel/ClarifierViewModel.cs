@@ -7,6 +7,7 @@ using System.ComponentModel;
 using wazniak_forever.Model;
 using Microsoft.Phone.Shell;
 using System.Windows;
+using Microsoft.Phone.Controls;
 
 namespace wazniak_forever.ViewModel
 {
@@ -385,8 +386,7 @@ namespace wazniak_forever.ViewModel
         {
             //NetworkInterface.GetIsNetworkAvailable()
             OnlineMode = DeviceNetworkInformation.IsNetworkAvailable;
-            NotifyPropertyChanged("AllOptions");
-            NotifyPropertyChanged("CourseOptions");
+            LoadMenu();
         }
 
         public void LoadMenu()
@@ -422,21 +422,50 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task Authenticate(MobileServiceAuthenticationProvider provider)
         {
-            if (db.User == null)
+            bool success = false;
+            CustomMessageBox messageBox = new CustomMessageBox()
             {
-                string message;
-                try
+                Caption = "Authentication error",
+                Message = "We could not complete logging on to your account. Would you like to try again?",
+                LeftButtonContent = "yes",
+                RightButtonContent = "no",
+                IsFullScreen = false
+            };
+
+            messageBox.Dismissed += (s, e) =>
                 {
-                    db.User = await DatabaseContext.MobileService
-                        .LoginAsync(provider);
-                    message =
-                        string.Format("You are now logged in - {0}", db.User.UserId);
-                }
-                catch (InvalidOperationException)
+                    switch (e.Result)
+                    {
+                        case CustomMessageBoxResult.LeftButton:
+                            break;
+                        case CustomMessageBoxResult.RightButton:
+                            success = true;
+                            break;
+                        default:
+                            break;
+                    }
+                };
+
+            while (!success)
+            {
+                if (db.User == null)
                 {
-                    message = "Error";
+                    string message;
+                    try
+                    {
+                        db.User = await DatabaseContext.MobileService
+                            .LoginAsync(provider);
+                        success = true;
+                        message =
+                            string.Format("You are now logged in as {0}", db.User.UserId);
+                        MessageBox.Show(message);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        messageBox.Show();
+                    }
+                    
                 }
-                MessageBox.Show(message);
             }
             
         }
@@ -567,6 +596,7 @@ namespace wazniak_forever.ViewModel
                 && mapping.UserID == db.User.UserId);
 
             await db.UsersAndSubjects.DeleteAsync(deletedMapping);
+
             _userSubjectMappings.Remove(deletedMapping);
             MyCourses.Remove(MyCourses.Find(course => course.ID == CurrentCourseID));
             LoadCoursePage();  
@@ -609,7 +639,21 @@ namespace wazniak_forever.ViewModel
         {
             SetProgressIndicator(depObject, actionDescr);
             ActivateProgressForTimeConsumingProcess(depObject);
-            await Method();
+            bool success = false;
+            int count = 0;
+            while (!success && count < 5)
+            {
+                try
+                {
+                    await Method();
+                    success = true;
+                }
+                catch (MobileServiceInvalidOperationException) 
+                { 
+                    count++; 
+                }
+            }
+            if (count == 5) MessageBox.Show("Clarifier cannot complete this operation!");
             DeactivateProgressForTimeConsumingProcess(depObject);
             System.Diagnostics.Debug.WriteLine("Finished job!!!");
 

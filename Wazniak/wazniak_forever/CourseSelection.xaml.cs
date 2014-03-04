@@ -11,11 +11,11 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            LoadFromLocalDatabase();
+            //LoadFromLocalDatabase();
             if (App.ViewModel.AreDownloads) MainPivot.Items.Add(CreatePivotItem("Downloads", "DownloadedCourses"));
             else
             {
-                LoadFromAzure();
+                //LoadFromAzure();
                 LoadPivot();
             }
         }
@@ -23,17 +23,22 @@ namespace wazniak_forever
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (App.ViewModel.OnlineMode)
-                LoadFromAzure();
-            LoadFromLocalDatabase();
+            LoadCoursesAsync();
         }
 
-        private async void LoadFromLocalDatabase()
+        private async void LoadCoursesAsync()
+        {
+            if (App.ViewModel.OnlineMode)
+                await LoadFromAzure();
+            await LoadFromLocalDatabase();
+        }
+
+        private async System.Threading.Tasks.Task LoadFromLocalDatabase()
         {
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading downloaded courses...", App.ViewModel.LoadDownloadedCourses);
         }
 
-        private async void LoadFromAzure()
+        private async System.Threading.Tasks.Task LoadFromAzure()
         {
             if (App.ViewModel.db.User != null) 
                 await App.ViewModel.PerformTimeConsumingProcess(this, "Loading My Courses...", App.ViewModel.LoadMyCourses);
