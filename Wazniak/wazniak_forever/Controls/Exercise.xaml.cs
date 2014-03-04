@@ -20,6 +20,7 @@ namespace wazniak_forever.Controls
             DataContext = App.ViewModel;
         }
 
+        /*
         public void setExplanationRow(int row) 
         {
             if (row < 6)
@@ -27,7 +28,7 @@ namespace wazniak_forever.Controls
                 Grid.SetRow(ExplanationPanel, row);
                 LayoutRoot.RowDefinitions[row].Height = GridLength.Auto;
             }
-        }
+        }*/ // TO BE DELETED
 
         public void NextExerciseVisible()
         {

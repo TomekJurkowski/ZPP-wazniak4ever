@@ -17,7 +17,6 @@ namespace wazniak_forever
         public ExerciseSingleValue()
         {
             InitializeComponent();
-            ExControl.setExplanationRow(3);
             AddEvents();
         }
 
@@ -41,7 +40,7 @@ namespace wazniak_forever
             {
                 headerBuilder.Append("Wrong!");
                 builder.Append("You answered: " + AnswerBox.Text + "\n");
-                builder.Append("Correct answer is " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
+                builder.Append("Correct answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
             }
             AnswerBox.Visibility = Visibility.Collapsed;
             ExControl.SubmitAnswerClick(headerBuilder, builder);

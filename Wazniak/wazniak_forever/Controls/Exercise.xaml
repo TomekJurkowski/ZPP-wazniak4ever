@@ -14,7 +14,6 @@
             <RowDefinition Height="160"/>
             <RowDefinition Height="0"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="220"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -57,7 +56,7 @@
                        Visibility="Collapsed"/>
 
         <StackPanel x:Name="ExplanationPanel"
-                        Grid.Row="4"
+                        Grid.Row="3"
                         Margin="15,10,15,10"
                         Visibility="Collapsed">
             <TextBlock x:Name="ExplanationHeader"
@@ -75,7 +74,7 @@
         </StackPanel>
 
         <Grid
-                Grid.Row="5"
+                Grid.Row="4"
                 VerticalAlignment="Bottom" 
                 HorizontalAlignment="Stretch">
             <Button 

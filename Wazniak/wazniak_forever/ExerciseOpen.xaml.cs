@@ -20,7 +20,6 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            ExControl.setExplanationRow(3);
             AddEvents();
         }
 
