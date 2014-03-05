@@ -69,17 +69,17 @@ namespace wazniak_forever
             }
 
             viewModel = new ClarifierViewModel();
-
+            DeviceNetworkInformation.NetworkAvailabilityChanged += (s, ev) =>
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(() => 
+                    App.ViewModel.CheckForNetworkAvailability());
+            };
         }
 
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
-        {
-            DeviceNetworkInformation.NetworkAvailabilityChanged += (s, ev) =>
-                {
-                    ViewModel.CheckForNetworkAvailability();
-                };
+        {          
         }
 
         // Code to execute when the application is activated (brought to foreground)

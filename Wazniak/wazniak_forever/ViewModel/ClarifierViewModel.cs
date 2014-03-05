@@ -385,8 +385,10 @@ namespace wazniak_forever.ViewModel
         public void CheckForNetworkAvailability()
         {
             //NetworkInterface.GetIsNetworkAvailable()
-            OnlineMode = DeviceNetworkInformation.IsNetworkAvailable;
+            //OnlineMode = DeviceNetworkInformation.IsNetworkAvailable;
+            OnlineMode = NetworkInterface.GetIsNetworkAvailable();
             LoadMenu();
+            LoadCourseOptions();
         }
 
         public void LoadMenu()
@@ -504,6 +506,8 @@ namespace wazniak_forever.ViewModel
 
         private void LoadDownloadedCourseOptions()
         {
+            if (DownloadedCourses == null) return;
+
             if (DownloadedCourses.Any(course => course.ID == CurrentCourseID))
             {
                 CourseOptions.RemoveAll(option => option.Type == OptionType.Download);
@@ -512,9 +516,8 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        public async void LoadCoursePage()
+        private void LoadCourseOptions()
         {
-            await LoadDownloadedCourses();
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
@@ -522,6 +525,12 @@ namespace wazniak_forever.ViewModel
             };
             LoadDownloadedCourseOptions();
             CheckCourseOwnership();
+        }
+
+        public async void LoadCoursePage()
+        {
+            await LoadDownloadedCourses();
+            LoadCourseOptions();
         }
 
         /*
