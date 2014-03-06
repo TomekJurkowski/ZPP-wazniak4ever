@@ -46,16 +46,26 @@ namespace wazniak_forever.Model
         public async void Initialize()
         {
             await Connect.CreateTableAsync<Subject>();
+            await Connect.CreateTableAsync<TaskAnswer>();
+            //await Connect.CreateTableAsync<TextSolution>();
+            //await Connect.CreateTableAsync<SingleValueSolution>();
         }
 
         public async void Drop()
         {
             await Connect.DropTableAsync<Subject>();
+            await Connect.DropTableAsync<TaskAnswer>();
         }
 
         public async Task<List<Subject>> LoadSubjectsOffline()
         {
             return await Connect.Table<Subject>().ToListAsync();
+        }
+
+        public async Task<List<TaskAnswer>> LoadExercisesOffline(int subjectID)
+        {
+            return await Connect.Table<TaskAnswer>()
+                .Where(exercise => exercise.SubjectID == subjectID).ToListAsync();
         }
 
         public async System.Threading.Tasks.Task SaveSubjectLocally(
@@ -66,6 +76,10 @@ namespace wazniak_forever.Model
                 App.ViewModel.SetProgressIndicator(depObject, actionDescr);
                 App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
                 await Connect.InsertAsync(newSubject);
+                var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
+                await Connect.InsertAllAsync(tasksWithAnswers);
+                var count = await Connect.Table<TaskAnswer>().CountAsync();
+                System.Diagnostics.Debug.WriteLine(count);
                 App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
                 App.ViewModel.ShowToast("Course successfully saved!");
             }
@@ -206,6 +220,7 @@ namespace wazniak_forever.Model
 
     public abstract class Exercise
     {
+        [PrimaryKey]
         public int ID { get; set; }
         public int SubjectID { get; set; }
         public int SolutionID { get; set; }
@@ -286,6 +301,7 @@ namespace wazniak_forever.Model
 
     public abstract class Solution
     {
+        [PrimaryKey]
         public int ExerciseID { get; set; }
         public List<string> Choices { get; set; }
         public AnswerType Answer { get; set; }
@@ -294,6 +310,7 @@ namespace wazniak_forever.Model
 
     public class TextSolution : Solution
     {
+        public TextSolution() { }
         public TextSolution(int _id, string _answer, Exercise _ex)
         {
             ExerciseID = _id;
@@ -306,6 +323,7 @@ namespace wazniak_forever.Model
 
     public class SingleValueSolution : Solution
     {
+        public SingleValueSolution() { }
         public SingleValueSolution(int _id, string _answer, Exercise _ex)
         {
             ExerciseID = _id;

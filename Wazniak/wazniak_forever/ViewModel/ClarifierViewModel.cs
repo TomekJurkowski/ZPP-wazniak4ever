@@ -236,7 +236,10 @@ namespace wazniak_forever.ViewModel
             var exerciseIds = exercises.Select(task => task.ID).ToList();*/
 
             System.Diagnostics.Debug.WriteLine("Beginning of LoadExercises()");
-            var tasksWithAnswers = await db.TasksWithAnswers.ToListAsync();
+
+                var tasksWithAnswers = OnlineMode ? 
+                    await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).ToListAsync() :
+                    await db.LoadExercisesOffline(CurrentCourseID);
 
             System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
             /*var exerciseAnswer = from exercise in exercises
@@ -272,9 +275,12 @@ namespace wazniak_forever.ViewModel
                 {
                     case "RegularTask":
                         System.Diagnostics.Debug.WriteLine("RegularTask");
+                        var subject = OnlineMode ?
+                            AllCourses.Where(course => course.ID == CurrentCourseID).First() :
+                            DownloadedCourses.Where(course => course.ID == CurrentCourseID).First();
                         var ex = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
                             task.Title, task.Text1, 
-                            AllCourses.Where(course => course.ID == CurrentCourseID).First(),
+                            subject,
                             solution);
                         System.Diagnostics.Debug.WriteLine("Regular Exercise ex created");
                         solution.Exercise = ex;
