@@ -397,7 +397,7 @@ namespace wazniak_forever.ViewModel
             {
                 new Option(OptionType.MyCourses, true, "Courses", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Downloads, false, "Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.Settings, false, "Settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
+                //new Option(OptionType.Settings, false, "Settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
             };
 
             if (db.User != null)
@@ -491,17 +491,17 @@ namespace wazniak_forever.ViewModel
 
         private void CheckCourseOwnership()
         {
-            if (db.User != null)
+            if (db.User == null) { return; }
+            
+            if (MyCourses.Any(course => course.ID == CurrentCourseID))
             {
-                if (MyCourses.Any(course => course.ID == CurrentCourseID))
-                {
-                    CourseOptions.Add(new Option(OptionType.DeleteFromMyCourses, false, "Delete from My Courses", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
-                }
-                else
-                {
-                    CourseOptions.Add(new Option(OptionType.AddToMyCourses, false, "Add to My Courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
-                }
+                CourseOptions.Add(new Option(OptionType.DeleteFromMyCourses, false, "Delete from My Courses", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
             }
+            else
+            {
+                CourseOptions.Add(new Option(OptionType.AddToMyCourses, false, "Add to My Courses", new Uri("/Assets/TickIcon.png", UriKind.RelativeOrAbsolute)));
+            }
+            
         }
 
         private void LoadDownloadedCourseOptions()
@@ -515,14 +515,16 @@ namespace wazniak_forever.ViewModel
                 CourseOptions.Add(new Option(OptionType.DeleteFromDownloads, false, "Delete from Downloads", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
             }
         }
-
+        
         private void LoadCourseOptions()
         {
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
+                new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.StudyWithClarifier, false, "Study with Clarifier", new Uri("/Assets/IdeaIcon.png", UriKind.RelativeOrAbsolute))
             };
+
             LoadDownloadedCourseOptions();
             CheckCourseOwnership();
         }
