@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
@@ -14,6 +16,7 @@ namespace WazniakWebsite.Controllers
         private const string NO_ANSWER_PICKED_STATEMENT = "You must create an answer for your exercise!";
         private const string SINGLE_VALUE_STATEMENT = "You must provide a value for the Single Value Answer.";
         private const string TEXT_STATEMENT = "You must provide some text for the Text Answer.";
+        private const string MULTI_STATEMENT = "You must provide at least 1 (preferably 3 or more) statements for Multiple Choice Answer.";
 
         private SchoolContext db = new SchoolContext();
 
@@ -62,7 +65,7 @@ namespace WazniakWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] RegularTask regulartask, string subjectName, int subjectId,
-            string answerType, string valueAns, string textAns)
+            string answerType, string valueAns, string textAns, string[] multiChoiceList, string[] multiAnswerList)
         {
             try
             {
@@ -104,9 +107,30 @@ namespace WazniakWebsite.Controllers
 
                             break;
                         case Answer.MULTIPLE_CHOICE_ANSWER:
+                            if (multiChoiceList.Length != multiAnswerList.Length)
+                            {
+                                throw new RetryLimitExceededException("The number of Options doesn't equal the number of true-false answers.");
+                            }
 
+                            // Case when we haven't got any valid Choices for the MultiChoiceAnswer
+                            if (multiChoiceList.Count(t => !String.IsNullOrEmpty(t)) == 0)
+                            {
+                                // Reload page with proper statement
+                                ViewBag.MultiChoiceStatement = MULTI_STATEMENT;
+                                FillTheViewBag(subjectName, subjectId, Answer.MULTIPLE_CHOICE_ANSWER);
 
+                                return View(regulartask);
+                            }
 
+                            // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                            // Every invalid value will be interpreted as 'False'
+                            var tempAnsList = multiAnswerList.Select(s => s.Equals("True", StringComparison.OrdinalIgnoreCase)).ToList();
+
+                            var tempChoiceList = multiChoiceList.ToList();
+
+                            // Create new MultiChoiceAnswer
+                            var multiChoiceAnswer = new MultipleChoiceAnswer(regulartask.ID, tempChoiceList, tempAnsList);
+                            db.MultipleChoiceAnswers.Add(multiChoiceAnswer);
                             break;
                         default:
                             // No answer has been selected - let's remind the user that he has to pick one
@@ -166,7 +190,7 @@ namespace WazniakWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID,SubjectID")] RegularTask regulartask, int isAnswerChanged, string answerType,
-            string valueAns, string textAns)
+            string valueAns, string textAns, string[] multiChoiceList, string[] multiAnswerList)
         {
             var sub = db.Subjects.Find(regulartask.SubjectID);
 

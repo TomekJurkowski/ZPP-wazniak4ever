@@ -7,7 +7,38 @@
 @section HeadScripts
 {
     <script type="text/javascript">
-        
+
+        var rowNum = 3;
+        function addRow() {
+            var row = '<div class="row" id="multiRow_' + rowNum + '"><div class="col-md-5">' +
+                '<input class="form-control" type="text" name="multiChoiceList" /></div><div class="col-md-3">' +
+                '<input type="checkbox" id="multiAnsCheckbox_' + rowNum + '" onclick="multiCheckboxOnClick(' + rowNum + ')">' +
+                '<input type="text" name="multiAnswerList" id="multiAnsHiddenInput_' + rowNum + '" value="False" hidden="" />' +
+                '<label class="PurpleText" id="multiAnsLabel_' + rowNum + '">False</label>' +
+                '</div><div class="col-md-1">' + 
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRow(' + rowNum + ')"></span>' + 
+                '</div></div>';
+                
+            jQuery('#multiContainer').append(row);
+            rowNum++;
+        }
+
+        function removeRow(id) {
+            jQuery('#multiRow_' + id).remove();
+        }
+
+        function multiCheckboxOnClick(id) {
+            if ($("#multiAnsCheckbox_" + id).is(':checked')) {
+                $("#multiAnsLabel_" + id).empty();
+                $("#multiAnsLabel_" + id).append("True");
+                $("#multiAnsHiddenInput_" + id).val("True");
+            } else {
+                $("#multiAnsLabel_" + id).empty();
+                $("#multiAnsLabel_" + id).append("False");
+                $("#multiAnsHiddenInput_" + id).val("False");
+            }
+        }
+
         function selectPreviousAnswer() {
             switch ("@ViewBag.PreviouslySelectedAnswer") {
                 case "@ViewBag.SingleValueAnswer":
@@ -81,6 +112,10 @@
             width: 100% !important;
             padding-left: 5px;
             padding-right: 5px;
+        }
+
+        div[id^="multiRow_"] {
+            margin-bottom: 15px;
         }
     </style>
 }
@@ -172,7 +207,37 @@
                         </div>
 
                         <br />
+                        
+                        <div class="container" id="multiContainer">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h5 class="PurpleText">Type the options below</h5>
+                                </div>
+                                <div class="col-md-3">
+                                    <h5 class="PurpleText">Select the ones which are true</h5>
+                                </div>
+                                <div class="col-md-offset-1 col-md-2">
+                                    <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRow()" />
+                                </div>
+                            </div>
 
+                            <br />
+                            
+                            @for (var i = 0; i < 3; i++)
+                            {
+                                <div class="row" id="multiRow_@(i)">
+                                    <div class="col-md-5">
+                                        <input class="form-control" type="text" name="multiChoiceList" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="checkbox" id="multiAnsCheckbox_@(i)" onclick="multiCheckboxOnClick(@i)" />
+                                        <input type="text" name="multiAnswerList" id="multiAnsHiddenInput_@(i)" value="False" hidden="" />
+                                        <label class="PurpleText" id="multiAnsLabel_@(i)">False</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
                     </div>
                 </div>
             </div>

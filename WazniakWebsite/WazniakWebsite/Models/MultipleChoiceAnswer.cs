@@ -13,6 +13,18 @@ namespace WazniakWebsite.Models
         [Required]
         public List<bool> AnswerList { get; set; }
 
+        public MultipleChoiceAnswer(int taskId, List<string> choiceList, List<bool> answerList)
+            : base(taskId)
+        {
+            ChoiceList = choiceList;
+            AnswerList = answerList;
+        }
+
+        public MultipleChoiceAnswer()
+        {
+
+        }
+
         public override string Overview()
         {
             return "MultipleChoiceAnswer with " + ChoiceList.Count + " options.";
@@ -23,7 +35,7 @@ namespace WazniakWebsite.Models
             var builder = new StringBuilder();
 
             builder.Append("\tChoice\tAnswer").AppendLine().AppendLine();
-            for (int i = 0; i < ChoiceList.Count; ++i)
+            for (var i = 0; i < ChoiceList.Count; ++i)
             {
                 builder.Append(i).Append(")\t").Append(ChoiceList[i])
                     .Append("\t").Append(AnswerList[i]).AppendLine();

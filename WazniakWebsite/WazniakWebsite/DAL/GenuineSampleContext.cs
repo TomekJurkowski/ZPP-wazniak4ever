@@ -28,6 +28,6 @@ namespace WazniakWebsite.DAL
         public DbSet<Task> Tasks { get; set; }
         public DbSet<RegularTask> RegularTasks { get; set; }
         public DbSet<SingleValueAnswer> SingleValueAnswers { get; set; }
-
+        public DbSet<MultipleChoiceAnswer> MultipleChoiceAnswers { get; set; }
     }
 }
