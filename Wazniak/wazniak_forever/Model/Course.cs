@@ -67,6 +67,7 @@ namespace wazniak_forever.Model
                 App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
                 await Connect.InsertAsync(newSubject);
                 App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
+                App.ViewModel.ShowToast("Course successfully saved!");
             }
             catch 
             {
@@ -81,6 +82,7 @@ namespace wazniak_forever.Model
             App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
             await Connect.DeleteAsync(subject);
             App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
+            App.ViewModel.ShowToast("Course successfully deleted!");
             App.ViewModel.LoadDownloadedCourses();
         }
 

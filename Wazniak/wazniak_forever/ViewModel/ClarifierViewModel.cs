@@ -8,6 +8,7 @@ using wazniak_forever.Model;
 using Microsoft.Phone.Shell;
 using System.Windows;
 using Microsoft.Phone.Controls;
+using Coding4Fun.Toolkit.Controls;
 
 namespace wazniak_forever.ViewModel
 {
@@ -491,7 +492,7 @@ namespace wazniak_forever.ViewModel
 
         private void CheckCourseOwnership()
         {
-            if (db.User == null) { return; }
+            if (db.User == null || MyCourses == null) { return; }
             
             if (MyCourses.Any(course => course.ID == CurrentCourseID))
             {
@@ -668,6 +669,17 @@ namespace wazniak_forever.ViewModel
             DeactivateProgressForTimeConsumingProcess(depObject);
             System.Diagnostics.Debug.WriteLine("Finished job!!!");
 
+        }
+
+        public void ShowToast(string message)
+        {
+            ToastPrompt prompt = new ToastPrompt
+            {
+                Title = "Clarifier",
+                Message = message,
+                
+            };
+            prompt.Show();
         }
 
         /*public async void AddSampleItem(SampleItem newSampleItem)
