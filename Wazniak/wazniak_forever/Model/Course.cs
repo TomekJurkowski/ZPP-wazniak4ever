@@ -75,12 +75,15 @@ namespace wazniak_forever.Model
             {
                 App.ViewModel.SetProgressIndicator(depObject, actionDescr);
                 App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
+                
                 await Connect.InsertAsync(newSubject);
                 var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
                 await Connect.InsertAllAsync(tasksWithAnswers);
                 var count = await Connect.Table<TaskAnswer>().CountAsync();
                 System.Diagnostics.Debug.WriteLine(count);
+                
                 App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
+                
                 App.ViewModel.ShowToast("Course successfully saved!");
             }
             catch 
@@ -94,8 +97,16 @@ namespace wazniak_forever.Model
         {
             App.ViewModel.SetProgressIndicator(depObject, actionDescr);
             App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
+            
             await Connect.DeleteAsync(subject);
+            var tasks = await LoadExercisesOffline(subject.ID);
+            tasks.ForEach(async task => 
+            { 
+                await Connect.DeleteAsync(task); 
+            });
+
             App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
+            
             App.ViewModel.ShowToast("Course successfully deleted!");
             App.ViewModel.LoadDownloadedCourses();
         }
@@ -158,6 +169,7 @@ namespace wazniak_forever.Model
 
     public class TaskAnswer
     {
+        [PrimaryKey]
         public int ID { get; set; }
         public string Title { get; set; }
         public int SubjectID { get; set; }
