@@ -76,7 +76,6 @@ namespace wazniak_forever.Model
                 await Connect.InsertAsync(newSubject);
                 var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
                 await Connect.InsertAllAsync(tasksWithAnswers);
-                
                 App.ViewModel.ShowToast("Course successfully saved!");
             }
             catch 
@@ -132,11 +131,41 @@ namespace wazniak_forever.Model
             var externalSubject = (await MobileService.GetTable<Subject>().Where(s => s.ID == subject.ID).ToListAsync())[0];
             if (externalSubject.LastUpdated > localSubject.LastUpdated)
             {
-                var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
+                /*await Connect.UpdateAsync(externalSubject);
+                var localTasks = await LoadExercisesOffline(subject.ID);
+                localTasks.ForEach(async task =>
+                {
+                    await Connect.DeleteAsync(task);
+                });
 
-                await Connect.UpdateAsync(externalSubject);
-                await Connect.UpdateAllAsync(tasksWithAnswers);
-                
+                var externalTasks = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
+                await Connect.InsertAllAsync(externalTasks);*/
+                var localTasks = await LoadExercisesOffline(subject.ID);
+                var externalTasks = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
+                int i = 0;
+                int j = 0;
+                while (j < externalTasks.Count) 
+                {
+                    if (i >= localTasks.Count || localTasks[i].ID > externalTasks[j].ID) {
+                        await Connect.InsertAsync(externalTasks[j]);
+                        j++;
+                        continue;
+                    }
+                    if (localTasks[i].ID == externalTasks[j].ID)
+                    {
+                        await Connect.UpdateAsync(externalTasks[j]);
+                        i++;
+                        j++;
+                    }
+                    else if (localTasks[i].ID < externalTasks[j].ID)
+                    {
+                        while (i < localTasks.Count && localTasks[i].ID < externalTasks[j].ID)
+                        {
+                            await Connect.DeleteAsync(localTasks[i]);
+                            i++;
+                        }
+                    }
+                }
             }
         }
 
