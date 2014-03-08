@@ -7,7 +7,7 @@ namespace WazniakWebsite.Models
         [Required]
         public string Text { get; set; }
 
-        public TextAnswer(int taskId, string text) : base(taskId)
+        public TextAnswer(string text)
         {
             Text = text;
         }

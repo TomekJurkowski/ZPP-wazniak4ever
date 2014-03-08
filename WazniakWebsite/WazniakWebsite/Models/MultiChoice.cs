@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WazniakWebsite.Models
 {
@@ -14,13 +15,25 @@ namespace WazniakWebsite.Models
         [Required]
         public bool ChoiceBool { get; set; }
 
+        [ForeignKey("MultipleChoiceAnswer")]
         public int MultipleChoiceAnswerID { get; set; }
 
         public virtual MultipleChoiceAnswer MultipleChoiceAnswer { get; set; }
 
+        public MultiChoice(string choiceString, bool choiceBool)
+        {
+            ChoiceString = choiceString;
+            ChoiceBool = choiceBool;
+        }
+
+        public MultiChoice()
+        {
+
+        }
+
         public override string ToString()
         {
-            return ChoiceString + "\t" + ChoiceBool;
+            return ChoiceString + " - " + ChoiceBool.ToString().ToUpper();
         }
     }
 }

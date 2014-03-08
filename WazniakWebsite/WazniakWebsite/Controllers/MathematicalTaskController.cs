@@ -81,7 +81,7 @@ namespace WazniakWebsite.Controllers
                             }
 
                             // Create new SingleValueAnswer
-                            var singleValueAnswer = new SingleValueAnswer(mathematicaltask.ID, valueAns);
+                            var singleValueAnswer = new SingleValueAnswer(valueAns);
                             db.SingleValueAnswers.Add(singleValueAnswer);
                             break;
                         case Answer.TEXT_ANSWER:
@@ -95,7 +95,7 @@ namespace WazniakWebsite.Controllers
                             }
 
                             // Create new TextAnswer
-                            var textAnswer = new TextAnswer(mathematicaltask.ID, textAns);
+                            var textAnswer = new TextAnswer(textAns);
                             db.TextAnswers.Add(textAnswer);
                             break;
                         case Answer.SINGLE_CHOICE_ANSWER:
@@ -217,7 +217,7 @@ namespace WazniakWebsite.Controllers
                                 db.Answers.Remove(ans);
                                 db.SaveChanges();
 
-                                var singleValueAnswer = new SingleValueAnswer(mathematicaltask.ID, valueAns);
+                                var singleValueAnswer = new SingleValueAnswer(valueAns);
                                 db.SingleValueAnswers.Add(singleValueAnswer);
                             }
 
@@ -246,7 +246,7 @@ namespace WazniakWebsite.Controllers
                                 db.Answers.Remove(ans);
                                 db.SaveChanges();
 
-                                var textAnswer = new TextAnswer(mathematicaltask.ID, textAns);
+                                var textAnswer = new TextAnswer(textAns);
                                 db.TextAnswers.Add(textAnswer);
                             }
 

@@ -18,16 +18,6 @@ namespace WazniakWebsite.Models
 
         public virtual Task Task { get; set; }
 
-        public Answer(int taskId)
-        {
-            TaskID = taskId;
-        }
-
-        public Answer()
-        {
-            
-        }
-
         public virtual string Overview()
         {
             return "Answer associated with task with id=" + TaskID + ".";

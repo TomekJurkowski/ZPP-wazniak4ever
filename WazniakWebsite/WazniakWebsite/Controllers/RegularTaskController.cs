@@ -83,7 +83,7 @@ namespace WazniakWebsite.Controllers
                             }
 
                             // Create new SingleValueAnswer
-                            var singleValueAnswer = new SingleValueAnswer(regulartask.ID, valueAns);
+                            var singleValueAnswer = new SingleValueAnswer(valueAns);
                             db.SingleValueAnswers.Add(singleValueAnswer);
                             break;
                         case Answer.TEXT_ANSWER:
@@ -97,7 +97,7 @@ namespace WazniakWebsite.Controllers
                             }
 
                             // Create new TextAnswer
-                            var textAnswer = new TextAnswer(regulartask.ID, textAns);
+                            var textAnswer = new TextAnswer(textAns);
                             db.TextAnswers.Add(textAnswer);
                             break;
                         case Answer.SINGLE_CHOICE_ANSWER:
@@ -120,16 +120,20 @@ namespace WazniakWebsite.Controllers
 
                                 return View(regulartask);
                             }
-
-                            // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
-                            // Every invalid value will be interpreted as 'False'
-                            var tempAnsList = multiAnswerList.Select(s => s.Equals("True", StringComparison.OrdinalIgnoreCase)).ToList();
-
-                            var tempChoiceList = multiChoiceList.ToList();
-
+                            
                             // Create new MultiChoiceAnswer
-                            var multiChoiceAnswer = new MultipleChoiceAnswer(regulartask.ID);
+                            var multiChoiceAnswer = new MultipleChoiceAnswer();
                             db.MultipleChoiceAnswers.Add(multiChoiceAnswer);
+
+                            for (var i = 0; i < multiChoiceList.Length; i++)
+                            {
+                                // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                                // Every invalid value will be interpreted as 'False'
+                                var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
+                                var multiChoice = new MultiChoice(multiChoiceList[i], tempAns);
+                                db.MultiChoices.Add(multiChoice);
+                            }
+
                             break;
                         default:
                             // No answer has been selected - let's remind the user that he has to pick one
@@ -240,7 +244,7 @@ namespace WazniakWebsite.Controllers
                                 db.Answers.Remove(ans);
                                 db.SaveChanges();
 
-                                var singleValueAnswer = new SingleValueAnswer(regulartask.ID, valueAns);
+                                var singleValueAnswer = new SingleValueAnswer(valueAns);
                                 db.SingleValueAnswers.Add(singleValueAnswer);
                             }
 
@@ -269,7 +273,7 @@ namespace WazniakWebsite.Controllers
                                 db.Answers.Remove(ans);
                                 db.SaveChanges();
 
-                                var textAnswer = new TextAnswer(regulartask.ID, textAns);
+                                var textAnswer = new TextAnswer(textAns);
                                 db.TextAnswers.Add(textAnswer);      
                             }
 

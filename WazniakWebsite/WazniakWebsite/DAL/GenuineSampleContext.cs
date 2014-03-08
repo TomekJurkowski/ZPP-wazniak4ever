@@ -29,6 +29,7 @@ namespace WazniakWebsite.DAL
         public DbSet<SingleValueAnswer> SingleValueAnswers { get; set; }
         public DbSet<MultipleChoiceAnswer> MultipleChoiceAnswers { get; set; }
         public DbSet<SingleChoiceAnswer> SingleChoiceAnswers { get; set; }
-
+        public DbSet<MultiChoice> MultiChoices { get; set; }
+        public DbSet<SingleChoice> SingleChoices { get; set; }
     }
 }

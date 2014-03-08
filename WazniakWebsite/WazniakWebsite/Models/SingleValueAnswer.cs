@@ -9,7 +9,7 @@ namespace WazniakWebsite.Models
                                           "For a longer answer consider using TextAnswer.")]
         public string Value { get; set; }
 
-        public SingleValueAnswer(int taskId, string value) : base(taskId)
+        public SingleValueAnswer(string value)
         {
             Value = value;
         }

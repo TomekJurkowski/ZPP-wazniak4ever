@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
+using WazniakWebsite.DAL;
 
 namespace WazniakWebsite.Models
 {
@@ -15,24 +17,27 @@ namespace WazniakWebsite.Models
 
         public override string Overview()
         {
-            return "SingleChoiceAnswer with the " + CorrectAnswer + " option correct.";
+            return "Single Choice Answer with the " + CorrectAnswer + " option correct.";
         }
 
         public override string ToString()
         {
+            var db = new SchoolContext();
+            var mySingleChoices = db.SingleChoices.Where(s => s.SingleChoiceAnswerID == TaskID);
+
             var builder = new StringBuilder();
 
-            builder.Append("\tPossible Answers").AppendLine().AppendLine();
+            builder.Append("There are ").Append(mySingleChoices.Count()).Append(" possibilities to choose from:");
             var i = 0;
-            foreach (var singleChoice in SingleChoices)
+            foreach (var singleChoice in mySingleChoices)
             {
                 if (i == CorrectAnswer)
                 {
-                    builder.Append(++i).Append(")\t").Append(singleChoice).Append("\tCorrect Answer").AppendLine();
+                    builder.Append(" [ ").Append(singleChoice).Append(" - CORRECT OPTION ];");
                 }
                 else
                 {
-                    builder.Append(++i).Append(")\t").Append(singleChoice).AppendLine();                    
+                    builder.Append(" [ ").Append(singleChoice).Append(" ];");
                 }
             }
 

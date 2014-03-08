@@ -1,38 +1,32 @@
 ﻿
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
+using WazniakWebsite.DAL;
 
 namespace WazniakWebsite.Models
 {
     public class MultipleChoiceAnswer : Answer
     {
         public virtual ICollection<MultiChoice> MultiChoices { get; set; }
-    
-        public MultipleChoiceAnswer(int taskId) : base(taskId)
-        {
-
-        }
-
-        public MultipleChoiceAnswer()
-        {
-
-        }
 
         public override string Overview()
         {
-            return "MultipleChoiceAnswer with " + MultiChoices.Count + " options.";
+            var db = new SchoolContext();
+            return "Multiple Choice Answer with " + db.MultiChoices.Count(m => m.MultipleChoiceAnswerID == TaskID) + " options.";
         }
 
         public override string ToString()
         {
+            var db = new SchoolContext();
+            var myMultiChoices = db.MultiChoices.Where(m => m.MultipleChoiceAnswerID == TaskID);
+
             var builder = new StringBuilder();
 
-            builder.Append("\tChoice\tAnswer").AppendLine().AppendLine();
-            var i = 0;
-            foreach (var multiChoice in MultiChoices)
+            builder.Append("There are ").Append(myMultiChoices.Count()).Append(" options to choose from:");
+            foreach (var multiChoice in myMultiChoices)
             {
-                builder.Append(++i).Append(")\t").Append(multiChoice).AppendLine();
+                builder.Append(" [ ").Append(multiChoice).Append(" ];");
             }
             
             return builder.ToString();
