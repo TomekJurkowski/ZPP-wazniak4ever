@@ -97,15 +97,18 @@ namespace wazniak_forever
                         await App.ViewModel.PerformTimeConsumingProcess(this, "Deleting from My Courses...", App.ViewModel.DeleteFromMyCourses);          
                         break;
                     case OptionType.Download:
-                        Subject currentCourse = App.ViewModel.AllCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
-                        await App.ViewModel.db.SaveSubjectLocally(this, "Downloading course...", currentCourse);
+                        Subject currentCourse = App.ViewModel.AllCourses.Find(x => x.ID == App.ViewModel.CurrentCourseID);
+                        //await App.ViewModel.db.SaveSubjectLocally(this, "Downloading course...", currentCourse);
+                        await App.ViewModel.PerformTimeConsumingProcess(this, "Downloading course...", async () => { await App.ViewModel.db.SaveSubjectLocally(currentCourse); });
                         App.ViewModel.LoadCoursePage();
                         break;
                     case OptionType.Update:
+                        currentCourse = App.ViewModel.AllCourses.Find(x => x.ID == App.ViewModel.CurrentCourseID);
+                        await App.ViewModel.PerformTimeConsumingProcess(this, "Updating course...", async () => { await App.ViewModel.db.SyncDownloadedCourse(currentCourse); });
                         break;
                     case OptionType.DeleteFromDownloads:
                         currentCourse = App.ViewModel.DownloadedCourses.Find( x => x.ID == App.ViewModel.CurrentCourseID);
-                        await App.ViewModel.db.DeleteSubjectFromDownloads(this, "Deleting from Downloads...", currentCourse);
+                        await App.ViewModel.PerformTimeConsumingProcess(this, "Deleting from Downloads...", async () => { await App.ViewModel.db.DeleteSubjectFromDownloads(currentCourse); });
                         App.ViewModel.LoadCoursePage();
                         break;
                 }

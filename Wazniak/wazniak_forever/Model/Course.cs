@@ -68,21 +68,14 @@ namespace wazniak_forever.Model
                 .Where(exercise => exercise.SubjectID == subjectID).ToListAsync();
         }
 
-        public async System.Threading.Tasks.Task SaveSubjectLocally(
-            System.Windows.DependencyObject depObject, string actionDescr, Subject newSubject)
+        public async System.Threading.Tasks.Task SaveSubjectLocally(Subject newSubject)
         {
             try
             {
-                App.ViewModel.SetProgressIndicator(depObject, actionDescr);
-                App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
                 
                 await Connect.InsertAsync(newSubject);
                 var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
                 await Connect.InsertAllAsync(tasksWithAnswers);
-                var count = await Connect.Table<TaskAnswer>().CountAsync();
-                System.Diagnostics.Debug.WriteLine(count);
-                
-                App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
                 
                 App.ViewModel.ShowToast("Course successfully saved!");
             }
@@ -92,11 +85,8 @@ namespace wazniak_forever.Model
             }
         }
 
-        public async System.Threading.Tasks.Task DeleteSubjectFromDownloads(
-            System.Windows.DependencyObject depObject, string actionDescr, Subject subject)
+        public async System.Threading.Tasks.Task DeleteSubjectFromDownloads(Subject subject)
         {
-            App.ViewModel.SetProgressIndicator(depObject, actionDescr);
-            App.ViewModel.ActivateProgressForTimeConsumingProcess(depObject);
             
             await Connect.DeleteAsync(subject);
             var tasks = await LoadExercisesOffline(subject.ID);
@@ -104,11 +94,9 @@ namespace wazniak_forever.Model
             { 
                 await Connect.DeleteAsync(task); 
             });
-
-            App.ViewModel.DeactivateProgressForTimeConsumingProcess(depObject);
             
             App.ViewModel.ShowToast("Course successfully deleted!");
-            App.ViewModel.LoadDownloadedCourses();
+            await App.ViewModel.LoadDownloadedCourses();
         }
 
         public async Task<bool> CheckIfSubjectSavedLocally(Subject subject)
@@ -134,6 +122,21 @@ namespace wazniak_forever.Model
             foreach (var s in updatedSubjects)
             {
                 if ((await localSubjects.ToListAsync()).Find(x => x.ID == s.ID) != null) await Connect.UpdateAsync(s);
+            }
+        }
+
+        public async System.Threading.Tasks.Task SyncDownloadedCourse(Subject subject)
+        {
+            var localSubject = await Connect.Table<Subject>().Where(s => s.ID == subject.ID).FirstOrDefaultAsync();
+            if (localSubject == null) return;
+            var externalSubject = (await MobileService.GetTable<Subject>().Where(s => s.ID == subject.ID).ToListAsync())[0];
+            if (externalSubject.LastUpdated > localSubject.LastUpdated)
+            {
+                var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
+
+                await Connect.UpdateAsync(externalSubject);
+                await Connect.UpdateAllAsync(tasksWithAnswers);
+                
             }
         }
 
