@@ -7,17 +7,11 @@ namespace WazniakWebsite.Models
 {
     public class MultipleChoiceAnswer : Answer
     {
-        [Required]
-        public List<string> ChoiceList { get; set; }
-
-        [Required]
-        public List<bool> AnswerList { get; set; }
-
-        public MultipleChoiceAnswer(int taskId, List<string> choiceList, List<bool> answerList)
-            : base(taskId)
+        public virtual ICollection<MultiChoice> MultiChoices { get; set; }
+    
+        public MultipleChoiceAnswer(int taskId) : base(taskId)
         {
-            ChoiceList = choiceList;
-            AnswerList = answerList;
+
         }
 
         public MultipleChoiceAnswer()
@@ -27,7 +21,7 @@ namespace WazniakWebsite.Models
 
         public override string Overview()
         {
-            return "MultipleChoiceAnswer with " + ChoiceList.Count + " options.";
+            return "MultipleChoiceAnswer with " + MultiChoices.Count + " options.";
         }
 
         public override string ToString()
@@ -35,12 +29,12 @@ namespace WazniakWebsite.Models
             var builder = new StringBuilder();
 
             builder.Append("\tChoice\tAnswer").AppendLine().AppendLine();
-            for (var i = 0; i < ChoiceList.Count; ++i)
+            var i = 0;
+            foreach (var multiChoice in MultiChoices)
             {
-                builder.Append(i).Append(")\t").Append(ChoiceList[i])
-                    .Append("\t").Append(AnswerList[i]).AppendLine();
+                builder.Append(++i).Append(")\t").Append(multiChoice).AppendLine();
             }
-
+            
             return builder.ToString();
         }
 

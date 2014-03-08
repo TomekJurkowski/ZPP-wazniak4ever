@@ -22,12 +22,13 @@ namespace WazniakWebsite.DAL
 
         public DbSet<MathematicalTask> MathematicalTasks { get; set; }
         public DbSet<Subject> Subjects { get; set; }
-        public DbSet<AbcdAnswer> AbcdAnswers { get; set; }
         public DbSet<TextAnswer> TextAnswers { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<RegularTask> RegularTasks { get; set; }
         public DbSet<SingleValueAnswer> SingleValueAnswers { get; set; }
         public DbSet<MultipleChoiceAnswer> MultipleChoiceAnswers { get; set; }
+        public DbSet<SingleChoiceAnswer> SingleChoiceAnswers { get; set; }
+
     }
 }

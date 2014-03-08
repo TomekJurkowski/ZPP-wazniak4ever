@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -129,7 +128,7 @@ namespace WazniakWebsite.Controllers
                             var tempChoiceList = multiChoiceList.ToList();
 
                             // Create new MultiChoiceAnswer
-                            var multiChoiceAnswer = new MultipleChoiceAnswer(regulartask.ID, tempChoiceList, tempAnsList);
+                            var multiChoiceAnswer = new MultipleChoiceAnswer(regulartask.ID);
                             db.MultipleChoiceAnswers.Add(multiChoiceAnswer);
                             break;
                         default:
