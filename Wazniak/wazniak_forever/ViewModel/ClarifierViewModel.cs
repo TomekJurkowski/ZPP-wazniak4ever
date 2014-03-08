@@ -237,10 +237,11 @@ namespace wazniak_forever.ViewModel
 
             System.Diagnostics.Debug.WriteLine("Beginning of LoadExercises()");
 
-                var tasksWithAnswers = OnlineMode ? 
-                    await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).ToListAsync() :
-                    await db.LoadExercisesOffline(CurrentCourseID);
+            var tasksWithAnswers = OnlineMode ? 
+                 await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).ToListAsync() :
+                await db.LoadExercisesOffline(CurrentCourseID);
 
+            
             System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
             /*var exerciseAnswer = from exercise in exercises
                                  join answer in answers on exercise.ID equals answer.TaskID
@@ -248,6 +249,12 @@ namespace wazniak_forever.ViewModel
 
             Exercises = new List<RegularExercise>();
             Solutions = new List<Solution>();
+
+            if (tasksWithAnswers.Count == 0)
+            {
+                MessageBox.Show("Unfortunately, this course hasn't got any exercises yet!");
+                return;
+            }
 
             foreach (var task in tasksWithAnswers)
             {
