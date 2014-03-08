@@ -48,8 +48,8 @@ namespace wazniak_forever
             //await App.ViewModel.LoadExercises();
             System.Diagnostics.Debug.WriteLine("Beginning of SelectExercise()");
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", App.ViewModel.LoadExercises);
-            System.Diagnostics.Debug.WriteLine("Hello");
             if (App.ViewModel.Solutions.Count <= 0) return;
+            System.Diagnostics.Debug.WriteLine("Hello");
             System.Diagnostics.Debug.WriteLine("Solutions.Count > 0");
             System.Diagnostics.Debug.WriteLine(App.ViewModel.Solutions[0].Answer.Type);
             string navTo;

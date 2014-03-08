@@ -29,17 +29,6 @@ namespace wazniak_forever
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
         }
 
-        protected override void OnBackKeyPress(CancelEventArgs e)
-        {
-            base.OnBackKeyPress(e);
-            if (NavigationService.CanGoBack)
-            {
-                e.Cancel = true;
-                NavigationService.RemoveBackEntry();
-                NavigationService.GoBack();
-            }
-        }
-
         private void AddEvents()
         {
             ExControl.SubmitAnswer.Click += new RoutedEventHandler(SubmitAnswer_Click);

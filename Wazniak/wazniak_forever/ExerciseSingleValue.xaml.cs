@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -24,6 +25,17 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
+        }
+
+        protected override void OnBackKeyPress(CancelEventArgs e)
+        {
+            base.OnBackKeyPress(e);
+            if (NavigationService.CanGoBack)
+            {
+                e.Cancel = true;
+                NavigationService.RemoveBackEntry();
+                NavigationService.GoBack();
+            }
         }
 
         private void AddEvents()
