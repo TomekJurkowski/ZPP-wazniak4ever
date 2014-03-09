@@ -20,12 +20,27 @@ namespace wazniak_forever
             
         }
 
+        private string GetCourseDescription()
+        {
+            Subject currentSubject;
+            if (App.ViewModel.OnlineMode)
+            {
+                currentSubject = App.ViewModel.AllCourses.Find(course => course.ID == App.ViewModel.CurrentCourseID);
+            }
+            else
+            {
+                currentSubject = App.ViewModel.DownloadedCourses.Find(course => course.ID == App.ViewModel.CurrentCourseID);
+            }
+            return currentSubject.Description;
+        }
+
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             App.ViewModel.CheckForNetworkAvailability();
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
             App.ViewModel.CurrentCourseID = Convert.ToInt32(NavigationContext.QueryString["courseID"]);
+            CourseDescription.Text = GetCourseDescription();
             App.ViewModel.LoadCoursePage();
             /*
             bool subjectSavedLocally = true;
