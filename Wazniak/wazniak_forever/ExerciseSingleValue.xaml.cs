@@ -25,6 +25,7 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
+            AnswerBox.Visibility = Visibility.Visible;
         }
 
         protected override void OnBackKeyPress(CancelEventArgs e)
