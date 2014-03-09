@@ -194,6 +194,10 @@
     <Compile Include="Migrations\201403082157148_ForeignKeySpecifierAdded.Designer.cs">
       <DependentUpon>201403082157148_ForeignKeySpecifierAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201403091709271_ConstructorAddedForSingleChoiceAnswer.cs" />
+    <Compile Include="Migrations\201403091709271_ConstructorAddedForSingleChoiceAnswer.Designer.cs">
+      <DependentUpon>201403091709271_ConstructorAddedForSingleChoiceAnswer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MultiChoice.cs" />
     <Compile Include="Models\MathematicalTask.cs" />
@@ -296,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201403082157148_ForeignKeySpecifierAdded.resx">
       <DependentUpon>201403082157148_ForeignKeySpecifierAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201403091709271_ConstructorAddedForSingleChoiceAnswer.resx">
+      <DependentUpon>201403091709271_ConstructorAddedForSingleChoiceAnswer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

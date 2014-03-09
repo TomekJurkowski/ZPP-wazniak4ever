@@ -15,7 +15,8 @@ namespace WazniakWebsite.Controllers
         private const string NO_ANSWER_PICKED_STATEMENT = "You must create an answer for your exercise!";
         private const string SINGLE_VALUE_STATEMENT = "You must provide a value for the Single Value Answer.";
         private const string TEXT_STATEMENT = "You must provide some text for the Text Answer.";
-        private const string MULTI_STATEMENT = "You must provide at least 1 (preferably 3 or more) statements for Multiple Choice Answer.";
+        private const string MULTI_STATEMENT = "You must provide at least 1 (preferably at least 3) statements for Multiple Choice Answer.";
+        private const string SINGLE_STATEMENT = "You must provide at least 1 (preferably at least 3) statements for Single Choice Answer and none of the statements can be empty.";
 
         private SchoolContext db = new SchoolContext();
 
@@ -64,7 +65,7 @@ namespace WazniakWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] RegularTask regulartask, string subjectName, int subjectId,
-            string answerType, string valueAns, string textAns, string[] multiChoiceList, string[] multiAnswerList)
+            string answerType, string valueAns, string textAns, string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
             try
             {
@@ -101,8 +102,29 @@ namespace WazniakWebsite.Controllers
                             db.TextAnswers.Add(textAnswer);
                             break;
                         case Answer.SINGLE_CHOICE_ANSWER:
+                            if (singleCorrectNo >= singleChoiceList.Length || singleCorrectNo < 0)
+                            {
+                                throw new RetryLimitExceededException("The number of the correct Choice for SingleChoiceAnswer is beyond valid range.");
+                            }
 
+                            // Case when we haven't got any valid Choices for the SingleChoiceAnswer or some choices are empty
+                            if (singleChoiceList.Length == 0 || singleChoiceList.Count(String.IsNullOrEmpty) != 0)
+                            {
+                                // Reload page with proper statement
+                                ViewBag.SingleChoiceStatement = SINGLE_STATEMENT;
+                                FillTheViewBag(subjectName, subjectId, Answer.SINGLE_CHOICE_ANSWER);
 
+                                return View(regulartask);
+                            }
+
+                            // Create new SingleChoiceAnswer
+                            var singleChoiceAnswer = new SingleChoiceAnswer(singleCorrectNo);
+                            db.SingleChoiceAnswers.Add(singleChoiceAnswer);
+
+                            foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s)))
+                            {
+                                db.SingleChoices.Add(singleChoice);
+                            }
 
                             break;
                         case Answer.MULTIPLE_CHOICE_ANSWER:

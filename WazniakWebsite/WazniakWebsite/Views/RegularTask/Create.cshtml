@@ -8,23 +8,63 @@
 {
     <script type="text/javascript">
 
-        var rowNum = 3;
-        function addRow() {
-            var row = '<div class="row" id="multiRow_' + rowNum + '"><div class="col-md-5">' +
+        // variable and 2 functions responsible for adding/removing rows for SingleChoiceAnswer
+        var rowNumForSingle = 3;
+        function addRowForSingle() {
+            var row = '<div class="row" id="singleRow_' + rowNumForSingle + '"><div class="col-md-5">' +
+                '<input class="form-control" type="text" name="singleChoiceList" /></div><div class="col-md-3">' +
+                '<input type="radio" id="singleAnsRadio_' + rowNumForSingle + '"  name="singleRadios" onclick="singleRadioOnClick(' + rowNumForSingle + ')" />' +
+                '<label class="PurpleText" id="singleAnsLabel_' + rowNumForSingle + '"></label>' +
+                '</div><div class="col-md-1">' +
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRowForSingle(' + rowNumForSingle + ')"></span>' +
+                '</div></div>';
+
+            jQuery('#singleContainer').append(row);
+            rowNumForSingle++;
+        }
+
+        function removeRowForSingle(id) {
+            if ($("#singleAnsRadio_" + id).is(':checked')) {
+                $("#singleAnsRadio_0").prop("checked", true);
+                singleRadioOnClick(0);
+            }
+
+            jQuery('#singleRow_' + id).remove();
+            
+            // Let's update the actual number of the option that is selected
+            $("[name='singleCorrectNo']").val(
+                $("[id^='singleAnsRadio_']").index($("input[id^='singleAnsRadio_']:checked"))
+            );
+        }
+
+        // variable and 2 functions responsible for adding/removing rows for MultipleChoiceAnswer
+        var rowNumForMultiple = 3;
+        function addRowForMultiple() {
+            var row = '<div class="row" id="multiRow_' + rowNumForMultiple + '"><div class="col-md-5">' +
                 '<input class="form-control" type="text" name="multiChoiceList" /></div><div class="col-md-3">' +
-                '<input type="checkbox" id="multiAnsCheckbox_' + rowNum + '" onclick="multiCheckboxOnClick(' + rowNum + ')">' +
-                '<input type="text" name="multiAnswerList" id="multiAnsHiddenInput_' + rowNum + '" value="False" hidden="" />' +
-                '<label class="PurpleText" id="multiAnsLabel_' + rowNum + '">False</label>' +
+                '<input type="checkbox" id="multiAnsCheckbox_' + rowNumForMultiple + '" onclick="multiCheckboxOnClick(' + rowNumForMultiple + ')" />' +
+                '<input type="text" name="multiAnswerList" id="multiAnsHiddenInput_' + rowNumForMultiple + '" value="False" hidden="" />' +
+                '<label class="PurpleText" id="multiAnsLabel_' + rowNumForMultiple + '">False</label>' +
                 '</div><div class="col-md-1">' + 
-                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRow(' + rowNum + ')"></span>' + 
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRowForMultiple(' + rowNumForMultiple + ')"></span>' + 
                 '</div></div>';
                 
             jQuery('#multiContainer').append(row);
-            rowNum++;
+            rowNumForMultiple++;
         }
 
-        function removeRow(id) {
+        function removeRowForMultiple(id) {
             jQuery('#multiRow_' + id).remove();
+        }
+
+        function singleRadioOnClick(id) {
+            $("[id^='singleAnsLabel_']").empty();
+            $("#singleAnsLabel_" + id).append("Correct");
+
+            // The code below will update the actual number of the option that is selected
+            $("[name='singleCorrectNo']").val(
+                $("[id^='singleAnsRadio_']").index($("#singleAnsRadio_" + id))
+            );
         }
 
         function multiCheckboxOnClick(id) {
@@ -95,6 +135,9 @@
                 animated: 'fade',
                 placement: 'bottom'
             });
+            
+            $("#singleAnsRadio_0").prop("checked", true);
+            singleRadioOnClick(0);
         });
 
         function goToByScroll() {
@@ -114,7 +157,7 @@
             padding-right: 5px;
         }
 
-        div[id^="multiRow_"] {
+        div[id^="multiRow_"], div[id^="singleRow_"] {
             margin-bottom: 15px;
         }
     </style>
@@ -198,7 +241,39 @@
                         </div>
 
                         <br />
+                        
+                        <div class="container" id="singleContainer">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h5 class="PurpleText">Type the options below</h5>
+                                </div>
+                                <div class="col-md-3">
+                                    <h5 class="PurpleText">Select the correct one</h5>
+                                </div>
+                                <div class="col-md-offset-1 col-md-2">
+                                    <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRowForSingle()" />
+                                </div>
+                            </div>
 
+                            <br />
+                            
+                            <input type="number" name="singleCorrectNo" hidden="" />
+
+                            @for (var i = 0; i < 3; i++)
+                            {
+                                <div class="row" id="singleRow_@(i)">
+                                    <div class="col-md-5">
+                                        <input class="form-control" type="text" name="singleChoiceList" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="radio" id="singleAnsRadio_@(i)" name="singleRadios" onclick="singleRadioOnClick(@i)" />
+                                        <label class="PurpleText" id="singleAnsLabel_@(i)"></label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="field-validation-error">@ViewBag.SingleChoiceNoCorrectStatement</span>
+                        <span class="field-validation-error">@ViewBag.SingleChoiceStatement</span>
                     </div>
 
                     <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
@@ -217,7 +292,7 @@
                                     <h5 class="PurpleText">Select the ones which are true</h5>
                                 </div>
                                 <div class="col-md-offset-1 col-md-2">
-                                    <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRow()" />
+                                    <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRowForMultiple()" />
                                 </div>
                             </div>
 
@@ -237,7 +312,7 @@
                                 </div>
                             }
                         </div>
-                        <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
+                        <span class="field-validation-error">@ViewBag.MultiChoiceStatement</span>
                     </div>
                 </div>
             </div>

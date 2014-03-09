@@ -15,6 +15,16 @@ namespace WazniakWebsite.Models
 
         public virtual ICollection<SingleChoice> SingleChoices { get; set; }
 
+        public SingleChoiceAnswer(int correctAnswer)
+        {
+            CorrectAnswer = correctAnswer;
+        }
+
+        public SingleChoiceAnswer()
+        {
+            
+        }
+
         public override string Overview()
         {
             return "Single Choice Answer with the " + CorrectAnswer + " option correct.";
@@ -31,14 +41,8 @@ namespace WazniakWebsite.Models
             var i = 0;
             foreach (var singleChoice in mySingleChoices)
             {
-                if (i == CorrectAnswer)
-                {
-                    builder.Append(" [ ").Append(singleChoice).Append(" - CORRECT OPTION ];");
-                }
-                else
-                {
-                    builder.Append(" [ ").Append(singleChoice).Append(" ];");
-                }
+                builder.Append(" [ ").Append(singleChoice).Append(i == CorrectAnswer ? " - CORRECT OPTION ];" : " ];");
+                i++;
             }
 
             return builder.ToString();
