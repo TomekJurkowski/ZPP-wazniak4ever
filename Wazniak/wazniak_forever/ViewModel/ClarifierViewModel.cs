@@ -241,6 +241,10 @@ namespace wazniak_forever.ViewModel
                  await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).ToListAsync() :
                 await db.LoadExercisesOffline(CurrentCourseID);
 
+            var multipleChoiceExerciseOptions = OnlineMode ?
+                await db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).ToListAsync() :
+                await db.LoadMultipleChoiceExOptionsOffline(CurrentCourseID);
+
             
             System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
             /*var exerciseAnswer = from exercise in exercises
@@ -271,6 +275,16 @@ namespace wazniak_forever.ViewModel
                         break;
                     case "TextAnswer":
                         solution = new TextSolution(task.TaskID, task.AnswerText, null);
+                        break;
+                    case "MultipleChoiceAnswer":
+                        List<string> choices = new List<string>();
+                        List<bool> answers = new List<bool>();
+                        multipleChoiceExerciseOptions.FindAll(option => option.TaskID == task.TaskID)
+                            .ForEach(option => {
+                                choices.Add(option.ChoiceString);
+                                answers.Add(option.ChoiceBool);
+                            });
+                        solution = new MultipleChoiceSolution(task.TaskID, choices, answers, null);
                         break;
                 }
 
@@ -681,8 +695,9 @@ namespace wazniak_forever.ViewModel
                     await Method();
                     success = true;
                 }
-                catch (MobileServiceInvalidOperationException) 
-                { 
+                catch (MobileServiceInvalidOperationException e) 
+                {
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     count++; 
                 }
             }

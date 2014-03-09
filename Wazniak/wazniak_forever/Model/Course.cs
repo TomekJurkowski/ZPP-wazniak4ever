@@ -38,6 +38,8 @@ namespace wazniak_forever.Model
         public IMobileServiceTable<TaskAnswer> TasksWithAnswers = MobileService.GetTable<TaskAnswer>();
         public IMobileServiceTable<UserSubject> UsersAndSubjects = MobileService.GetTable<UserSubject>();
         public IMobileServiceTable<UserFullSubject> MySubjects = MobileService.GetTable<UserFullSubject>();
+        public IMobileServiceTable<MultipleChoiceExerciseOption> MultipleChoiceOptions = 
+            MobileService.GetTable<MultipleChoiceExerciseOption>();
 
         public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
             Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
@@ -47,14 +49,14 @@ namespace wazniak_forever.Model
         {
             await Connect.CreateTableAsync<Subject>();
             await Connect.CreateTableAsync<TaskAnswer>();
-            //await Connect.CreateTableAsync<TextSolution>();
-            //await Connect.CreateTableAsync<SingleValueSolution>();
+            await Connect.CreateTableAsync<MultipleChoiceExerciseOption>();
         }
 
         public async void Drop()
         {
             await Connect.DropTableAsync<Subject>();
             await Connect.DropTableAsync<TaskAnswer>();
+            await Connect.DropTableAsync<MultipleChoiceExerciseOption>();
         }
 
         public async Task<List<Subject>> LoadSubjectsOffline()
@@ -68,6 +70,12 @@ namespace wazniak_forever.Model
                 .Where(exercise => exercise.SubjectID == subjectID).ToListAsync();
         }
 
+        public async Task<List<MultipleChoiceExerciseOption>> LoadMultipleChoiceExOptionsOffline(int subjectID)
+        {
+            return await Connect.Table<MultipleChoiceExerciseOption>()
+                .Where(option => option.SubjectID == subjectID).ToListAsync();
+        }
+
         public async System.Threading.Tasks.Task SaveSubjectLocally(Subject newSubject)
         {
             try
@@ -75,7 +83,11 @@ namespace wazniak_forever.Model
                 
                 await Connect.InsertAsync(newSubject);
                 var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
+                var multipleChoiceExerciseOptions = await MultipleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
+
                 await Connect.InsertAllAsync(tasksWithAnswers);
+                await Connect.InsertAllAsync(multipleChoiceExerciseOptions);
+
                 App.ViewModel.ShowToast("Course successfully saved!");
             }
             catch 
@@ -92,6 +104,11 @@ namespace wazniak_forever.Model
             tasks.ForEach(async task => 
             { 
                 await Connect.DeleteAsync(task); 
+            });
+            var options = await LoadMultipleChoiceExOptionsOffline(subject.ID);
+            options.ForEach(async option =>
+            {
+                await Connect.DeleteAsync(option);
             });
             
             App.ViewModel.ShowToast("Course successfully deleted!");
@@ -131,7 +148,7 @@ namespace wazniak_forever.Model
             var externalSubject = (await MobileService.GetTable<Subject>().Where(s => s.ID == subject.ID).ToListAsync())[0];
             if (externalSubject.LastUpdated > localSubject.LastUpdated)
             {
-                /*await Connect.UpdateAsync(externalSubject);
+                await Connect.UpdateAsync(externalSubject);
                 var localTasks = await LoadExercisesOffline(subject.ID);
                 localTasks.ForEach(async task =>
                 {
@@ -139,8 +156,18 @@ namespace wazniak_forever.Model
                 });
 
                 var externalTasks = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
-                await Connect.InsertAllAsync(externalTasks);*/
-                var localTasks = await LoadExercisesOffline(subject.ID);
+                await Connect.InsertAllAsync(externalTasks);
+
+                var localMultipleChoiceExOptions = await LoadMultipleChoiceExOptionsOffline(subject.ID);
+                localMultipleChoiceExOptions.ForEach(async option =>
+                {
+                    await Connect.DeleteAsync(option);
+                });
+
+                var externalMultipleChoiceExOptions = await MultipleChoiceOptions
+                    .Where(option => option.SubjectID == subject.ID).ToListAsync();
+                await Connect.InsertAllAsync(externalMultipleChoiceExOptions);
+                /*var localTasks = await LoadExercisesOffline(subject.ID);
                 var externalTasks = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
                 int i = 0;
                 int j = 0;
@@ -165,13 +192,23 @@ namespace wazniak_forever.Model
                             i++;
                         }
                     }
-                }
+                }*/
             }
         }
 
     }
 
     #region Azure Adapters
+
+    public class MultipleChoiceExerciseOption
+    {
+        public int ID { get; set; }
+        public int SubjectID { get; set; }
+        public int TaskID { get; set; }
+        public string ChoiceString { get; set; }
+        public bool ChoiceBool { get; set; }
+
+    }
 
     public class UserFullSubject
     {
