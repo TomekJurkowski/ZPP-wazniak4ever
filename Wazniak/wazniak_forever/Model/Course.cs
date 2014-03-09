@@ -218,6 +218,8 @@ namespace wazniak_forever.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public System.DateTime LastUpdated { get; set; }
+        public double Percentage { get; set; }
+        public int Attempts { get; set; }
     }
 
     public class UserSubject
@@ -225,12 +227,16 @@ namespace wazniak_forever.Model
         public string Id { get; set; }
         public string UserID { get; set; }
         public int SubjectID { get; set; }
+        public double Percentage { get; set; }
+        public int Attempts { get; set; }
 
-        public UserSubject(string id, string userID, int subjectID)
+        public UserSubject(string id, string userID, int subjectID, double percentage, int attempts)
         {
             Id = id;
             UserID = userID;
             SubjectID = subjectID;
+            Percentage = percentage;
+            Attempts = attempts;
         }
 
         public UserSubject() { }

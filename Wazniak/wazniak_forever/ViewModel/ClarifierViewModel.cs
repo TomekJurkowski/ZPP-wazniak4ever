@@ -612,7 +612,8 @@ namespace wazniak_forever.ViewModel
             {
                 MyCourses.Add(new Subject(subject.ID, subject.Name, 
                     subject.Description, subject.LastUpdated));
-                _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID, subject.ID));
+                _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID, 
+                    subject.ID, subject.Percentage, subject.Attempts));
             });
              
 
@@ -624,13 +625,28 @@ namespace wazniak_forever.ViewModel
             };*/
         }
 
+        public async System.Threading.Tasks.Task SendMyResultsOver(double results)
+        {
+            var currentMapping = _userSubjectMappings.Find(mapping =>
+                mapping.SubjectID == CurrentCourseID
+                && mapping.UserID == db.User.UserId);
+            
+            currentMapping.Percentage = 
+                (currentMapping.Attempts * currentMapping.Percentage + results) / (currentMapping.Attempts + 1);
+            currentMapping.Attempts++;
+
+            await db.UsersAndSubjects.UpdateAsync(currentMapping);
+        }
+
         public async System.Threading.Tasks.Task AddToMyCourses()
         {
             await db.UsersAndSubjects.InsertAsync(
                 new UserSubject
                 {
                     UserID = DatabaseContext.MobileService.CurrentUser.UserId,
-                    SubjectID = CurrentCourseID
+                    SubjectID = CurrentCourseID,
+                    Percentage = 0,
+                    Attempts = 0
                 });
             MyCourses.Add(AllCourses.Find(course => course.ID == CurrentCourseID));
             LoadCoursePage();  
