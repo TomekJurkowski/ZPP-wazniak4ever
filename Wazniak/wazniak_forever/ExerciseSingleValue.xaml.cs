@@ -47,12 +47,17 @@ namespace wazniak_forever
         {
             StringBuilder headerBuilder = new StringBuilder();
             StringBuilder builder = new StringBuilder();
-            if (AnswerBox.Text == (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value) headerBuilder.Append("Correct!");
+            if (AnswerBox.Text == (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value)
+            {
+                headerBuilder.Append("Correct!");
+                ExControl.CorrectAnswerMediaElement.Play();
+            }
             else
             {
                 headerBuilder.Append("Wrong!");
                 builder.Append("You answered: " + AnswerBox.Text + "\n");
                 builder.Append("Correct answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
+                ExControl.WrongAnswerMediaElement.Play();
             }
             AnswerBox.Visibility = Visibility.Collapsed;
             ExControl.SubmitAnswerClick(headerBuilder, builder);

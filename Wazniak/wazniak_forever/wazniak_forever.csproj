@@ -823,6 +823,8 @@
     <Content Include="Assets\SettingsIcon.png" />
     <Content Include="Assets\SignInIcon.png" />
     <Content Include="Assets\SignOutIcon.png" />
+    <Content Include="Assets\Sound1.wav" />
+    <Content Include="Assets\Sound2.wav" />
     <Content Include="Assets\StartIcon.png" />
     <Content Include="Assets\tick.png" />
     <Content Include="Assets\ApplicationIcon.png" />

@@ -19,7 +19,7 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="Math Input Test"
+            <TextBlock Text="CLARIFIER"
                            Style="{StaticResource PhoneTextNormalStyle}"
                            Margin="12,0"
                            Foreground="{StaticResource PageNameColor}"/>
@@ -81,6 +81,16 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Left">Submit</Button>
+
+            <MediaElement x:Name="CorrectAnswerMediaElement"
+                          Source="/Assets/Sound1.wav"
+                          Volume="1"
+                          AutoPlay="False"/>
+
+            <MediaElement x:Name="WrongAnswerMediaElement"
+                          Source="/Assets/Sound2.wav"
+                          Volume="1"
+                          AutoPlay="False"/>
 
             <Button 
                     x:Name="NextQuestion"

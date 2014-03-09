@@ -54,11 +54,16 @@ namespace wazniak_forever
             StringBuilder builder = new StringBuilder();
             string choice = SingleChoiceAnswerInput.SelectedItem.ToString();
             SingleAnswer<string> ans = new SingleAnswer<string>(choice);
-            if (ans.Equals(App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>)) headerBuilder.Append("Correct!\n");
+            if (ans.Equals(App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>))
+            {
+                headerBuilder.Append("Correct!\n");
+                ExControl.CorrectAnswerMediaElement.Play();
+            }
             else
             {
                 headerBuilder.Append("Wrong!\n");
                 builder.Append("You answered: " + choice + "\n Correct answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
+                ExControl.WrongAnswerMediaElement.Play();
             }
             SingleChoiceAnswerInput.Visibility = Visibility.Collapsed;
             ExControl.SubmitAnswerClick(headerBuilder, builder);

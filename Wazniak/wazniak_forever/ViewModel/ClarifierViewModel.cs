@@ -529,18 +529,26 @@ namespace wazniak_forever.ViewModel
                 CourseOptions.Add(new Option(OptionType.DeleteFromDownloads, false, "Delete from Downloads", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
             }
         }
+
+        private void LoadLoggedInOptions()
+        {
+            if (db.User != null)
+            {
+                CourseOptions.Insert(1, new Option(OptionType.StudyWithClarifier, false, "Study with Clarifier", new Uri("/Assets/IdeaIcon.png", UriKind.RelativeOrAbsolute)));
+            }
+        }
         
         private void LoadCourseOptions()
         {
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.StudyWithClarifier, false, "Study with Clarifier", new Uri("/Assets/IdeaIcon.png", UriKind.RelativeOrAbsolute))
+                new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
-
+            
             LoadDownloadedCourseOptions();
             CheckCourseOwnership();
+            LoadLoggedInOptions();
         }
 
         public async void LoadCoursePage()

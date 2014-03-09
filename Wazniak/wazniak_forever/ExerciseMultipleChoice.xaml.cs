@@ -91,6 +91,7 @@ namespace wazniak_forever
                 App.ViewModel.CorrectAnswers++;
                 headerBuilder.Append("Correct!");
                 builder.Append("");
+                ExControl.CorrectAnswerMediaElement.Play();
             }
             else
             {
@@ -109,6 +110,7 @@ namespace wazniak_forever
                         builder.AppendLine();
                     }
                 }
+                ExControl.WrongAnswerMediaElement.Play();
             }
             MultipleChoiceAnswerInput.Visibility = Visibility.Collapsed;
             ExControl.SubmitAnswerClick(headerBuilder, builder);
