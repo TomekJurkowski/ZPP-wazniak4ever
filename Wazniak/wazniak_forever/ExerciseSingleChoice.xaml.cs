@@ -72,6 +72,7 @@ namespace wazniak_forever
             SingleAnswer<string> ans = new SingleAnswer<string>(choice);
             if (ans.Equals(App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>))
             {
+                App.ViewModel.CorrectAnswers++;
                 headerBuilder.Append("Correct!\n");
                 ExControl.CorrectAnswerMediaElement.Play();
             }

@@ -49,6 +49,7 @@ namespace wazniak_forever
             StringBuilder builder = new StringBuilder();
             if (AnswerBox.Text == (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value)
             {
+                App.ViewModel.CorrectAnswers++;
                 headerBuilder.Append("Correct!");
                 ExControl.CorrectAnswerMediaElement.Play();
             }
