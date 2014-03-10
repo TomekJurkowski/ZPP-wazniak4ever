@@ -4,6 +4,19 @@
     ViewBag.Title = "Details";
 }
 
+@section HeadScripts
+{
+    <style>
+    textarea {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 150%;
+    }
+    </style>
+}
+
 <h2 class="PurpleText">Details</h2>
 
 <hr />
@@ -28,7 +41,7 @@
     </div>
 
     <div class="form-group">
-        <label class="myLabel control-label col-md-2 PurpleText">Exercise Content</label>
+        <label class="myLabel control-label col-md-2 PurpleText">Content</label>
         <div class="col-md-10">
             <div class="alert lightPurpleBackground">
                 @Html.DisplayFor(model => model.Text)
@@ -37,11 +50,9 @@
     </div>
 
     <div class="form-group">
-        <label class="myLabel control-label col-md-2 PurpleText">Exercise Solution</label>
+        <label class="myLabel control-label col-md-2 PurpleText">Solution</label>
         <div class="col-md-10">
-            <div class="alert lightPurpleBackground">
-                @Model.Answer.ToString()
-            </div>
+            <textarea class="alert lightPurpleBackground" rows="6" disabled="">@Model.Answer.ToString()</textarea>
         </div>
     </div>
 

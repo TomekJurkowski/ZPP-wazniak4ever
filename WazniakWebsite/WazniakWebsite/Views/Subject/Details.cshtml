@@ -137,7 +137,10 @@
                         @Html.ActionLink("Exercise title", "Details", new { sortOrder = ViewBag.SortParam, currentFilter = ViewBag.CurrentFilter })
                     </th>
                     <th>
-                        Solution
+                        Solution Type
+                    </th>
+                    <th>
+                        Solution Overview
                     </th>
                     <th></th>
                     <th></th>
@@ -148,6 +151,26 @@
                     <tr>
                         <td  class="clickable" onclick="goToTaskDetails('@item.className()', @item.ID)">
                             @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @{
+                                if (@item.Answer.className() == ViewBag.TextAnswer)
+                                {
+                                    @Html.Raw("Text")
+                                }
+                                else if (@item.Answer.className() == ViewBag.SingleValueAnswer)
+                                {
+                                    @Html.Raw("Single Value")
+                                }
+                                else if (@item.Answer.className() == ViewBag.SingleChoiceAnswer)
+                                {
+                                    @Html.Raw("Single Choice")
+                                }
+                                else if (@item.Answer.className() == ViewBag.MultipleChoiceAnswer)
+                                {
+                                    @Html.Raw("Multiple Choice")
+                                }
+                            }
                         </td>
                         <td>
                             @{

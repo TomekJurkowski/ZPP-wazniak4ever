@@ -13,7 +13,10 @@ namespace WazniakWebsite.Models
         public override string Overview()
         {
             var db = new SchoolContext();
-            return "Multiple Choice Answer with " + db.MultiChoices.Count(m => m.MultipleChoiceAnswerID == TaskID) + " options.";
+            var ret = "1). " + db.MultiChoices.FirstOrDefault(m => m.MultipleChoiceAnswerID == TaskID) + "    2). ...";
+            db.Dispose();
+
+            return ret;
         }
 
         public override string ToString()
@@ -23,12 +26,15 @@ namespace WazniakWebsite.Models
 
             var builder = new StringBuilder();
 
-            builder.Append("There are ").Append(myMultiChoices.Count()).Append(" options to choose from:");
+            builder.Append("There are ").Append(myMultiChoices.Count()).Append(" options that could be right or wrong:");
+            var i = 0;
             foreach (var multiChoice in myMultiChoices)
             {
-                builder.Append(" [ ").Append(multiChoice).Append(" ];");
+                builder.AppendLine().Append(++i).Append(").\t").Append(multiChoice);
             }
-            
+
+            db.Dispose();
+
             return builder.ToString();
         }
 

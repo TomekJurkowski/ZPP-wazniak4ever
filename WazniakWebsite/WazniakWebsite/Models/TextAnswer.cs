@@ -23,7 +23,7 @@ namespace WazniakWebsite.Models
             {
                 return Text.Substring(0, 99) + "...";                
             }
-            return Text;
+            return "'" + Text + "'";
         }
 
         public override string ToString()

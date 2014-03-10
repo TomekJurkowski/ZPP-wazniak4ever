@@ -27,7 +27,11 @@ namespace WazniakWebsite.Models
 
         public override string Overview()
         {
-            return "Single Choice Answer with the " + CorrectAnswer + " option correct.";
+            var db = new SchoolContext();
+            var ret = "1). " + db.SingleChoices.FirstOrDefault(m => m.SingleChoiceAnswerID == TaskID) + "    2). ...";
+            db.Dispose();
+
+            return ret;
         }
 
         public override string ToString()
@@ -41,9 +45,11 @@ namespace WazniakWebsite.Models
             var i = 0;
             foreach (var singleChoice in mySingleChoices)
             {
-                builder.Append(" [ ").Append(singleChoice).Append(i == CorrectAnswer ? " - CORRECT OPTION ];" : " ];");
+                builder.AppendLine().Append(i + 1).Append(").\t").Append(singleChoice).Append(i == CorrectAnswer ? " - CORRECT OPTION" : "");
                 i++;
             }
+
+            db.Dispose();
 
             return builder.ToString();
         }

@@ -60,6 +60,11 @@ namespace WazniakWebsite.Controllers
                 return HttpNotFound();
             }
 
+            ViewBag.SingleValueAnswer = Answer.SINGLE_VALUE_ANSWER;
+            ViewBag.TextAnswer = Answer.TEXT_ANSWER;
+            ViewBag.SingleChoiceAnswer = Answer.SINGLE_CHOICE_ANSWER;
+            ViewBag.MultipleChoiceAnswer = Answer.MULTIPLE_CHOICE_ANSWER;
+
             ViewBag.CurrentSort = sortOrder;
             ViewBag.SortParam = String.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
 
