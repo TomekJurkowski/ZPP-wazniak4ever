@@ -42,20 +42,7 @@ namespace wazniak_forever
             App.ViewModel.CurrentCourseID = Convert.ToInt32(NavigationContext.QueryString["courseID"]);
             CourseDescription.Text = GetCourseDescription();
             App.ViewModel.LoadCoursePage();
-            /*
-            bool subjectSavedLocally = true;
-            if (App.ViewModel.OnlineMode)
-            {
-                Subject currentCourse = App.ViewModel.AllCourses.Find(x => x.ID == App.ViewModel.CurrentCourseID);
-                subjectSavedLocally = await App.ViewModel.db.CheckIfSubjectSavedLocally(currentCourse);
-            }
-            if (subjectSavedLocally)
-            {
-                App.ViewModel.LoadDownloadedCoursePage();
-                System.Diagnostics.Debug.WriteLine("Subject already saved");
-            }
-            else System.Diagnostics.Debug.WriteLine("Subject NOT saved");
-            */
+            
         }
 
         private async void SelectExercise()
@@ -113,7 +100,6 @@ namespace wazniak_forever
                         break;
                     case OptionType.Download:
                         Subject currentCourse = App.ViewModel.AllCourses.Find(x => x.ID == App.ViewModel.CurrentCourseID);
-                        //await App.ViewModel.db.SaveSubjectLocally(this, "Downloading course...", currentCourse);
                         await App.ViewModel.PerformTimeConsumingProcess(this, "Downloading course...", async () => { await App.ViewModel.db.SaveSubjectLocally(currentCourse); });
                         App.ViewModel.LoadCoursePage();
                         break;
