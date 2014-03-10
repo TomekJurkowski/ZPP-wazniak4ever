@@ -18,7 +18,7 @@ namespace WazniakWebsite.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy, HH:mm}", ApplyFormatInEditMode = true)]
         [Display(Name = "Last Update Date")]
         public DateTime LastUpdated { get; set; }
 
@@ -26,7 +26,7 @@ namespace WazniakWebsite.Models
 
         public void UpdateLastUpdatedTime()
         {
-            LastUpdated = DateTime.Today;
+            LastUpdated = DateTime.Now;
         }
     }
 }
