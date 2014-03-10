@@ -50,7 +50,7 @@ namespace wazniak_forever
                 RadioButton radioButton1 = new RadioButton();
                 radioButton1.Content = s;
                 radioButton1.GroupName = "SingleChoices";
-                radioButton1.Foreground = Application.Current.Resources["PageNameColor"] as System.Windows.Media.Brush;
+                radioButton1.Foreground = Application.Current.Resources["MenuItemColor"] as System.Windows.Media.Brush;
                 radioButton1.Checked += RadioButton_Checked;
                 SingleChoicePanel.Children.Add(radioButton1);
             }
