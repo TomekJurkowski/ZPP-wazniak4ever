@@ -79,7 +79,7 @@ namespace wazniak_forever
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
-        {          
+        {
         }
 
         // Code to execute when the application is activated (brought to foreground)
@@ -133,7 +133,7 @@ namespace wazniak_forever
 
             // Create the frame but don't set it as RootVisual yet; this allows the splash
             // screen to remain active until the application is ready to render.
-            RootFrame = new PhoneApplicationFrame();
+            RootFrame = new TransitionFrame();
             RootFrame.Navigated += CompleteInitializePhoneApplication;
 
             // Handle navigation failures
