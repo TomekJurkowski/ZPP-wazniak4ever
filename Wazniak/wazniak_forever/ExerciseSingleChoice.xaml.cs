@@ -16,10 +16,13 @@ namespace wazniak_forever
 {
     public partial class ExerciseSingleChoice : PhoneApplicationPage
     {
+        string choice = "";
+
         public ExerciseSingleChoice()
         {
             InitializeComponent(); DataContext = App.ViewModel;
             //AddRowDefinitions();
+            AddChoices();
             AddEvents();
         }
 
@@ -27,13 +30,30 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
-            SingleChoiceAnswerInput.Visibility = Visibility.Visible;
         }
 
         protected override void OnBackKeyPress(CancelEventArgs e)
         {
             base.OnBackKeyPress(e);
-            // BUG?
+            if (NavigationService.CanGoBack)
+            {
+                e.Cancel = true;
+                NavigationService.RemoveBackEntry();
+                NavigationService.GoBack();
+            }
+        }
+
+        private void AddChoices()
+        {
+            foreach (string s in App.ViewModel.CurrentSolution.Choices)
+            {
+                RadioButton radioButton1 = new RadioButton();
+                radioButton1.Content = s;
+                radioButton1.GroupName = "SingleChoices";
+                radioButton1.Foreground = Application.Current.Resources["PageNameColor"] as System.Windows.Media.Brush;
+                radioButton1.Checked += RadioButton_Checked;
+                SingleChoicePanel.Children.Add(radioButton1);
+            }
         }
 
         private void AddRowDefinitions()
@@ -49,11 +69,15 @@ namespace wazniak_forever
             ExControl.SubmitAnswer.Click += new RoutedEventHandler(SubmitAnswer_Click);
         }
 
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            choice = (sender as RadioButton).Content as string;
+        }
+
         private void SubmitAnswer_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder headerBuilder = new StringBuilder();
             StringBuilder builder = new StringBuilder();
-            string choice = SingleChoiceAnswerInput.SelectedItem.ToString();
             SingleAnswer<string> ans = new SingleAnswer<string>(choice);
             if (ans.Equals(App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>))
             {
@@ -63,10 +87,10 @@ namespace wazniak_forever
             else
             {
                 headerBuilder.Append("Wrong!\n");
-                builder.Append("You answered: " + choice + "\n Correct answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
+                builder.Append("You answered: " + choice + "\nCorrect answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
                 ExControl.WrongAnswerMediaElement.Play();
             }
-            SingleChoiceAnswerInput.Visibility = Visibility.Collapsed;
+            SingleChoicePanel.Visibility = Visibility.Collapsed;
             ExControl.SubmitAnswerClick(headerBuilder, builder);
         }
     }

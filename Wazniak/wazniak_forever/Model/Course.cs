@@ -360,7 +360,7 @@ namespace wazniak_forever.Model
     {
         public T value { get; set; }
         public SingleAnswer(T _value) { value = _value; }
-        public bool Equals(SingleAnswer<T> other) { return value.CompareTo(other.value) != 0; }
+        public bool Equals(SingleAnswer<T> other) { return value.CompareTo(other.value) == 0; }
     }
 
     public class AnswerList<T> : AnswerType where T : System.IComparable
