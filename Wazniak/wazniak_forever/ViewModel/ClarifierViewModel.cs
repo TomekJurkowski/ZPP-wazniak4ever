@@ -247,7 +247,7 @@ namespace wazniak_forever.ViewModel
 
             var singleChoiceExerciseOptions = OnlineMode ?
                 await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).ToListAsync() :
-                null;
+                await db.LoadSingleChoiceExOptionsOffline(CurrentCourseID);
             
             System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
             /*var exerciseAnswer = from exercise in exercises

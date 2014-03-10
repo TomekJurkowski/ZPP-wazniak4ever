@@ -53,6 +53,7 @@ namespace wazniak_forever.Model
             await Connect.CreateTableAsync<Subject>();
             await Connect.CreateTableAsync<TaskAnswer>();
             await Connect.CreateTableAsync<MultipleChoiceExerciseOption>();
+            await Connect.CreateTableAsync<SingleChoiceExerciseOption>();
         }
 
         public async void Drop()
@@ -60,6 +61,7 @@ namespace wazniak_forever.Model
             await Connect.DropTableAsync<Subject>();
             await Connect.DropTableAsync<TaskAnswer>();
             await Connect.DropTableAsync<MultipleChoiceExerciseOption>();
+            await Connect.DropTableAsync<SingleChoiceExerciseOption>();
         }
 
         public async Task<List<Subject>> LoadSubjectsOffline()
@@ -79,6 +81,12 @@ namespace wazniak_forever.Model
                 .Where(option => option.SubjectID == subjectID).ToListAsync();
         }
 
+        public async Task<List<SingleChoiceExerciseOption>> LoadSingleChoiceExOptionsOffline(int subjectID) 
+        {
+            return await Connect.Table<SingleChoiceExerciseOption>()
+                .Where(option => option.SubjectID == subjectID).ToListAsync();
+        }
+
         public async System.Threading.Tasks.Task SaveSubjectLocally(Subject newSubject)
         {
             try
@@ -87,9 +95,11 @@ namespace wazniak_forever.Model
                 await Connect.InsertAsync(newSubject);
                 var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
                 var multipleChoiceExerciseOptions = await MultipleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
+                var singleChoiceExerciseOptions = await SingleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
 
                 await Connect.InsertAllAsync(tasksWithAnswers);
                 await Connect.InsertAllAsync(multipleChoiceExerciseOptions);
+                await Connect.InsertAllAsync(singleChoiceExerciseOptions);
 
                 App.ViewModel.ShowToast("Course successfully saved!");
             }
@@ -108,11 +118,17 @@ namespace wazniak_forever.Model
             { 
                 await Connect.DeleteAsync(task); 
             });
-            var options = await LoadMultipleChoiceExOptionsOffline(subject.ID);
-            options.ForEach(async option =>
+            var multipleChoiceOptions = await LoadMultipleChoiceExOptionsOffline(subject.ID);
+            multipleChoiceOptions.ForEach(async option =>
             {
                 await Connect.DeleteAsync(option);
             });
+            var singleChoiceOptions = await LoadSingleChoiceExOptionsOffline(subject.ID);
+            singleChoiceOptions.ForEach(async option =>
+            {
+                await Connect.DeleteAsync(option);
+            });
+            
             
             App.ViewModel.ShowToast("Course successfully deleted!");
             await App.ViewModel.LoadDownloadedCourses();
@@ -167,9 +183,20 @@ namespace wazniak_forever.Model
                     await Connect.DeleteAsync(option);
                 });
 
+                var localSingleChoiceExOptions = await LoadSingleChoiceExOptionsOffline(subject.ID);
+                localSingleChoiceExOptions.ForEach(async option =>
+                {
+                    await Connect.DeleteAsync(option);
+                });
+
                 var externalMultipleChoiceExOptions = await MultipleChoiceOptions
                     .Where(option => option.SubjectID == subject.ID).ToListAsync();
                 await Connect.InsertAllAsync(externalMultipleChoiceExOptions);
+
+                var externalSingleChoiceExOptions = await SingleChoiceOptions
+                    .Where(option => option.SubjectID == subject.ID).ToListAsync();
+                await Connect.InsertAllAsync(externalSingleChoiceExOptions);
+
                 /*var localTasks = await LoadExercisesOffline(subject.ID);
                 var externalTasks = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
                 int i = 0;
