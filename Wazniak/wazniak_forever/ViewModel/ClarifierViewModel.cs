@@ -245,6 +245,9 @@ namespace wazniak_forever.ViewModel
                 await db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).ToListAsync() :
                 await db.LoadMultipleChoiceExOptionsOffline(CurrentCourseID);
 
+            var singleChoiceExerciseOptions = OnlineMode ?
+                await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).ToListAsync() :
+                null;
             
             System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
             /*var exerciseAnswer = from exercise in exercises
@@ -280,11 +283,22 @@ namespace wazniak_forever.ViewModel
                         List<string> choices = new List<string>();
                         List<bool> answers = new List<bool>();
                         multipleChoiceExerciseOptions.FindAll(option => option.TaskID == task.TaskID)
-                            .ForEach(option => {
+                            .ForEach(option => 
+                            {
                                 choices.Add(option.ChoiceString);
                                 answers.Add(option.ChoiceBool);
                             });
                         solution = new MultipleChoiceSolution(task.TaskID, choices, answers, null);
+                        break;
+                    case "SingleChoiceAnswer":
+                        List<string> sChoices = new List<string>();
+                        singleChoiceExerciseOptions.FindAll(option => option.TaskID == task.TaskID)
+                            .ForEach(option =>
+                            {
+                                sChoices.Add(option.ChoiceString);
+                            });
+                        var answer = sChoices[task.CorrectAnswer];
+                        solution = new SingleChoiceSolution(task.TaskID, sChoices, answer, null);
                         break;
                 }
 

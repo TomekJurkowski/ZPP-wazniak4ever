@@ -40,6 +40,9 @@ namespace wazniak_forever.Model
         public IMobileServiceTable<UserFullSubject> MySubjects = MobileService.GetTable<UserFullSubject>();
         public IMobileServiceTable<MultipleChoiceExerciseOption> MultipleChoiceOptions = 
             MobileService.GetTable<MultipleChoiceExerciseOption>();
+        public IMobileServiceTable<SingleChoiceExerciseOption> SingleChoiceOptions =
+            MobileService.GetTable<SingleChoiceExerciseOption>();
+
 
         public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
             Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
@@ -200,12 +203,16 @@ namespace wazniak_forever.Model
 
     #region Azure Adapters
 
-    public class MultipleChoiceExerciseOption
+    public class SingleChoiceExerciseOption
     {
         public int ID { get; set; }
         public int SubjectID { get; set; }
         public int TaskID { get; set; }
         public string ChoiceString { get; set; }
+    }
+
+    public class MultipleChoiceExerciseOption : SingleChoiceExerciseOption
+    {
         public bool ChoiceBool { get; set; }
 
     }
@@ -254,6 +261,7 @@ namespace wazniak_forever.Model
         public int TaskID { get; set; }
         public string Value { get; set; }
         public string AnswerText { get; set; }
+        public int CorrectAnswer { get; set; }
         public string AnswerDiscriminator { get; set; }
     }
 
