@@ -21,7 +21,6 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            //AddRowDefinitions();
             AddEvents();
         }
 
@@ -35,14 +34,6 @@ namespace wazniak_forever
         {
             base.OnBackKeyPress(e);
             MultipleChoiceAnswerInput.SelectedItems.Clear();
-        }
-
-        private void AddRowDefinitions()
-        {
-            foreach (RowDefinition row in ExControl.LayoutRoot.RowDefinitions) 
-            {
-                LayoutRoot.RowDefinitions.Add(row);
-            }
         }
 
         private void AddEvents()

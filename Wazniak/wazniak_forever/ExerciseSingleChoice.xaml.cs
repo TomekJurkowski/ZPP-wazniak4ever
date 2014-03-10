@@ -21,7 +21,6 @@ namespace wazniak_forever
         public ExerciseSingleChoice()
         {
             InitializeComponent(); DataContext = App.ViewModel;
-            //AddRowDefinitions();
             AddChoices();
             AddEvents();
         }
@@ -53,14 +52,6 @@ namespace wazniak_forever
                 radioButton1.Foreground = Application.Current.Resources["MenuItemColor"] as System.Windows.Media.Brush;
                 radioButton1.Checked += RadioButton_Checked;
                 SingleChoicePanel.Children.Add(radioButton1);
-            }
-        }
-
-        private void AddRowDefinitions()
-        {
-            foreach (RowDefinition row in ExControl.LayoutRoot.RowDefinitions)
-            {
-                LayoutRoot.RowDefinitions.Add(row);
             }
         }
 
