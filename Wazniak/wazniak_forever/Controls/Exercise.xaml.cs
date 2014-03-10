@@ -58,19 +58,19 @@ namespace wazniak_forever.Controls
             switch (App.ViewModel.CurrentSolution.Answer.Type)
             {
                 case SolutionType.Open:
-                    navTo = string.Format("/ExerciseOpen.xaml?courseName={0}", CourseName.Text);
+                    navTo = string.Format("/ExerciseOpen.xaml?courseName={0}&id=" + App.ViewModel.CurrentQuestionNumber, CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
                     break;
                 case SolutionType.Value:
-                    navTo = string.Format("/ExerciseSingleValue.xaml?courseName={0}", CourseName.Text);
+                    navTo = string.Format("/ExerciseSingleValue.xaml?courseName={0}&id=" + App.ViewModel.CurrentQuestionNumber, CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
                     break;
                 case SolutionType.Multiple:
-                    navTo = string.Format("/ExerciseMultipleChoice.xaml?courseName={0}", CourseName.Text);
+                    navTo = string.Format("/ExerciseMultipleChoice.xaml?courseName={0}&id=" + App.ViewModel.CurrentQuestionNumber, CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
                     break;
                 case SolutionType.Single:
-                    navTo = string.Format("/ExerciseSingleChoice.xaml?courseName={0}", CourseName.Text);
+                    navTo = string.Format("/ExerciseSingleChoice.xaml?courseName={0}&id=" + App.ViewModel.CurrentQuestionNumber, CourseName.Text);
                     (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
                     break;
             }
