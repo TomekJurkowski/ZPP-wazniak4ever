@@ -243,11 +243,11 @@ namespace wazniak_forever.ViewModel
 
             var multipleChoiceExerciseOptions = OnlineMode ?
                 await db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).ToListAsync() :
-                await db.LoadMultipleChoiceExOptionsOffline(CurrentCourseID);
+                await db.LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(CurrentCourseID);
 
             var singleChoiceExerciseOptions = OnlineMode ?
                 await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).ToListAsync() :
-                await db.LoadSingleChoiceExOptionsOffline(CurrentCourseID);
+                await db.LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(CurrentCourseID);
             
             System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
             /*var exerciseAnswer = from exercise in exercises

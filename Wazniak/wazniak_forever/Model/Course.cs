@@ -75,7 +75,14 @@ namespace wazniak_forever.Model
                 .Where(exercise => exercise.SubjectID == subjectID).ToListAsync();
         }
 
-        public async Task<List<MultipleChoiceExerciseOption>> LoadMultipleChoiceExOptionsOffline(int subjectID)
+
+        public async Task<List<T>> LoadExerciseChoicesOffline<T>(int subjectID) where T : SingleChoiceExerciseOption, new()
+        {
+            return await Connect.Table<T>()
+                .Where(option => option.SubjectID == subjectID).ToListAsync();
+        }
+
+        /*public async Task<List<MultipleChoiceExerciseOption>> LoadMultipleChoiceExOptionsOffline(int subjectID)
         {
             return await Connect.Table<MultipleChoiceExerciseOption>()
                 .Where(option => option.SubjectID == subjectID).ToListAsync();
@@ -85,21 +92,25 @@ namespace wazniak_forever.Model
         {
             return await Connect.Table<SingleChoiceExerciseOption>()
                 .Where(option => option.SubjectID == subjectID).ToListAsync();
+        }*/
+
+        private async System.Threading.Tasks.Task InsertIntoLocalDatabase(Subject newSubject)
+        {
+            await Connect.InsertAsync(newSubject);
+            var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
+            var multipleChoiceExerciseOptions = await MultipleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
+            var singleChoiceExerciseOptions = await SingleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
+
+            await Connect.InsertAllAsync(tasksWithAnswers);
+            await Connect.InsertAllAsync(multipleChoiceExerciseOptions);
+            await Connect.InsertAllAsync(singleChoiceExerciseOptions);
         }
 
         public async System.Threading.Tasks.Task SaveSubjectLocally(Subject newSubject)
         {
             try
             {
-                
-                await Connect.InsertAsync(newSubject);
-                var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
-                var multipleChoiceExerciseOptions = await MultipleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
-                var singleChoiceExerciseOptions = await SingleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
-
-                await Connect.InsertAllAsync(tasksWithAnswers);
-                await Connect.InsertAllAsync(multipleChoiceExerciseOptions);
-                await Connect.InsertAllAsync(singleChoiceExerciseOptions);
+                await InsertIntoLocalDatabase(newSubject);
 
                 App.ViewModel.ShowToast("Course successfully saved!");
             }
@@ -109,26 +120,29 @@ namespace wazniak_forever.Model
             }
         }
 
-        public async System.Threading.Tasks.Task DeleteSubjectFromDownloads(Subject subject)
+        private async System.Threading.Tasks.Task DeleteFromLocalDatabase(Subject subject)
         {
-            
             await Connect.DeleteAsync(subject);
             var tasks = await LoadExercisesOffline(subject.ID);
-            tasks.ForEach(async task => 
-            { 
-                await Connect.DeleteAsync(task); 
+            tasks.ForEach(async task =>
+            {
+                await Connect.DeleteAsync(task);
             });
-            var multipleChoiceOptions = await LoadMultipleChoiceExOptionsOffline(subject.ID);
+            var multipleChoiceOptions = await LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(subject.ID);
             multipleChoiceOptions.ForEach(async option =>
             {
                 await Connect.DeleteAsync(option);
             });
-            var singleChoiceOptions = await LoadSingleChoiceExOptionsOffline(subject.ID);
+            var singleChoiceOptions = await LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(subject.ID);
             singleChoiceOptions.ForEach(async option =>
             {
                 await Connect.DeleteAsync(option);
             });
-            
+        }
+
+        public async System.Threading.Tasks.Task DeleteSubjectFromDownloads(Subject subject)
+        {
+            await DeleteFromLocalDatabase(subject);
             
             App.ViewModel.ShowToast("Course successfully deleted!");
             await App.ViewModel.LoadDownloadedCourses();
@@ -167,7 +181,14 @@ namespace wazniak_forever.Model
             var externalSubject = (await MobileService.GetTable<Subject>().Where(s => s.ID == subject.ID).ToListAsync())[0];
             if (externalSubject.LastUpdated > localSubject.LastUpdated)
             {
-                await Connect.UpdateAsync(externalSubject);
+                await DeleteFromLocalDatabase(externalSubject);
+                await InsertIntoLocalDatabase(externalSubject);
+
+                App.ViewModel.ShowToast("The course has been updated!");
+
+                #region Temporary Code
+                /*await Connect.UpdateAsync(externalSubject);
+
                 var localTasks = await LoadExercisesOffline(subject.ID);
                 localTasks.ForEach(async task =>
                 {
@@ -177,13 +198,13 @@ namespace wazniak_forever.Model
                 var externalTasks = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
                 await Connect.InsertAllAsync(externalTasks);
 
-                var localMultipleChoiceExOptions = await LoadMultipleChoiceExOptionsOffline(subject.ID);
+                var localMultipleChoiceExOptions = await LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(subject.ID);
                 localMultipleChoiceExOptions.ForEach(async option =>
                 {
                     await Connect.DeleteAsync(option);
                 });
 
-                var localSingleChoiceExOptions = await LoadSingleChoiceExOptionsOffline(subject.ID);
+                var localSingleChoiceExOptions = await LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(subject.ID);
                 localSingleChoiceExOptions.ForEach(async option =>
                 {
                     await Connect.DeleteAsync(option);
@@ -195,7 +216,7 @@ namespace wazniak_forever.Model
 
                 var externalSingleChoiceExOptions = await SingleChoiceOptions
                     .Where(option => option.SubjectID == subject.ID).ToListAsync();
-                await Connect.InsertAllAsync(externalSingleChoiceExOptions);
+                await Connect.InsertAllAsync(externalSingleChoiceExOptions);*/
 
                 /*var localTasks = await LoadExercisesOffline(subject.ID);
                 var externalTasks = await TasksWithAnswers.Where(task => task.SubjectID == subject.ID).ToListAsync();
@@ -223,6 +244,11 @@ namespace wazniak_forever.Model
                         }
                     }
                 }*/
+                #endregion
+            }
+            else
+            {
+                App.ViewModel.ShowToast("The course is up to date!");
             }
         }
 
@@ -232,6 +258,7 @@ namespace wazniak_forever.Model
 
     public class SingleChoiceExerciseOption
     {
+        [PrimaryKey]
         public int ID { get; set; }
         public int SubjectID { get; set; }
         public int TaskID { get; set; }
@@ -241,7 +268,6 @@ namespace wazniak_forever.Model
     public class MultipleChoiceExerciseOption : SingleChoiceExerciseOption
     {
         public bool ChoiceBool { get; set; }
-
     }
 
     public class UserFullSubject
