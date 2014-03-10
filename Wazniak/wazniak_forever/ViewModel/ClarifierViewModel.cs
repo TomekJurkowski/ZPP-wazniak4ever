@@ -562,7 +562,7 @@ namespace wazniak_forever.ViewModel
         {
             if (db.User != null)
             {
-                CourseOptions.Insert(1, new Option(OptionType.StudyWithClarifier, false, "Study with Clarifier", new Uri("/Assets/IdeaIcon.png", UriKind.RelativeOrAbsolute)));
+                CourseOptions.Insert(0, new Option(OptionType.StudyWithClarifier, false, "Study with Clarifier", new Uri("/Assets/IdeaIcon.png", UriKind.RelativeOrAbsolute)));
             }
         }
         
@@ -570,7 +570,7 @@ namespace wazniak_forever.ViewModel
         {
             CourseOptions = new List<Option>()
             {
-                new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Start, false, "Open Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
             
