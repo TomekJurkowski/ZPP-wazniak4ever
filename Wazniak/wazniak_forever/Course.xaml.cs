@@ -45,7 +45,7 @@ namespace wazniak_forever
             
         }
 
-        private async void SelectExercise()
+        private async void SelectExercise(CourseType type)
         {
             //await App.ViewModel.LoadExercises();
             System.Diagnostics.Debug.WriteLine("Beginning of SelectExercise()");
@@ -88,9 +88,10 @@ namespace wazniak_forever
                 switch (option.Type)
                 {
                     case OptionType.Start:
-                        SelectExercise();
+                        SelectExercise(CourseType.Classic);
                         break;
                     case OptionType.StudyWithClarifier:
+                        SelectExercise(CourseType.StudyWithClarifier);
                         break;
                     case OptionType.AddToMyCourses:
                         await App.ViewModel.PerformTimeConsumingProcess(this, "Adding to My Courses...", App.ViewModel.AddToMyCourses);                                             

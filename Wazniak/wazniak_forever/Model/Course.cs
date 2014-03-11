@@ -341,6 +341,7 @@ namespace wazniak_forever.Model
 
     #endregion
 
+    public enum CourseType { Classic, StudyWithClarifier, Time, FixedNumber }
 
     public class Subject
     {
