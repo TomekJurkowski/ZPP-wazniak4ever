@@ -83,14 +83,17 @@ namespace wazniak_forever.Controls
             Finish.Visibility = Visibility.Collapsed;
             QuestionContent.Visibility = Visibility.Collapsed;
             ExplanationPanel.Visibility = Visibility.Collapsed;
-            StatisticTitle.Visibility = Visibility.Visible;
+            if (App.ViewModel.CourseType != CourseType.Classic)
+            {
+                StatisticTitle.Visibility = Visibility.Visible;
+                StatisticContent.Visibility = Visibility.Visible;
+            }
 
             int total = App.ViewModel.CurrentQuestionNumber + 1;
             StringBuilder builder = new StringBuilder();
             builder.Append("You have answered ").Append(App.ViewModel.CorrectAnswers).Append(" questions correctly out of ").Append(total);
 
             StatisticContent.Text = builder.ToString();
-            StatisticContent.Visibility = Visibility.Visible;
         }
 
         public void Return_Click(object sender, RoutedEventArgs e)

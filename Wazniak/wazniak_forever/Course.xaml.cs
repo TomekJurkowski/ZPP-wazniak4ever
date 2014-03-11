@@ -49,6 +49,7 @@ namespace wazniak_forever
         {
             //await App.ViewModel.LoadExercises();
             System.Diagnostics.Debug.WriteLine("Beginning of SelectExercise()");
+            App.ViewModel.CourseType = type;
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", App.ViewModel.LoadExercises);
             if (App.ViewModel.Solutions.Count <= 0) return;
             System.Diagnostics.Debug.WriteLine("Hello");

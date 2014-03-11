@@ -57,7 +57,16 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        
+        private CourseType _courseType;
+        public CourseType CourseType
+        {
+            get { return _courseType; }
+            set
+            {
+                _courseType = value;
+                NotifyPropertyChanged("CourseType");
+            }
+        }
 
         private List<AuthenticationProvider> _authenticationProviders;
 
@@ -257,16 +266,13 @@ namespace wazniak_forever.ViewModel
             Exercises = new List<RegularExercise>();
             Solutions = new List<Solution>();
 
-            if (tasksWithAnswers.Count == 0)
-            {
-                MessageBox.Show("Unfortunately, this course hasn't got any exercises yet!");
-                return;
-            }
 
             foreach (var task in tasksWithAnswers)
             {
                 System.Diagnostics.Debug.WriteLine("Beginning of foreach");
                 
+                if (task.AnswerDiscriminator == "TextAnswer" && CourseType != CourseType.Classic) continue;
+
                 Solution solution = null;
 
                 System.Diagnostics.Debug.WriteLine("task title: " + task.Title);
@@ -325,6 +331,12 @@ namespace wazniak_forever.ViewModel
                 }                      
             }
             System.Diagnostics.Debug.WriteLine("Finished");
+
+            if (Exercises.Count == 0)
+            {
+                MessageBox.Show("Unfortunately, this course hasn't got any exercises yet!");
+                return;
+            }
 
             CurrentQuestionNumber = 0;
             CurrentExercise = Exercises[0];
