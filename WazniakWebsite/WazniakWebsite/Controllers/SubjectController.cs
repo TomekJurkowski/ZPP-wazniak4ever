@@ -205,6 +205,25 @@ namespace WazniakWebsite.Controllers
                 // Remove all Tasks (with their Answers) that belong to the Subject
                 for (var i = arr.Length - 1; i >= 0; --i)
                 {
+                    var taskId = arr[i].ID;
+
+                    if (arr[i].Answer.className() == Answer.SINGLE_CHOICE_ANSWER)
+                    {
+                        var choices = db.SingleChoices.Where(choice => choice.SingleChoiceAnswerID == taskId).ToArray();
+                        for (var j = choices.Length - 1; j >= 0; --j)
+                        {
+                            db.SingleChoices.Remove(choices[j]);                            
+                        }
+                    }
+                    if (arr[i].Answer.className() == Answer.MULTIPLE_CHOICE_ANSWER)
+                    {
+                        var choices = db.MultiChoices.Where(choice => choice.MultipleChoiceAnswerID == taskId).ToArray();
+                        for (var j = choices.Length - 1; j >= 0; --j)
+                        {
+                            db.MultiChoices.Remove(choices[j]);
+                        }
+                    }
+
                     db.Answers.Remove(arr[i].Answer);
                     db.Tasks.Remove(arr[i]);
                 }

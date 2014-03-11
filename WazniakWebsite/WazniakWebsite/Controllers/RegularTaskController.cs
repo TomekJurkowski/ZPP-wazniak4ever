@@ -382,6 +382,23 @@ namespace WazniakWebsite.Controllers
                 sub.UpdateLastUpdatedTime();
                 db.Entry(sub).State = EntityState.Modified;
 
+                if (regulartask.Answer.className() == Answer.SINGLE_CHOICE_ANSWER)
+                {
+                    var choices = db.SingleChoices.Where(choice => choice.SingleChoiceAnswerID == id).ToArray();
+                    for (var j = choices.Length - 1; j >= 0; --j)
+                    {
+                        db.SingleChoices.Remove(choices[j]);
+                    }
+                }
+                if (regulartask.Answer.className() == Answer.MULTIPLE_CHOICE_ANSWER)
+                {
+                    var choices = db.MultiChoices.Where(choice => choice.MultipleChoiceAnswerID == id).ToArray();
+                    for (var j = choices.Length - 1; j >= 0; --j)
+                    {
+                        db.MultiChoices.Remove(choices[j]);
+                    }
+                }
+
                 db.Answers.Remove(regulartask.Answer);
                 db.RegularTasks.Remove(regulartask);
 

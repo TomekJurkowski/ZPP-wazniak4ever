@@ -149,7 +149,6 @@
     <Compile Include="Controllers\MathematicalTaskController.cs" />
     <Compile Include="Controllers\RegularTaskController.cs" />
     <Compile Include="Controllers\SubjectController.cs" />
-    <Compile Include="Controllers\TextAnswerController.cs" />
     <Compile Include="DAL\GenuineSampleContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -253,11 +252,6 @@
     <Content Include="Views\Subject\Details.cshtml" />
     <Content Include="Views\Subject\Edit.cshtml" />
     <Content Include="Views\Subject\Index.cshtml" />
-    <Content Include="Views\TextAnswer\Create.cshtml" />
-    <Content Include="Views\TextAnswer\Delete.cshtml" />
-    <Content Include="Views\TextAnswer\Details.cshtml" />
-    <Content Include="Views\TextAnswer\Edit.cshtml" />
-    <Content Include="Views\TextAnswer\Index.cshtml" />
     <Content Include="Views\RegularTask\Create.cshtml" />
     <Content Include="Views\RegularTask\Delete.cshtml" />
     <Content Include="Views\RegularTask\Details.cshtml" />
