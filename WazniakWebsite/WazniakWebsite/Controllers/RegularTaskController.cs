@@ -86,6 +86,7 @@ namespace WazniakWebsite.Controllers
                             // Create new SingleValueAnswer
                             var singleValueAnswer = new SingleValueAnswer(valueAns);
                             db.SingleValueAnswers.Add(singleValueAnswer);
+
                             break;
                         case Answer.TEXT_ANSWER:
                             if (String.IsNullOrEmpty(textAns))
@@ -100,6 +101,7 @@ namespace WazniakWebsite.Controllers
                             // Create new TextAnswer
                             var textAnswer = new TextAnswer(textAns);
                             db.TextAnswers.Add(textAnswer);
+
                             break;
                         case Answer.SINGLE_CHOICE_ANSWER:
                             if (singleCorrectNo >= singleChoiceList.Length || singleCorrectNo < 0)
@@ -215,7 +217,7 @@ namespace WazniakWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID,SubjectID")] RegularTask regulartask, int isAnswerChanged, string answerType,
-            string valueAns, string textAns, string[] multiChoiceList, string[] multiAnswerList)
+            string valueAns, string textAns, string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
             var sub = db.Subjects.Find(regulartask.SubjectID);
 
@@ -263,6 +265,7 @@ namespace WazniakWebsite.Controllers
                             else
                             {
                                 // Delete previous answer and create new SingleValueAnswer
+                                removeOldChoices(ans.className(), regulartask.ID);
                                 db.Answers.Remove(ans);
                                 db.SaveChanges();
 
@@ -292,6 +295,7 @@ namespace WazniakWebsite.Controllers
                             else
                             {
                                 // Delete previous answer and create new TextAnswer
+                                removeOldChoices(ans.className(), regulartask.ID);
                                 db.Answers.Remove(ans);
                                 db.SaveChanges();
 
@@ -301,28 +305,104 @@ namespace WazniakWebsite.Controllers
 
                             break;
                         case Answer.SINGLE_CHOICE_ANSWER:
+                            if (singleCorrectNo >= singleChoiceList.Length || singleCorrectNo < 0)
+                            {
+                                throw new RetryLimitExceededException("The number of the correct Choice for SingleChoiceAnswer is beyond valid range.");
+                            }
 
-                            if (regulartask.Answer.className() == answerType)
+                            // Case when we haven't got any valid Choices for the SingleChoiceAnswer or some choices are empty
+                            if (singleChoiceList.Length == 0 || singleChoiceList.Count(String.IsNullOrEmpty) != 0)
+                            {
+                                // Reload page with proper statement
+                                ViewBag.SingleChoiceStatement = SINGLE_STATEMENT;
+                                FillTheViewBag(sub.Name, sub.ID, Answer.SINGLE_CHOICE_ANSWER);
+
+                                return View(regulartask);
+                            }
+
+                            if (ans.className() == answerType)
                             {
                                 // We don't have to create a completely new Answer, only update the current one
-                            
+                                ((SingleChoiceAnswer)ans).CorrectAnswer = singleCorrectNo;
+                                db.Entry(ans).State = EntityState.Modified;
+
+                                // Let's remove old choices ...
+                                removeOldChoices(ans.className(), regulartask.ID);
+
+                                // ... and add new ones
+                                foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s) { SingleChoiceAnswerID = regulartask.ID }))
+                                {
+                                    singleChoice.SingleChoiceAnswerID = regulartask.ID;
+                                    db.SingleChoices.Add(singleChoice);
+                                }
                             }
                             else
                             {
-                                
+                                // Delete previous answer and create new SingleChoiceAnswer
+                                removeOldChoices(ans.className(), regulartask.ID);
+                                db.Answers.Remove(ans);
+                                db.SaveChanges();
+
+                                var singleChoiceAnswer = new SingleChoiceAnswer(singleCorrectNo) { TaskID = regulartask.ID };
+                                db.SingleChoiceAnswers.Add(singleChoiceAnswer);
+
+                                foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s) { SingleChoiceAnswerID = regulartask.ID }))
+                                {
+                                    db.SingleChoices.Add(singleChoice);
+                                }
                             }
 
                             break;
                         case Answer.MULTIPLE_CHOICE_ANSWER:
+                            if (multiChoiceList.Length != multiAnswerList.Length)
+                            {
+                                throw new RetryLimitExceededException("The number of Options doesn't equal the number of true-false answers.");
+                            }
 
-                            if (regulartask.Answer.className() == answerType)
+                            // Case when we haven't got any valid Choices for the MultiChoiceAnswer
+                            if (multiChoiceList.Count(t => !String.IsNullOrEmpty(t)) == 0)
+                            {
+                                // Reload page with proper statement
+                                ViewBag.MultiChoiceStatement = MULTI_STATEMENT;
+                                FillTheViewBag(sub.Name, sub.ID, Answer.MULTIPLE_CHOICE_ANSWER);
+
+                                return View(regulartask);
+                            }
+
+                            if (ans.className() == answerType)
                             {
                                 // We don't have to create a completely new Answer, only update the current one
+                                // Let's remove old choices ...
+                                removeOldChoices(ans.className(), regulartask.ID);
 
+                                // ... and add new ones
+                                for (var i = 0; i < multiChoiceList.Length; i++)
+                                {
+                                    // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                                    // Every invalid value will be interpreted as 'False'
+                                    var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
+                                    var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = regulartask.ID }; ;
+                                    db.MultiChoices.Add(multiChoice);
+                                }
                             }
                             else
                             {
-                                
+                                // Delete previous answer and create new MultipleChoiceAnswer
+                                removeOldChoices(ans.className(), regulartask.ID);
+                                db.Answers.Remove(ans);
+                                db.SaveChanges();
+
+                                var multiChoiceAnswer = new MultipleChoiceAnswer { TaskID = regulartask.ID };
+                                db.MultipleChoiceAnswers.Add(multiChoiceAnswer);
+
+                                for (var i = 0; i < multiChoiceList.Length; i++)
+                                {
+                                    // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                                    // Every invalid value will be interpreted as 'False'
+                                    var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
+                                    var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = regulartask.ID };
+                                    db.MultiChoices.Add(multiChoice);
+                                }
                             }
 
                             break;
@@ -349,6 +429,31 @@ namespace WazniakWebsite.Controllers
 
             // In this case we want to reload the Edit page with the original RegularTask
             return View(db.RegularTasks.Find(regulartask.ID));
+        }
+
+        private void removeOldChoices(string answerType, int id)
+        {
+            switch (answerType)
+            {
+                case Answer.SINGLE_CHOICE_ANSWER:
+                    var previousSingleChoices =
+                        db.SingleChoices.Where(s => s.SingleChoiceAnswerID == id).ToArray();
+                    for (var j = previousSingleChoices.Length - 1; j >= 0; --j)
+                    {
+                        db.SingleChoices.Remove(previousSingleChoices[j]);
+                    }
+
+                    break;
+                case Answer.MULTIPLE_CHOICE_ANSWER:
+                    var previousMultiChoices =
+                        db.MultiChoices.Where(s => s.MultipleChoiceAnswerID == id).ToArray();
+                    for (var j = previousMultiChoices.Length - 1; j >= 0; --j)
+                    {
+                        db.MultiChoices.Remove(previousMultiChoices[j]);
+                    }
+
+                    break;
+            }
         }
 
         // GET: /RegularTask/Delete/5

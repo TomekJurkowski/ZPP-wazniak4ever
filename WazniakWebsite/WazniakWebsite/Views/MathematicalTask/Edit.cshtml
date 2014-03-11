@@ -308,9 +308,8 @@
                     }
 
                 </div>
-                <div class="alert lightPurpleBackground">
-                    @Model.Answer.ToString()
-                </div>
+
+                <textarea class="alert lightPurpleBackground" rows="6" disabled="">@Model.Answer.ToString()</textarea>
             </div>
         </div>
 
@@ -318,7 +317,7 @@
 
         <div class="checkbox col-md-offset-2">
             <label class="PurpleText">
-                Select the checkbox if you want to change your Solution.
+                Select the checkbox if you want to change the Solution of the Exercise.
                 <input type="checkbox" id="newAnswerCheckbox" onclick="hideOrShowAnswerPanel()">
             </label>
         </div>

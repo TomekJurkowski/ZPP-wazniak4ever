@@ -8,6 +8,77 @@
 {
     <script type="text/javascript">
         
+        // variable and 2 functions responsible for adding/removing rows for SingleChoiceAnswer
+        var rowNumForSingle = 3;
+        function addRowForSingle() {
+            var row = '<div class="row" id="singleRow_' + rowNumForSingle + '"><div class="col-md-5">' +
+                '<input class="form-control" type="text" name="singleChoiceList" /></div><div class="col-md-3">' +
+                '<input type="radio" id="singleAnsRadio_' + rowNumForSingle + '"  name="singleRadios" onclick="singleRadioOnClick(' + rowNumForSingle + ')" />' +
+                '<label class="PurpleText" id="singleAnsLabel_' + rowNumForSingle + '"></label>' +
+                '</div><div class="col-md-1">' +
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRowForSingle(' + rowNumForSingle + ')"></span>' +
+                '</div></div>';
+
+            jQuery('#singleContainer').append(row);
+            rowNumForSingle++;
+        }
+
+        function removeRowForSingle(id) {
+            if ($("#singleAnsRadio_" + id).is(':checked')) {
+                $("#singleAnsRadio_0").prop("checked", true);
+                singleRadioOnClick(0);
+            }
+
+            jQuery('#singleRow_' + id).remove();
+
+            // Let's update the actual number of the option that is selected
+            $("[name='singleCorrectNo']").val(
+                $("[id^='singleAnsRadio_']").index($("input[id^='singleAnsRadio_']:checked"))
+            );
+        }
+
+        // variable and 2 functions responsible for adding/removing rows for MultipleChoiceAnswer
+        var rowNumForMultiple = 3;
+        function addRowForMultiple() {
+            var row = '<div class="row" id="multiRow_' + rowNumForMultiple + '"><div class="col-md-5">' +
+                '<input class="form-control" type="text" name="multiChoiceList" /></div><div class="col-md-3">' +
+                '<input type="checkbox" id="multiAnsCheckbox_' + rowNumForMultiple + '" onclick="multiCheckboxOnClick(' + rowNumForMultiple + ')" />' +
+                '<input type="text" name="multiAnswerList" id="multiAnsHiddenInput_' + rowNumForMultiple + '" value="False" hidden="" />' +
+                '<label class="PurpleText" id="multiAnsLabel_' + rowNumForMultiple + '">False</label>' +
+                '</div><div class="col-md-1">' +
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRowForMultiple(' + rowNumForMultiple + ')"></span>' +
+                '</div></div>';
+
+            jQuery('#multiContainer').append(row);
+            rowNumForMultiple++;
+        }
+
+        function removeRowForMultiple(id) {
+            jQuery('#multiRow_' + id).remove();
+        }
+
+        function singleRadioOnClick(id) {
+            $("[id^='singleAnsLabel_']").empty();
+            $("#singleAnsLabel_" + id).append("Correct");
+
+            // The code below will update the actual number of the option that is selected
+            $("[name='singleCorrectNo']").val(
+                $("[id^='singleAnsRadio_']").index($("#singleAnsRadio_" + id))
+            );
+        }
+
+        function multiCheckboxOnClick(id) {
+            if ($("#multiAnsCheckbox_" + id).is(':checked')) {
+                $("#multiAnsLabel_" + id).empty();
+                $("#multiAnsLabel_" + id).append("True");
+                $("#multiAnsHiddenInput_" + id).val("True");
+            } else {
+                $("#multiAnsLabel_" + id).empty();
+                $("#multiAnsLabel_" + id).append("False");
+                $("#multiAnsHiddenInput_" + id).val("False");
+            }
+        }
+
         function selectPreviousAnswer() {
             if ("@ViewBag.PreviouslySelectedAnswer" != "@Model.Answer.className()" || "@ViewBag.ReloadPage" == "1") {
                 $("#newAnswerCheckbox").prop('checked', true);
@@ -72,6 +143,9 @@
                 }
 
                 goToByScroll();
+                
+                $("#singleAnsRadio_0").prop("checked", true);
+                singleRadioOnClick(0);
             });
 
             $("#tooltip1,#tooltip2,#tooltip3,#tooltip4").tooltip({
@@ -96,6 +170,10 @@
             padding-left: 5px;
             padding-right: 5px;
         }
+
+        div[id^="multiRow_"], div[id^="singleRow_"] {
+            margin-bottom: 15px;
+        }
     </style>
 }
 
@@ -116,7 +194,7 @@
             <label class="myLabel2 control-label col-md-2 PurpleText">Subject Name</label>
             <div class="col-md-10">
                 @Html.DisplayFor(model => model.Subject.Name, new { @class = "form-control" })
-                <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
+                <span class="field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span>
             </div>
         </div>
 
@@ -160,17 +238,16 @@
                     }
                     
                 </div>
-                <div class="alert lightPurpleBackground">
-                    @Model.Answer.ToString()
-                </div>
-                </div>
+
+                <textarea class="alert lightPurpleBackground" rows="6" disabled="">@Model.Answer.ToString()</textarea>
+            </div>
         </div>
 
         <br />
 
         <div class="checkbox col-md-offset-2">
             <label class="PurpleText">
-                Select the checkbox if you want to change your Solution.
+                Select the checkbox if you want to change the Solution of the Exercise.
                 <input type="checkbox" id="newAnswerCheckbox" onclick="hideOrShowAnswerPanel()">
             </label>
         </div>
@@ -187,7 +264,7 @@
                     <ul class="nav nav-pills">
                         <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
                         <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
-                        <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+                        <li><a href="#SingleChoiceAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
                         <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
                     </ul>
 
@@ -219,13 +296,44 @@
                             <span class="field-validation-error">@ViewBag.TextStatement</span>
                         </div>
 
-                        <div class="pill-pane fade" id="AbcdAnswer_pill">
+                        <div class="pill-pane fade" id="SingleChoiceAnswer_pill">
                             <div class="well">
                                 <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
                             </div>
 
                             <br />
+                            
+                            <div class="container" id="singleContainer">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <h5 class="PurpleText">Type the options below</h5>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <h5 class="PurpleText">Select the correct one</h5>
+                                    </div>
+                                    <div class="col-md-offset-1 col-md-2">
+                                        <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRowForSingle()" />
+                                    </div>
+                                </div>
 
+                                <br />
+
+                                <input type="number" name="singleCorrectNo" hidden="" />
+
+                                @for (var i = 0; i < 3; i++)
+                                {
+                                    <div class="row" id="singleRow_@(i)">
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" name="singleChoiceList" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="radio" id="singleAnsRadio_@(i)" name="singleRadios" onclick="singleRadioOnClick(@i)" />
+                                            <label class="PurpleText" id="singleAnsLabel_@(i)"></label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <span class="field-validation-error">@ViewBag.SingleChoiceStatement</span>
                         </div>
 
                         <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
@@ -234,7 +342,37 @@
                             </div>
 
                             <br />
+                            
+                            <div class="container" id="multiContainer">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <h5 class="PurpleText">Type the options below</h5>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <h5 class="PurpleText">Select the ones which are true</h5>
+                                    </div>
+                                    <div class="col-md-offset-1 col-md-2">
+                                        <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRowForMultiple()" />
+                                    </div>
+                                </div>
 
+                                <br />
+
+                                @for (var i = 0; i < 3; i++)
+                                {
+                                    <div class="row" id="multiRow_@(i)">
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" name="multiChoiceList" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="checkbox" id="multiAnsCheckbox_@(i)" onclick="multiCheckboxOnClick(@i)" />
+                                            <input type="text" name="multiAnswerList" id="multiAnsHiddenInput_@(i)" value="False" hidden="" />
+                                            <label class="PurpleText" id="multiAnsLabel_@(i)">False</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <span class="field-validation-error">@ViewBag.MultiChoiceStatement</span>
                         </div>
                     </div>
                 </div>

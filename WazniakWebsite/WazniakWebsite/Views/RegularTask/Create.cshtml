@@ -201,7 +201,7 @@
                 <ul class="nav nav-pills">
                     <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
                     <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
-                    <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+                    <li><a href="#SingleChoiceAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
                     <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
                 </ul>
 
@@ -235,7 +235,7 @@
                         <span class="field-validation-error">@ViewBag.TextStatement</span>
                     </div>
 
-                    <div class="pill-pane fade" id="AbcdAnswer_pill">
+                    <div class="pill-pane fade" id="SingleChoiceAnswer_pill">
                         <div class="well">
                             <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
                         </div>
@@ -272,7 +272,6 @@
                                 </div>
                             }
                         </div>
-                        <span class="field-validation-error">@ViewBag.SingleChoiceNoCorrectStatement</span>
                         <span class="field-validation-error">@ViewBag.SingleChoiceStatement</span>
                     </div>
 
