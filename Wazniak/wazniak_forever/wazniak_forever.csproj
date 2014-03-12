@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\TimeToStringConverter.cs" />
     <Compile Include="Course.xaml.cs">
       <DependentUpon>Course.xaml</DependentUpon>
     </Compile>
@@ -149,6 +150,9 @@
     </Compile>
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />
+    <Compile Include="TimedModeResults.xaml.cs">
+      <DependentUpon>TimedModeResults.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\ClarifierViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +209,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\OnlineInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TimedModeResults.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

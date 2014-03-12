@@ -530,6 +530,7 @@ namespace wazniak_forever.ViewModel
             {
                 new Option(OptionType.Start, false, "Open Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.FixedNumber, false, "Quick Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Timer, false, "Timed Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
             
@@ -720,6 +721,32 @@ namespace wazniak_forever.ViewModel
             AllSampleItems.Remove(removedSampleitem);
         }*/
 
-        
+        public DTimer Timer { get; set; }
+
+        private int currentTime;
+
+        public int CurrentTime
+        {
+            get { return currentTime; }
+            set
+            {
+                currentTime = value;
+                NotifyPropertyChanged("CurrentTime");
+            }
+        }
+
+        public void TimerModeTickHandler(int time)
+        {
+            System.Diagnostics.Debug.WriteLine("Tick! + Current time: " + time);
+            CurrentTime = time;
+            if (time == 0)
+            {
+                MessageBox.Show("Time's up!");
+                HandleTimesUp();
+            }
+                
+        }
+
+        public event Action HandleTimesUp;
     }
 }

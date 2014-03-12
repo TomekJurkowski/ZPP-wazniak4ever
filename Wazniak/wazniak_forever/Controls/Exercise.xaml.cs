@@ -18,6 +18,12 @@ namespace wazniak_forever.Controls
         {
             InitializeComponent();
             DataContext = App.ViewModel;
+
+            if (App.ViewModel != null && App.ViewModel.CourseType == CourseType.Time)
+            {
+                TimerTextBlock.Visibility = Visibility.Visible;
+                App.ViewModel.HandleTimesUp += HandleTimesUpAction;
+            }
         }
 
         public void NextExerciseVisible()
@@ -76,9 +82,15 @@ namespace wazniak_forever.Controls
             }
         }
 
-        private void Finish_Click(object sender, RoutedEventArgs e)
+        public void HandleTimesUpAction()
         {
-            // Hide everything unnecessary and show statistics
+            var navTo = string.Format("/TimedModeResults.xaml?courseName={0}", CourseName.Text);
+            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
+        }
+
+        public void HandleFinishAction() 
+        {
+            SubmitAnswer.Visibility = Visibility.Collapsed;
             Return.Visibility = Visibility.Visible;
             Finish.Visibility = Visibility.Collapsed;
             QuestionContent.Visibility = Visibility.Collapsed;
@@ -89,11 +101,22 @@ namespace wazniak_forever.Controls
                 StatisticContent.Visibility = Visibility.Visible;
             }
 
+            if (App.ViewModel.CourseType == CourseType.Time)
+            {
+                var timer = App.ViewModel.Timer;
+                timer.Stop();
+            }
+
             int total = App.ViewModel.CurrentQuestionNumber + 1;
             StringBuilder builder = new StringBuilder();
             builder.Append("You have answered ").Append(App.ViewModel.CorrectAnswers).Append(" questions correctly out of ").Append(total);
 
             StatisticContent.Text = builder.ToString();
+        }
+
+        private void Finish_Click(object sender, RoutedEventArgs e)
+        {
+            HandleFinishAction();
         }
 
         public void Return_Click(object sender, RoutedEventArgs e)

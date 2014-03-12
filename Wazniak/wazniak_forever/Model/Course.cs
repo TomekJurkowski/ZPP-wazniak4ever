@@ -6,9 +6,67 @@ using System.IO;
 using System.Threading.Tasks;
 using SQLite;
 using Newtonsoft.Json;
+using System.Windows.Threading;
+using System;
 
 namespace wazniak_forever.Model
 {
+    public class DTimer
+    {
+        private DispatcherTimer timer;
+        public event Action<int> HandleTick;
+
+        private int counter;
+
+       /* private static DTimer instance;
+
+        private DTimer() { timer = new DispatcherTimer(); }
+        
+        public static DTimer Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new DTimer();
+                }
+                return instance;
+            }
+        }
+        */
+
+        public DTimer() 
+        { 
+            timer = new DispatcherTimer(); 
+        }
+
+        public void Start(int periodInSeconds, int time)
+        {
+            timer.Interval = TimeSpan.FromSeconds(periodInSeconds);
+            timer.Tick += timer_Task;
+            counter = time;
+            timer.Start();
+        }
+
+        public void Stop()
+        {
+            timer.Stop();
+        }
+        private void timer_Task(object sender, EventArgs e)
+        {
+            counter--;
+            if (HandleTick != null) HandleTick(counter);
+            if (counter == 0) Stop();
+        }
+
+        public bool IsEnabled()
+        {
+            if (HandleTick != null) System.Diagnostics.Debug.WriteLine("The Event handler is not null!");
+            else System.Diagnostics.Debug.WriteLine("The Event handler is null");
+            return timer.IsEnabled;
+        }
+    }
+
     public enum AuthenticationProviderType { Microsoft, Facebook, Google, Twitter }
 
     public class AuthenticationProvider

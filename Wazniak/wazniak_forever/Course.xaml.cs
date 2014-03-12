@@ -55,6 +55,19 @@ namespace wazniak_forever
             System.Diagnostics.Debug.WriteLine("Hello");
             System.Diagnostics.Debug.WriteLine("Solutions.Count > 0");
             System.Diagnostics.Debug.WriteLine(App.ViewModel.Solutions[0].Answer.Type);
+            
+            if (App.ViewModel.CourseType == CourseType.Time)
+            {
+                App.ViewModel.Timer = new DTimer();
+                var timer = App.ViewModel.Timer;
+                if (!timer.IsEnabled())
+                {
+                    System.Diagnostics.Debug.WriteLine("Timer not enabled!");
+                    timer.HandleTick += App.ViewModel.TimerModeTickHandler;
+                    timer.Start(1, 20);
+                }
+            }
+
             string navTo;
             switch (App.ViewModel.Solutions[0].Answer.Type)
             {
@@ -96,6 +109,9 @@ namespace wazniak_forever
                         break;
                     case OptionType.FixedNumber:
                         SelectExercise(CourseType.FixedNumber);
+                        break;
+                    case OptionType.Timer:
+                        SelectExercise(CourseType.Time);
                         break;
                     case OptionType.AddToMyCourses:
                         await App.ViewModel.PerformTimeConsumingProcess(this, "Adding to My Courses...", App.ViewModel.AddToMyCourses);                                             
