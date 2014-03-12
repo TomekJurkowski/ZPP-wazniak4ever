@@ -529,8 +529,8 @@ namespace wazniak_forever.ViewModel
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Open Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.FixedNumber, false, "Quick Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.Timer, false, "Timed Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.FixedNumber, false, "Quick Mode", new Uri("/Assets/Quick.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.Timer, false, "Timed Mode", new Uri("/Assets/Timer.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
             

@@ -821,6 +821,7 @@
     <Content Include="Assets\Math\web.html">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Assets\Quick.png" />
     <Content Include="Assets\SettingsIcon.png" />
     <Content Include="Assets\SignInIcon.png" />
     <Content Include="Assets\SignOutIcon.png" />
@@ -851,6 +852,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Tiles\IconicTileSmall_1.png" />
+    <Content Include="Assets\Timer.png" />
     <Content Include="ReadMe.Coding4Fun.Toolkit.txt" />
     <Content Include="README_FIRST.txt" />
     <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
