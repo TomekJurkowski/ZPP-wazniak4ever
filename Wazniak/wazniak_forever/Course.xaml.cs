@@ -94,6 +94,9 @@ namespace wazniak_forever
                     case OptionType.StudyWithClarifier:
                         SelectExercise(CourseType.StudyWithClarifier);
                         break;
+                    case OptionType.FixedNumber:
+                        SelectExercise(CourseType.FixedNumber);
+                        break;
                     case OptionType.AddToMyCourses:
                         await App.ViewModel.PerformTimeConsumingProcess(this, "Adding to My Courses...", App.ViewModel.AddToMyCourses);                                             
                         break;

@@ -9,7 +9,7 @@ namespace wazniak_forever.Model
     public enum OptionType
     {
         MyCourses, Downloads,
-        Settings, Start, StudyWithClarifier, AddToMyCourses, Download,
+        Settings, Start, StudyWithClarifier, FixedNumber, AddToMyCourses, Download,
         Login, Logout, Update, DeleteFromMyCourses,
         DeleteFromDownloads
     }

@@ -337,6 +337,22 @@ namespace wazniak_forever.ViewModel
                 MessageBox.Show("Unfortunately, this course hasn't got any exercises yet!");
                 return;
             }
+            if (CourseType == CourseType.FixedNumber)
+            {
+                List<RegularExercise> RandomExercises = new List<RegularExercise>();
+                List<Solution> RandomSolutions = new List<Solution>();
+                Random r = new Random();
+                while (RandomExercises.Count < 5 && Exercises.Count > 0)
+                {
+                    int index = r.Next(0, Exercises.Count);
+                    RandomExercises.Add(Exercises.ElementAt(index));
+                    RandomSolutions.Add(Solutions.ElementAt(index));
+                    Exercises.RemoveAt(index);
+                    Solutions.RemoveAt(index);
+                }
+                Exercises = RandomExercises;
+                Solutions = RandomSolutions;
+            }
 
             CurrentQuestionNumber = 0;
             CurrentExercise = Exercises[0];
@@ -513,6 +529,7 @@ namespace wazniak_forever.ViewModel
             CourseOptions = new List<Option>()
             {
                 new Option(OptionType.Start, false, "Open Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
+                new Option(OptionType.FixedNumber, false, "Quick Mode", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Download, true, "Download", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
             };
             
