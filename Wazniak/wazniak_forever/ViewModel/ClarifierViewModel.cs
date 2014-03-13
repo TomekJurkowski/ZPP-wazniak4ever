@@ -520,7 +520,7 @@ namespace wazniak_forever.ViewModel
         {
             if (db.User != null)
             {
-                CourseOptions.Insert(0, new Option(OptionType.StudyWithClarifier, false, "Study with Clarifier", new Uri("/Assets/IdeaIcon.png", UriKind.RelativeOrAbsolute)));
+                CourseOptions.Insert(1, new Option(OptionType.StudyWithClarifier, false, "Study with Clarifier", new Uri("/Assets/IdeaIcon.png", UriKind.RelativeOrAbsolute)));
             }
         }
         
