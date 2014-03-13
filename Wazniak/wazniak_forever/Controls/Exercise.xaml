@@ -105,7 +105,7 @@
                           AutoPlay="False"/>
 
             <MediaElement x:Name="WrongAnswerMediaElement"
-                          Source="/Assets/Sound2.wav"
+                          Source="/Assets/Wrong4.wav"
                           Volume="1"
                           AutoPlay="False"/>
 
