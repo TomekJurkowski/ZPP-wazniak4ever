@@ -334,7 +334,7 @@ namespace wazniak_forever.ViewModel
 
             if (Exercises.Count == 0)
             {
-                MessageBox.Show("Unfortunately, this course hasn't got any exercises yet!");
+                MessageBox.Show("Unfortunately, there are no exercises for this course yet!");
                 return;
             }
             if (CourseType == CourseType.FixedNumber)
@@ -342,7 +342,7 @@ namespace wazniak_forever.ViewModel
                 List<RegularExercise> RandomExercises = new List<RegularExercise>();
                 List<Solution> RandomSolutions = new List<Solution>();
                 Random r = new Random();
-                while (RandomExercises.Count < 5 && Exercises.Count > 0)
+                while (RandomExercises.Count < 10 && Exercises.Count > 0)
                 {
                     int index = r.Next(0, Exercises.Count);
                     RandomExercises.Add(Exercises.ElementAt(index));
