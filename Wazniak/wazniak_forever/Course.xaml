@@ -56,13 +56,20 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="1" Margin="12,17,0,28">
-            <TextBlock 
+            <!--<TextBlock 
                     Text="CLARIFIER" 
                     Style="{StaticResource PhoneTextNormalStyle}" 
-                    Foreground="{StaticResource PageNameColor}"/>
+                    Foreground="{StaticResource PageNameColor}"/>-->
+            <Image Width="Auto" 
+                Height="Auto"
+                Margin="12,0,370,15"
+                Source="/Assets/Logo_Czarek_white.png" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
             <TextBlock 
                     Name="CourseName" 
-                    Margin="9,-7,0,0" 
+                    Margin="9,-7,0,0"
+                    TextWrapping="Wrap"
                     Style="{StaticResource PhoneTextTitle1Style}" 
                     Foreground="{StaticResource PageNameColor}"/>
         </StackPanel>
