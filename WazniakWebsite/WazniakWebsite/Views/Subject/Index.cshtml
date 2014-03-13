@@ -92,12 +92,12 @@
             <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
+            <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
                 <span class="shortDisplay">
                     @Html.DisplayFor(modelItem => item.Description)
                 </span>
             </td>
-            <td>
+            <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
                 @Html.DisplayFor(modelItem => item.LastUpdated)
             </td>
             <td>

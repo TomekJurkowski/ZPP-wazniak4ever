@@ -149,10 +149,10 @@
                 @foreach (var item in (IPagedList<WazniakWebsite.Models.Task>)ViewBag.Tasks)
                 {
                     <tr>
-                        <td  class="clickable" onclick="goToTaskDetails('@item.className()', @item.ID)">
+                        <td class="clickable" onclick="goToTaskDetails('@item.className()', @item.ID)">
                             @Html.DisplayFor(modelItem => item.Title)
                         </td>
-                        <td>
+                        <td class="clickable" onclick="goToTaskDetails('@item.className()', @item.ID)">
                             @{
                                 if (@item.Answer.className() == ViewBag.TextAnswer)
                                 {
@@ -172,14 +172,15 @@
                                 }
                             }
                         </td>
-                        <td>
+                        <td class="clickable" onclick="goToTaskDetails('@item.className()', @item.ID)">
                             @{
-                                if (item.Answer != null)
-                                {
-                                    @item.Answer.Overview()
-                                }
+                    if (item.Answer != null)
+                    {
+                        @item.Answer.Overview()
+                    }
                             }
                         </td>
+
                         <td>
                             <span id="tooltipEdit" class="glyphicon glyphicon-edit PurpleColor clickable" title="Edit" onclick="editTask('@item.ID', '@item.className()')"></span>
                         </td>
