@@ -1,4 +1,7 @@
-﻿using Microsoft.Phone.Net.NetworkInformation;
+﻿using System.Threading.Tasks;
+using System.Windows.Navigation;
+using System.Windows.Threading;
+using Microsoft.Phone.Net.NetworkInformation;
 using Microsoft.WindowsAzure.MobileServices;
 using System;
 using System.Linq;
@@ -747,6 +750,29 @@ namespace wazniak_forever.ViewModel
                 
         }
 
-        public event Action HandleTimesUp;
+        public event Action HandleTimesUp;   
+
+        public bool HandleCourseExit(CancelEventArgs e)
+        {
+            if (CourseType == CourseType.Time)
+                Timer.Stop();
+            bool quit = true;
+
+            var result = MessageBox.Show("Do you want to leave the course?", "", MessageBoxButton.OKCancel);
+            switch (result)
+            {
+                case MessageBoxResult.OK:
+                    e.Cancel = false;
+                    System.Diagnostics.Debug.WriteLine("Haloooooo");
+                    break;
+                default:
+                    e.Cancel = true;
+                    if (CourseType == CourseType.Time)
+                        Timer.Resume();
+                    quit = false;
+                    break;
+            }
+            return quit;
+        }
     }
 }

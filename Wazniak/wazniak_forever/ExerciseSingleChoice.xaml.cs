@@ -28,18 +28,28 @@ namespace wazniak_forever
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            System.Diagnostics.Debug.WriteLine("Navigated to Exercise Single Choice");
+            System.Diagnostics.Debug.WriteLine((Application.Current.RootVisual as PhoneApplicationFrame).BackStack.First().Source.OriginalString);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            NavigationService.RemoveBackEntry();
         }
 
         protected override void OnBackKeyPress(CancelEventArgs e)
         {
-            base.OnBackKeyPress(e);
+            /*base.OnBackKeyPress(e);
             if (NavigationService.CanGoBack)
             {
                 e.Cancel = true;
                 NavigationService.RemoveBackEntry();
                 NavigationService.GoBack();
-            }
+            }*/
+            if (!App.ViewModel.HandleCourseExit(e)) return;
+            base.OnBackKeyPress(e);
         }
 
         private void AddChoices()

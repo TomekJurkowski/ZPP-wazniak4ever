@@ -48,6 +48,11 @@ namespace wazniak_forever.Model
             timer.Start();
         }
 
+        public void Resume()
+        {
+            timer.Start();
+        }
+
         public void Stop()
         {
             timer.Stop();
