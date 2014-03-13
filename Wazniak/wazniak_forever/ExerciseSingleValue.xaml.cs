@@ -19,6 +19,8 @@ namespace wazniak_forever
         {
             InitializeComponent();
             AddEvents();
+            LayoutRoot.Children.Remove(AnswerBox);
+            ExControl.AddElement(AnswerBox);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
