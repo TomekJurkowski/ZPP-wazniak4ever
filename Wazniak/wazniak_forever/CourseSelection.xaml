@@ -47,11 +47,19 @@
         </Grid.RowDefinitions>
         <!--Pivot Control-->
         <controls:OnlineInfo Grid.Row="0"/>
-        <phone:Pivot Title="CLARIFIER"
+        
+        <phone:Pivot 
                      Grid.Row="1"
                      x:Name="MainPivot"
                      Foreground="{StaticResource PageNameColor}">
-                
+            <phone:Pivot.Title>
+                <Image Width="Auto" 
+                Height="Auto"
+                Margin="0,0,370,15"
+                Source="/Assets/Logo_Czarek_white.png" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
+            </phone:Pivot.Title>
         </phone:Pivot>
     </Grid>
     

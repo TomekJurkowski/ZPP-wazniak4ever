@@ -62,12 +62,14 @@
                 Foreground="{StaticResource PageNameColor}"
                 HorizontalAlignment="Left"/>-->
             <Image Width="Auto" 
-                Height="Auto" 
+                Height="Auto"
+                Margin="15,15,70,15"
                 Source="/Assets/Logo_Czarek_white.png" 
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"/>
             <TextBlock Text="STUDENTS' FIRST AID"
                 Margin="15,5,0,0"
+                FontSize="30"
                 Style="{StaticResource PhoneTextNormalStyle}"
                 Foreground="{StaticResource PageNameColor}"/>
         </StackPanel>
