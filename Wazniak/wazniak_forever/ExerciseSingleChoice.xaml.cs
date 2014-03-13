@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 using System.ComponentModel;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -28,41 +29,35 @@ namespace wazniak_forever
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            System.Diagnostics.Debug.WriteLine("Navigated to Exercise Single Choice");
-            System.Diagnostics.Debug.WriteLine((Application.Current.RootVisual as PhoneApplicationFrame).BackStack.First().Source.OriginalString);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-            NavigationService.RemoveBackEntry();
         }
 
         protected override void OnBackKeyPress(CancelEventArgs e)
         {
-            /*base.OnBackKeyPress(e);
-            if (NavigationService.CanGoBack)
-            {
-                e.Cancel = true;
-                NavigationService.RemoveBackEntry();
-                NavigationService.GoBack();
-            }*/
             if (!App.ViewModel.HandleCourseExit(e)) return;
             base.OnBackKeyPress(e);
         }
 
         private void AddChoices()
         {
+            StackPanel SingleChoicePanel = new StackPanel();
+            SingleChoicePanel.Visibility = Visibility.Visible;
+            SingleChoicePanel.VerticalAlignment = VerticalAlignment.Top;
             foreach (string s in App.ViewModel.CurrentSolution.Choices)
             {
+                ScrollViewer SingleChoiceViewer = new ScrollViewer();
+                SingleChoiceViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                SingleChoiceViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
                 RadioButton radioButton1 = new RadioButton();
                 radioButton1.Content = s;
+                radioButton1.FontSize = 20;
                 radioButton1.GroupName = "SingleChoices";
                 radioButton1.Foreground = Application.Current.Resources["MenuItemColor"] as System.Windows.Media.Brush;
                 radioButton1.Checked += RadioButton_Checked;
-                SingleChoicePanel.Children.Add(radioButton1);
+                SingleChoiceViewer.Content = radioButton1;
+                SingleChoicePanel.Children.Add(SingleChoiceViewer);
             }
+            ExControl.AddElement(SingleChoicePanel);
         }
 
         private void AddEvents()
@@ -92,7 +87,6 @@ namespace wazniak_forever
                 builder.Append("You answered: " + choice + "\nCorrect answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
                 ExControl.WrongAnswerMediaElement.Play();
             }
-            SingleChoicePanel.Visibility = Visibility.Collapsed;
             ExControl.SubmitAnswerClick(headerBuilder, builder);
         }
     }

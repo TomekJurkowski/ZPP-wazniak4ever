@@ -22,6 +22,8 @@ namespace wazniak_forever
             InitializeComponent();
             DataContext = App.ViewModel;
             AddEvents();
+            LayoutRoot.Children.Remove(MultipleChoiceAnswerInput);
+            ExControl.AddElement(MultipleChoiceAnswerInput);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

@@ -18,13 +18,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="1*"/>                
-            </Grid.RowDefinitions>
-            <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="3">
-            
+        <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="5">
         </controls:Exercise>
         
             <toolkit:LongListMultiSelector
@@ -34,8 +28,7 @@
                     Visibility="Visible"
                     ItemsSource="{Binding UserChoices}"
                     LayoutMode="List"
-                    IsSelectionEnabled="True"
-                    Grid.Row="1">
+                    IsSelectionEnabled="True">
                 <toolkit:LongListMultiSelector.ItemTemplate>
                     <DataTemplate>
                         <TextBlock x:Name="Choice"

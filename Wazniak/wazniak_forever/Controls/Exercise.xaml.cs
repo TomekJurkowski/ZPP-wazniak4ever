@@ -26,6 +26,12 @@ namespace wazniak_forever.Controls
             }
         }
 
+        public void AddElement(FrameworkElement element)
+        {
+            Grid.SetRow(element, 3);
+            LayoutRoot.Children.Add(element);
+        }
+
         public void NextExerciseVisible()
         {
             SubmitAnswer.Visibility = Visibility.Visible;
@@ -35,6 +41,10 @@ namespace wazniak_forever.Controls
 
         public void SubmitAnswerClick(StringBuilder headerBuilder, StringBuilder builder)
         {
+            foreach (FrameworkElement element in LayoutRoot.Children)
+            {
+                if (Grid.GetRow(element) == 3) element.Visibility = Visibility.Collapsed;
+            }
             SubmitAnswer.Visibility = Visibility.Collapsed;
             ExplanationPanel.Visibility = Visibility.Visible;
             ExplanationHeader.Text = headerBuilder.ToString();
