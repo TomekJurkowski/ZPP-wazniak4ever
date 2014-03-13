@@ -32,6 +32,7 @@
                        Foreground="{StaticResource PageNameColor}"/>                    
             <TextBlock Name="CourseName"
                            Margin="9,-7,0,0"
+                           TextWrapping="Wrap"
                            Style="{StaticResource PhoneTextTitle1Style}"
                            Foreground="{StaticResource PageNameColor}"/>
         </StackPanel>
@@ -95,6 +96,7 @@
                     x:Name="SubmitAnswer"
                     Height="100"
                     Width="200"
+                    Foreground="{StaticResource MenuItemColor}"
                     HorizontalAlignment="Left">Submit</Button>
 
             <MediaElement x:Name="CorrectAnswerMediaElement"
@@ -112,6 +114,7 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Right"
+                    Foreground="{StaticResource MenuItemColor}"
                     Click="NextQuestion_Click"
                     Visibility="Collapsed">Next</Button>
 
@@ -120,6 +123,7 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Right"
+                    Foreground="{StaticResource MenuItemColor}"
                     Click="Finish_Click"
                     Visibility="Collapsed">My Results</Button>
 
@@ -128,6 +132,7 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Center"
+                    Foreground="{StaticResource MenuItemColor}"
                     Visibility="Collapsed"
                     Click="Return_Click">Back</Button>
         </Grid>
