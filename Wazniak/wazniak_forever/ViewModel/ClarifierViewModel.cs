@@ -249,6 +249,7 @@ namespace wazniak_forever.ViewModel
 
             System.Diagnostics.Debug.WriteLine("Beginning of LoadExercises()");
 
+
             var tasksWithAnswers = OnlineMode ? 
                  await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).ToListAsync() :
                 await db.LoadExercisesOffline(CurrentCourseID);
@@ -258,9 +259,11 @@ namespace wazniak_forever.ViewModel
                 await db.LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(CurrentCourseID);
 
             var singleChoiceExerciseOptions = OnlineMode ?
-                await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).ToListAsync() :
+                await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).IncludeTotalCount().ToListAsync() :
                 await db.LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(CurrentCourseID);
             
+            System.Diagnostics.Debug.WriteLine("Request Total Count: " + db.SingleChoiceOptions.IncludeTotalCount().RequestTotalCount);
+
             System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
             /*var exerciseAnswer = from exercise in exercises
                                  join answer in answers on exercise.ID equals answer.TaskID
@@ -301,11 +304,14 @@ namespace wazniak_forever.ViewModel
                         break;
                     case "SingleChoiceAnswer":
                         List<string> sChoices = new List<string>();
+                        System.Diagnostics.Debug.WriteLine("Exercise id: " + task.TaskID);
                         singleChoiceExerciseOptions.FindAll(option => option.TaskID == task.TaskID)
                             .ForEach(option =>
                             {
                                 sChoices.Add(option.ChoiceString);
                             });
+                        //if (sChoices.Count == 0) continue;
+                        System.Diagnostics.Debug.WriteLine("Exercise id: " + task.TaskID);
                         var answer = sChoices[task.CorrectAnswer];
                         solution = new SingleChoiceSolution(task.TaskID, sChoices, answer, null);
                         break;
