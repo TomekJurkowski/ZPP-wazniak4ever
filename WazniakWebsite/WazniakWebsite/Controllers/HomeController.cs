@@ -11,15 +11,16 @@ namespace WazniakWebsite.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "This page is yet to be updated. Stay tunned for fresh updates on the work progress!";
 
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
+            ViewBag.Message = "If you have any doubts, questions or suggestions on how to make Clarifier better, please don't hesitate to contact us!";
+            ViewBag.Message2 = "Here is where you might find us:";
+            ViewBag.Message3 = "And here is some other useful contact info:";
             return View();
         }
     }
