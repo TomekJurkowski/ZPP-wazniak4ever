@@ -251,15 +251,15 @@ namespace wazniak_forever.ViewModel
 
 
             var tasksWithAnswers = OnlineMode ? 
-                 await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).ToListAsync() :
+                await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).LoadAllAync() :
                 await db.LoadExercisesOffline(CurrentCourseID);
 
             var multipleChoiceExerciseOptions = OnlineMode ?
-                await db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).ToListAsync() :
+                await db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).LoadAllAync() :
                 await db.LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(CurrentCourseID);
 
             var singleChoiceExerciseOptions = OnlineMode ?
-                await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).IncludeTotalCount().ToListAsync() :
+                await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).IncludeTotalCount().LoadAllAync() :
                 await db.LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(CurrentCourseID);
             
             System.Diagnostics.Debug.WriteLine("Request Total Count: " + db.SingleChoiceOptions.IncludeTotalCount().RequestTotalCount);
@@ -292,8 +292,8 @@ namespace wazniak_forever.ViewModel
                         solution = new TextSolution(task.TaskID, task.AnswerText, null);
                         break;
                     case "MultipleChoiceAnswer":
-                        List<string> choices = new List<string>();
-                        List<bool> answers = new List<bool>();
+                        var choices = new List<string>();
+                        var answers = new List<bool>();
                         multipleChoiceExerciseOptions.FindAll(option => option.TaskID == task.TaskID)
                             .ForEach(option => 
                             {
@@ -303,13 +303,10 @@ namespace wazniak_forever.ViewModel
                         solution = new MultipleChoiceSolution(task.TaskID, choices, answers, null);
                         break;
                     case "SingleChoiceAnswer":
-                        List<string> sChoices = new List<string>();
+                        var sChoices = new List<string>();
                         System.Diagnostics.Debug.WriteLine("Exercise id: " + task.TaskID);
                         singleChoiceExerciseOptions.FindAll(option => option.TaskID == task.TaskID)
-                            .ForEach(option =>
-                            {
-                                sChoices.Add(option.ChoiceString);
-                            });
+                            .ForEach(option => sChoices.Add(option.ChoiceString));
                         //if (sChoices.Count == 0) continue;
                         System.Diagnostics.Debug.WriteLine("Exercise id: " + task.TaskID);
                         var answer = sChoices[task.CorrectAnswer];
@@ -348,12 +345,12 @@ namespace wazniak_forever.ViewModel
             }
             if (CourseType == CourseType.FixedNumber)
             {
-                List<RegularExercise> RandomExercises = new List<RegularExercise>();
-                List<Solution> RandomSolutions = new List<Solution>();
-                Random r = new Random();
+                var RandomExercises = new List<RegularExercise>();
+                var RandomSolutions = new List<Solution>();
+                var r = new Random();
                 while (RandomExercises.Count < 10 && Exercises.Count > 0)
                 {
-                    int index = r.Next(0, Exercises.Count);
+                    var index = r.Next(0, Exercises.Count);
                     RandomExercises.Add(Exercises.ElementAt(index));
                     RandomSolutions.Add(Solutions.ElementAt(index));
                     Exercises.RemoveAt(index);
@@ -433,8 +430,8 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task Authenticate(MobileServiceAuthenticationProvider provider)
         {
-            bool success = false;
-            CustomMessageBox messageBox = new CustomMessageBox()
+            var success = false;
+            var messageBox = new CustomMessageBox()
             {
                 Caption = "Authentication error",
                 Message = "We could not complete logging on to your account. Would you like to try again?",
@@ -650,13 +647,13 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task LoadNewCourses()
         {
-            List<Subject> subjects = await db.Subjects.ToListAsync();
+            var subjects = await db.Subjects.ToListAsync();
             NewCourses = subjects.OrderByDescending(x => x.LastUpdated).Take(10).ToList();
         }
 
         public void SetProgressIndicator(System.Windows.DependencyObject depObject, string text)
         {
-            ProgressIndicator progressIndicator = new ProgressIndicator()
+            var progressIndicator = new ProgressIndicator()
             {
                 IsVisible = false,
                 IsIndeterminate = false,
@@ -681,17 +678,17 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task PerformTimeConsumingProcess(
             System.Windows.DependencyObject depObject, string actionDescr, 
-            Func<System.Threading.Tasks.Task> Method)
+            Func<System.Threading.Tasks.Task> method)
         {
             SetProgressIndicator(depObject, actionDescr);
             ActivateProgressForTimeConsumingProcess(depObject);
-            bool success = false;
-            int count = 0;
+            var success = false;
+            var count = 0;
             while (!success && count < 5)
             {
                 try
                 {
-                    await Method();
+                    await method();
                     success = true;
                 }
                 catch (MobileServiceInvalidOperationException e) 
@@ -708,7 +705,7 @@ namespace wazniak_forever.ViewModel
 
         public void ShowToast(string message)
         {
-            ToastPrompt prompt = new ToastPrompt
+            var prompt = new ToastPrompt
             {
                 Title = "Clarifier",
                 Message = message,
@@ -762,7 +759,7 @@ namespace wazniak_forever.ViewModel
         {
             if (CourseType == CourseType.Time)
                 Timer.Stop();
-            bool quit = true;
+            var quit = true;
 
             var result = MessageBox.Show("Do you want to leave the course?", "", MessageBoxButton.OKCancel);
             switch (result)
@@ -780,5 +777,26 @@ namespace wazniak_forever.ViewModel
             }
             return quit;
         }
+    }
+
+    public static class AzureLoadingExtensions
+    {
+        //Azure Mobile Services allow for taking 50 records at a time by default and 1000 records at maximum
+        public async static Task<List<T>> LoadAllAync<T>(this IMobileServiceTableQuery<T> table, int bufferSize = 1000)
+        {
+            var query = table.IncludeTotalCount();
+            var results = await query.ToEnumerableAsync();
+            if (results == null) return null;
+            var count = ((ITotalCountProvider) results).TotalCount;
+            if (count <= 0) return null;
+            var updates = new List<T>();
+            while (updates.Count < count)
+            {
+                var next = await query.Skip(updates.Count).Take(bufferSize).ToListAsync();
+                updates.AddRange(next);
+            }
+            return updates;
+        }
+        
     }
 }

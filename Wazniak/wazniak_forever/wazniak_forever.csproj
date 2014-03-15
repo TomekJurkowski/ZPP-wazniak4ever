@@ -860,6 +860,7 @@
     <Content Include="Assets\Tiles\logo_1_white.png" />
     <Content Include="Assets\Timer.png" />
     <Content Include="Assets\Wrong4.wav" />
+    <Content Include="logo.png" />
     <Content Include="ReadMe.Coding4Fun.Toolkit.txt" />
     <Content Include="README_FIRST.txt" />
     <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
