@@ -121,6 +121,8 @@ namespace WazniakWebsite.Controllers
                     sub.UpdateLastUpdatedTime();
                     db.Entry(sub).State = EntityState.Modified;
 
+                    mathematicaltask.CorrectAnswers = 0;
+                    mathematicaltask.Attempts = 0;
                     db.MathematicalTasks.Add(mathematicaltask);
                     db.SaveChanges();
                     return RedirectToAction("Details", "Subject", new { id = subjectId });
@@ -182,6 +184,8 @@ namespace WazniakWebsite.Controllers
                         sub.UpdateLastUpdatedTime();
                         db.Entry(sub).State = EntityState.Modified;
 
+                        mathematicaltask.CorrectAnswers = 0;
+                        mathematicaltask.Attempts = 0;
                         db.Entry(mathematicaltask).State = EntityState.Modified;
                         db.SaveChanges();
                         return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
@@ -283,6 +287,8 @@ namespace WazniakWebsite.Controllers
                     sub.UpdateLastUpdatedTime();
                     db.Entry(sub).State = EntityState.Modified;
 
+                    mathematicaltask.CorrectAnswers = 0;
+                    mathematicaltask.Attempts = 0;
                     db.Entry(mathematicaltask).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });

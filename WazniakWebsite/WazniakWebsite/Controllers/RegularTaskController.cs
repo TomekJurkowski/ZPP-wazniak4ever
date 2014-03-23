@@ -172,6 +172,8 @@ namespace WazniakWebsite.Controllers
                     sub.UpdateLastUpdatedTime();
                     db.Entry(sub).State = EntityState.Modified;
 
+                    regulartask.CorrectAnswers = 0;
+                    regulartask.Attempts = 0;
                     db.RegularTasks.Add(regulartask);
                     db.SaveChanges();
                     return RedirectToAction("Details", "Subject", new { id = subjectId });
@@ -233,6 +235,8 @@ namespace WazniakWebsite.Controllers
                         sub.UpdateLastUpdatedTime();
                         db.Entry(sub).State = EntityState.Modified;
 
+                        regulartask.CorrectAnswers = 0;
+                        regulartask.Attempts = 0;
                         db.Entry(regulartask).State = EntityState.Modified;
                         db.SaveChanges();
                         return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });                        
@@ -412,6 +416,8 @@ namespace WazniakWebsite.Controllers
                     sub.UpdateLastUpdatedTime();
                     db.Entry(sub).State = EntityState.Modified;
 
+                    regulartask.CorrectAnswers = 0;
+                    regulartask.Attempts = 0;
                     db.Entry(regulartask).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });
