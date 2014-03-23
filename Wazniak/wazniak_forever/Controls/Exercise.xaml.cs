@@ -98,7 +98,7 @@ namespace wazniak_forever.Controls
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.RelativeOrAbsolute));
         }
 
-        public void HandleFinishAction() 
+        public async void HandleFinishAction() 
         {
             SubmitAnswer.Visibility = Visibility.Collapsed;
             Return.Visibility = Visibility.Visible;
@@ -122,6 +122,15 @@ namespace wazniak_forever.Controls
             builder.Append("You have answered ").Append(App.ViewModel.CorrectAnswers).Append(" questions correctly out of ").Append(total);
 
             StatisticContent.Text = builder.ToString();
+
+            if (App.ViewModel.db.User.UserId != null 
+                && App.ViewModel.MyCourses.Any(course => course.ID == App.ViewModel.CurrentCourseID))
+            {
+                await App.ViewModel.PerformTimeConsumingProcess(this, "Sending your results...", async () =>
+                {
+                    await App.ViewModel.SendMyResults(App.ViewModel.CorrectAnswers, total);
+                });
+            }
         }
 
         private void Finish_Click(object sender, RoutedEventArgs e)
