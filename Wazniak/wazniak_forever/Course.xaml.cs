@@ -40,6 +40,8 @@ namespace wazniak_forever
             App.ViewModel.CheckForNetworkAvailability();
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
             App.ViewModel.CurrentCourseID = Convert.ToInt32(NavigationContext.QueryString["courseID"]);
+            App.ViewModel.CorrectAnswers = 0;
+            App.ViewModel.GivenAnswers = new List<KeyValuePair<int, bool>>();
             CourseDescription.Text = GetCourseDescription();
             App.ViewModel.LoadCoursePage();
             

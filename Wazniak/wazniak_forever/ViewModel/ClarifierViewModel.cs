@@ -605,18 +605,49 @@ namespace wazniak_forever.ViewModel
             };*/
         }
 
+        private List<KeyValuePair<int, bool>> _givenAnswers = new List<KeyValuePair<int, bool>>();
+
+        public List<KeyValuePair<int, bool>> GivenAnswers
+        {
+            get { return _givenAnswers; }
+            set { _givenAnswers = value; }
+        } 
+
+        public void AddAnswer(int exerciseId, bool correctAnswer)
+        {
+            _givenAnswers.Add(new KeyValuePair<int, bool>(exerciseId, correctAnswer));
+        }
+
+
         public async System.Threading.Tasks.Task SendMyResults(int correctAnswers, int attempts)
         {
-            var currentMapping = _userSubjectMappings.Find(mapping =>
+            var currentUserSubjectMapping = _userSubjectMappings.Find(mapping =>
                 mapping.SubjectID == CurrentCourseID
                 && mapping.UserID == db.User.UserId);
-            
+
+
+
             //currentMapping.Percentage = 
             //    (currentMapping.Attempts * currentMapping.Percentage + results) / (currentMapping.Attempts + 1);
-            currentMapping.CorrectAnswers += correctAnswers; 
-            currentMapping.Attempts += attempts;
+            currentUserSubjectMapping.CorrectAnswers += correctAnswers;
+            currentUserSubjectMapping.Attempts += attempts;
 
-            await db.UsersAndSubjects.UpdateAsync(currentMapping);
+            await db.UsersAndSubjects.UpdateAsync(currentUserSubjectMapping);
+            foreach (KeyValuePair<int, bool> t in _givenAnswers)
+            {
+                var userExerciseMap = (await db.UsersAndExercises
+                    .Where(ue => ue.UserId == db.User.UserId && ue.ExerciseId == t.Key).ToListAsync()).FirstOrDefault();
+                if (userExerciseMap == null)
+                {
+                    await db.UsersAndExercises.InsertAsync(new UserExercise(db.User.UserId, t.Key, 1, t.Value ? 1 : 0));
+                }
+                else
+                {
+                    userExerciseMap.Attempts++;
+                    if (t.Value) userExerciseMap.CorrectAnswers++;
+                    await db.UsersAndExercises.UpdateAsync(userExerciseMap);
+                }
+            }
         }
 
         public async System.Threading.Tasks.Task AddToMyCourses()

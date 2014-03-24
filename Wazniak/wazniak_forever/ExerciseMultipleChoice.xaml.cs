@@ -86,8 +86,12 @@ namespace wazniak_forever
                     break;
                 }
             }
+
+            var currentExerciseId = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber].ID;
+            
             if (correctAnswer)
             {
+                App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
                 headerBuilder.Append("Correct!");
                 builder.Append("");
@@ -95,6 +99,7 @@ namespace wazniak_forever
             }
             else
             {
+                App.ViewModel.AddAnswer(currentExerciseId, false);
                 headerBuilder.Append("You're wrong :-(");
                 builder.Append("Explanation:\n");
                 for (int i = 0; i < feedback.Length; ++i)

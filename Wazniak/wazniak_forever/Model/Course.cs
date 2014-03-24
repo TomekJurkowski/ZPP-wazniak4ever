@@ -100,6 +100,7 @@ namespace wazniak_forever.Model
         public IMobileServiceTable<Answer> Answers = MobileService.GetTable<Answer>();
         public IMobileServiceTable<TaskAnswer> TasksWithAnswers = MobileService.GetTable<TaskAnswer>();
         public IMobileServiceTable<UserSubject> UsersAndSubjects = MobileService.GetTable<UserSubject>();
+        public IMobileServiceTable<UserExercise> UsersAndExercises = MobileService.GetTable<UserExercise>(); 
         public IMobileServiceTable<UserFullSubject> MySubjects = MobileService.GetTable<UserFullSubject>();
         public IMobileServiceTable<MultipleChoiceExerciseOption> MultipleChoiceOptions = 
             MobileService.GetTable<MultipleChoiceExerciseOption>();
@@ -363,6 +364,25 @@ namespace wazniak_forever.Model
         }
 
         public UserSubject() { }
+    }
+
+    public class UserExercise
+    {
+        public string Id { get; set; }
+        public string UserId { get; set; }
+        public int ExerciseId { get; set; }
+        public int Attempts { get; set; }
+        public int CorrectAnswers { get; set; }
+
+        public UserExercise() { }
+
+        public UserExercise(string userId, int exerciseId, int attempts, int correctAnswers)
+        {
+            UserId = userId;
+            ExerciseId = exerciseId;
+            Attempts = attempts;
+            CorrectAnswers = correctAnswers;
+        }
     }
 
     public class TaskAnswer

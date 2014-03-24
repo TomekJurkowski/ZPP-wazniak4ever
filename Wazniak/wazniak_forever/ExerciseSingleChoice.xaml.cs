@@ -84,14 +84,19 @@ namespace wazniak_forever
             StringBuilder headerBuilder = new StringBuilder();
             StringBuilder builder = new StringBuilder();
             SingleAnswer<string> ans = new SingleAnswer<string>(choice);
+
+            var currentExerciseId = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber].ID;
+
             if (ans.Equals(App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>))
             {
+                App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
                 headerBuilder.Append("Correct!\n");
                 ExControl.CorrectAnswerMediaElement.Play();
             }
             else
             {
+                App.ViewModel.AddAnswer(currentExerciseId, false);
                 headerBuilder.Append("Wrong!\n");
                 builder.Append("You answered: " + choice + "\nCorrect answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
                 ExControl.WrongAnswerMediaElement.Play();

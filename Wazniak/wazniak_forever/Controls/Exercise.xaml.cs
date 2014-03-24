@@ -123,7 +123,7 @@ namespace wazniak_forever.Controls
 
             StatisticContent.Text = builder.ToString();
 
-            if (App.ViewModel.db.User.UserId != null 
+            if (App.ViewModel.db.User != null 
                 && App.ViewModel.MyCourses.Any(course => course.ID == App.ViewModel.CurrentCourseID))
             {
                 await App.ViewModel.PerformTimeConsumingProcess(this, "Sending your results...", async () =>
