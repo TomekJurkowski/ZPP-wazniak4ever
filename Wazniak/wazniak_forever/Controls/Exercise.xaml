@@ -33,7 +33,7 @@
             <Image Width="Auto" 
                 Height="Auto"
                 Margin="12,0,370,15"
-                Source="/Assets/Logo_Czarek_white.png" 
+                Source="/Assets/Logo_small.png" 
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"/>
             <TextBlock Name="CourseName"

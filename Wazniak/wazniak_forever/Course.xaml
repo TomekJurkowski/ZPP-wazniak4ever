@@ -43,72 +43,74 @@
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <controls:OnlineInfo Grid.Row="0"/>
+            <controls:OnlineInfo Grid.Row="0"/>
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="1" Margin="12,17,0,28">
-            <!--<TextBlock 
-                    Text="CLARIFIER" 
-                    Style="{StaticResource PhoneTextNormalStyle}" 
-                    Foreground="{StaticResource PageNameColor}"/>-->
-            <Image Width="Auto" 
-                Height="Auto"
-                Margin="12,0,370,15"
-                Source="/Assets/Logo_Czarek_white.png" 
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"/>
+            <!--TitlePanel contains the name of the application and page title-->
+            <StackPanel Grid.Row="1" Margin="12,17,0,28">
+                <!--<TextBlock 
+                        Text="CLARIFIER" 
+                        Style="{StaticResource PhoneTextNormalStyle}" 
+                        Foreground="{StaticResource PageNameColor}"/>-->
+                <Image Width="Auto" 
+                    Height="Auto"
+                    Margin="12,0,370,15"
+                    Source="/Assets/Logo_small.png" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"/>
+                <TextBlock 
+                        Name="CourseName" 
+                        Margin="9,-7,0,0"
+                        TextWrapping="Wrap"
+                        Style="{StaticResource PhoneTextTitle1Style}" 
+                        Foreground="{StaticResource PageNameColor}"/>
+            </StackPanel>
+
             <TextBlock 
-                    Name="CourseName" 
-                    Margin="9,-7,0,0"
-                    TextWrapping="Wrap"
-                    Style="{StaticResource PhoneTextTitle1Style}" 
-                    Foreground="{StaticResource PageNameColor}"/>
-        </StackPanel>
+                        Name="CourseDescription"
+                        FontSize="25"
+                        Margin="30,30,30,30"
+                        Foreground="{StaticResource MenuItemColor}"
+                        TextWrapping="Wrap"
+                        Grid.Row="2"/>
 
-        <TextBlock 
-                    Name="CourseDescription"
-                    FontSize="25"
-                    Margin="30,30,30,30"
-                    Foreground="{StaticResource MenuItemColor}"
-                    TextWrapping="Wrap"
-                    Grid.Row="2"/>
+            <!--ContentPanel - place additional content here-->
+            <Grid x:Name="ContentPanel" Grid.Row="4" Margin="12,0,12,0">
+                <phone:LongListSelector x:Name="CoursePageOptions"
+                                        ItemsSource="{Binding CourseOptions}"
+                                        SelectionChanged="CoursePageOptions_SelectionChanged"
+                                        toolkit:TiltEffect.IsTiltEnabled="True"
+                                        Foreground="{StaticResource MenuItemColor}">
+                    <phone:LongListSelector.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" 
+                                        Opacity="{Binding OnlineOnly, 
+                                                Converter={StaticResource BooleanToOpacityConverter}}">
 
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="4" Margin="12,0,12,0">
-            <phone:LongListSelector x:Name="CoursePageOptions"
-                                    ItemsSource="{Binding CourseOptions}"
-                                    SelectionChanged="CoursePageOptions_SelectionChanged"
-                                    toolkit:TiltEffect.IsTiltEnabled="True"
-                                    Foreground="{StaticResource MenuItemColor}">
-                <phone:LongListSelector.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" 
-                                    Opacity="{Binding OnlineOnly, 
-                                            Converter={StaticResource BooleanToOpacityConverter}}">
+                                <Image Width="Auto" 
+                                        Height="Auto" 
+                                        Source="{Binding ImageUrl}" 
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        />
 
-                            <Image Width="Auto" 
-                                    Height="Auto" 
-                                    Source="{Binding ImageUrl}" 
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"
-                                    />
-
-                            <TextBlock Text="{Binding Name}" 
-                                        FontSize="34"
-                                        VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </phone:LongListSelector.ItemTemplate>
-            </phone:LongListSelector>
+                                <TextBlock Text="{Binding Name}" 
+                                            FontSize="34"
+                                            VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </phone:LongListSelector.ItemTemplate>
+                </phone:LongListSelector>
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </phone:PhoneApplicationPage>
