@@ -155,6 +155,20 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        private int compareExerciseData(int correctAnswers1, int Attempts1, int correctAnswers2, int attempts2)
+        {
+
+        }
+
+        private int compareSubjects(Subject s1, Subject s2)
+        {
+            UserSubject uS1 = _userSubjectMappings.Find(mapping =>
+                mapping.SubjectID == s1.ID && mapping.UserID == db.User.UserId);
+            UserSubject uS2 = _userSubjectMappings.Find(mapping =>
+                mapping.SubjectID == s2.ID && mapping.UserID == db.User.UserId);
+            return compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS2.CorrectAnswers, uS2.Attempts);
+        }
+
         #region ExerciseSolving
 
         private int _currentQuestionNumber;
@@ -595,14 +609,8 @@ namespace wazniak_forever.ViewModel
                 _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID, 
                     subject.ID, subject.CorrectAnswers, subject.Attempts));
             });
-             
 
-            /*MyCourses = new List<Subject>()
-            {
-                new Subject("Algorithms I"),
-                new Subject("Algorithms II"),
-                new Subject("Databases")
-            };*/
+            MyCourses.Sort(compareSubjects);
         }
 
         private List<KeyValuePair<int, bool>> _givenAnswers = new List<KeyValuePair<int, bool>>();
@@ -661,7 +669,7 @@ namespace wazniak_forever.ViewModel
                     Attempts = 0
                 });
             MyCourses.Add(AllCourses.Find(course => course.ID == CurrentCourseID));
-            LoadCoursePage();  
+            LoadCoursePage();
         }
 
         public async System.Threading.Tasks.Task DeleteFromMyCourses()
@@ -798,7 +806,6 @@ namespace wazniak_forever.ViewModel
             {
                 case MessageBoxResult.OK:
                     e.Cancel = false;
-                    System.Diagnostics.Debug.WriteLine("Haloooooo");
                     break;
                 default:
                     e.Cancel = true;
