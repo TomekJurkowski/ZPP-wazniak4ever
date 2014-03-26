@@ -694,7 +694,6 @@ namespace wazniak_forever.ViewModel
                 {
                     UserExercise newUE = new UserExercise(db.User.UserId, t.Key, 1, t.Value ? 1 : 0);
                     await db.UsersAndExercises.InsertAsync(newUE);
-                    _userExerciseMappings.Add(newUE);
                 }
                 else
                 {
@@ -730,7 +729,7 @@ namespace wazniak_forever.ViewModel
             _userSubjectMappings.Remove(deletedMapping);
             MyCourses.Remove(MyCourses.Find(course => course.ID == CurrentCourseID));
 
-            // BELOW: to be deleted
+            // BELOW: DO NOT DELETE YET
             var lol = _userExerciseMappings.FindAll(mapping => mapping.UserId == db.User.UserId);
             foreach (UserExercise uE in lol) await db.UsersAndExercises.DeleteAsync(uE);
 
