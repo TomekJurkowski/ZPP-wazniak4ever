@@ -155,9 +155,16 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private int compareExerciseData(int correctAnswers1, int Attempts1, int correctAnswers2, int attempts2)
+        private int compareExerciseData(int correctAnswers1, int attempts1, int correctAnswers2, int attempts2)
         {
-
+            if (attempts1 == 0 && attempts2 == 0) return 0;
+            else if (attempts1 == 0) return -1;
+            else if (attempts2 == 0) return 1;
+            double ratio1 = correctAnswers1 / attempts1;
+            double ratio2 = correctAnswers2 / attempts2;
+            if (ratio1 < ratio2) return -1;
+            else if (ratio1 > ratio2) return 1;
+            return 0;
         }
 
         private int compareSubjects(Subject s1, Subject s2)
@@ -167,6 +174,22 @@ namespace wazniak_forever.ViewModel
             UserSubject uS2 = _userSubjectMappings.Find(mapping =>
                 mapping.SubjectID == s2.ID && mapping.UserID == db.User.UserId);
             return compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS2.CorrectAnswers, uS2.Attempts);
+        }
+
+        private int compareExercises(Exercise ex1, Exercise ex2)
+        {
+            return 0;
+        }
+
+        private int compareSolutions(Solution s1, Solution s2)
+        {
+            return s1.ExerciseID - s2.ExerciseID;
+        }
+
+        public void sortExercisesByProgress()
+        {
+            Exercises.Sort(compareExercises);
+            Solutions.Sort(compareSolutions);
         }
 
         #region ExerciseSolving

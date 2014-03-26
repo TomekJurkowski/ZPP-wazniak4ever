@@ -54,10 +54,7 @@ namespace wazniak_forever
             App.ViewModel.CourseType = type;
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", App.ViewModel.LoadExercises);
             if (App.ViewModel.Solutions.Count <= 0) return;
-            System.Diagnostics.Debug.WriteLine("Hello");
-            System.Diagnostics.Debug.WriteLine("Solutions.Count > 0");
-            System.Diagnostics.Debug.WriteLine(App.ViewModel.Solutions[0].Answer.Type);
-            
+
             if (App.ViewModel.CourseType == CourseType.Time)
             {
                 App.ViewModel.Timer = new DTimer();
@@ -69,6 +66,7 @@ namespace wazniak_forever
                     timer.Start(1, 20);
                 }
             }
+            else if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.sortExercisesByProgress();
 
             string navTo;
             switch (App.ViewModel.Solutions[0].Answer.Type)
