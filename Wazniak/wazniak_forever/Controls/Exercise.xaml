@@ -128,10 +128,10 @@
                     x:Name="Finish"
                     Height="100"
                     Width="200"
-                    HorizontalAlignment="Right"
+                    HorizontalAlignment="Left"
                     Foreground="{StaticResource MenuItemColor}"
                     Click="Finish_Click"
-                    Visibility="Collapsed">My Results</Button>
+                    Visibility="Collapsed">Finish</Button>
 
             <Button 
                     x:Name="Return"

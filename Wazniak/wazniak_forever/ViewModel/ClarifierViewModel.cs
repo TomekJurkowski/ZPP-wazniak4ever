@@ -178,18 +178,38 @@ namespace wazniak_forever.ViewModel
 
         private int compareExercises(Exercise ex1, Exercise ex2)
         {
-            return 0;
+            UserExercise uE1 = _userExerciseMappings.Find(mapping =>
+                mapping.ExerciseId == ex1.ID && mapping.UserId == db.User.UserId);
+            UserExercise uE2 = _userExerciseMappings.Find(mapping =>
+                mapping.ExerciseId == ex2.ID && mapping.UserId == db.User.UserId);
+            if (uE1 == null && uE2 == null) return 0;
+            else if (uE1 == null) return -1;
+            else if (uE2 == null) return 1;
+            return compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE2.CorrectAnswers, uE2.Attempts);
         }
 
         private int compareSolutions(Solution s1, Solution s2)
         {
-            return s1.ExerciseID - s2.ExerciseID;
+            return Exercises.IndexOf(s1.Exercise as RegularExercise) - Exercises.IndexOf(s2.Exercise as RegularExercise);
+        }
+
+        private List<Solution> matchSolutions()
+        {
+            List<Solution> result = new List<Solution>();
+            foreach (Exercise ex in Exercises)
+            {
+                result.Add(ex.Solution);
+            }
+            return result;
         }
 
         public void sortExercisesByProgress()
         {
             Exercises.Sort(compareExercises);
-            Solutions.Sort(compareSolutions);
+            Solutions = matchSolutions();
+            CurrentExercise = Exercises[0];
+            CurrentSolution = Solutions[0];
+            UserChoices = Exercises[0].Solution.Choices;
         }
 
         #region ExerciseSolving
@@ -616,6 +636,8 @@ namespace wazniak_forever.ViewModel
 
         private List<UserSubject> _userSubjectMappings;
 
+        private List<UserExercise> _userExerciseMappings;
+
         public async System.Threading.Tasks.Task LoadMyCourses()
         {
             var mySubjects = await db.MySubjects
@@ -623,8 +645,14 @@ namespace wazniak_forever.ViewModel
                 .ToListAsync();
 
             MyCourses = new List<Subject>();
-            _userSubjectMappings = new List<UserSubject>();
+            _userExerciseMappings = new List<UserExercise>();
+            var testIfNull = (await db.UsersAndExercises.Where(ue => ue.UserId == db.User.UserId).ToListAsync()).FirstOrDefault();
+            if (testIfNull != null)
+            {
+                _userExerciseMappings = await db.UsersAndExercises.Where(ue => ue.UserId == db.User.UserId).ToListAsync();
+            }
 
+            _userSubjectMappings = new List<UserSubject>();
             mySubjects.ForEach(subject =>
             {
                 MyCourses.Add(new Subject(subject.ID, subject.Name, 
@@ -666,7 +694,7 @@ namespace wazniak_forever.ViewModel
             await db.UsersAndSubjects.UpdateAsync(currentUserSubjectMapping);
             foreach (KeyValuePair<int, bool> t in _givenAnswers)
             {
-                var userExerciseMap = (await db.UsersAndExercises
+                /*var userExerciseMap = (await db.UsersAndExercises
                     .Where(ue => ue.UserId == db.User.UserId && ue.ExerciseId == t.Key).ToListAsync()).FirstOrDefault();
                 if (userExerciseMap == null)
                 {
@@ -677,6 +705,21 @@ namespace wazniak_forever.ViewModel
                     userExerciseMap.Attempts++;
                     if (t.Value) userExerciseMap.CorrectAnswers++;
                     await db.UsersAndExercises.UpdateAsync(userExerciseMap);
+                }*/
+
+                var currentUserExerciseMapping = _userExerciseMappings.Find(mapping =>
+                    mapping.ExerciseId == t.Key && mapping.UserId == db.User.UserId);
+                if (currentUserExerciseMapping == null)
+                {
+                    UserExercise newUE = new UserExercise(db.User.UserId, t.Key, 1, t.Value ? 1 : 0);
+                    await db.UsersAndExercises.InsertAsync(newUE);
+                    _userExerciseMappings.Add(newUE);
+                }
+                else
+                {
+                    currentUserExerciseMapping.Attempts++;
+                    if (t.Value) currentUserExerciseMapping.CorrectAnswers++;
+                    await db.UsersAndExercises.UpdateAsync(currentUserExerciseMapping);
                 }
             }
         }

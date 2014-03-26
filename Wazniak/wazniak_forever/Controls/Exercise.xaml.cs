@@ -36,6 +36,7 @@ namespace wazniak_forever.Controls
         {
             SubmitAnswer.Visibility = Visibility.Visible;
             NextQuestion.Visibility = Visibility.Collapsed;
+            Finish.Visibility = Visibility.Collapsed;
             ExplanationPanel.Visibility = Visibility.Collapsed;
         }
 
@@ -52,10 +53,13 @@ namespace wazniak_forever.Controls
 
             if (App.ViewModel.CurrentQuestionNumber == App.ViewModel.Exercises.Count - 1)
             {
+                Finish.HorizontalAlignment = HorizontalAlignment.Right;
                 Finish.Visibility = Visibility.Visible;
+                if (App.ViewModel.CourseType != CourseType.Classic) Finish.Content = "My results";
             }
             else
             {
+                if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) Finish.Visibility = Visibility.Visible;
                 NextQuestion.Visibility = Visibility.Visible;
             }
         }
@@ -101,8 +105,9 @@ namespace wazniak_forever.Controls
         public async void HandleFinishAction() 
         {
             SubmitAnswer.Visibility = Visibility.Collapsed;
-            Return.Visibility = Visibility.Visible;
+            NextQuestion.Visibility = Visibility.Collapsed;
             Finish.Visibility = Visibility.Collapsed;
+            Return.Visibility = Visibility.Visible;
             QuestionContent.Visibility = Visibility.Collapsed;
             ExplanationPanel.Visibility = Visibility.Collapsed;
             if (App.ViewModel.CourseType != CourseType.Classic)
