@@ -344,6 +344,7 @@ namespace wazniak_forever.Model
         public System.DateTime LastUpdated { get; set; }
         public int CorrectAnswers { get; set; }
         public int Attempts { get; set; }
+        public System.DateTime LastAttempt { get; set; }
     }
 
     public class UserSubject
@@ -353,14 +354,16 @@ namespace wazniak_forever.Model
         public int SubjectID { get; set; }
         public int CorrectAnswers { get; set; }
         public int Attempts { get; set; }
+        public System.DateTime LastAttempt { get; set; }
 
-        public UserSubject(string id, string userID, int subjectID, int correctAnswers, int attempts)
+        public UserSubject(string id, string userID, int subjectID, int correctAnswers, int attempts, System.DateTime lastAttempt)
         {
             Id = id;
             UserID = userID;
             SubjectID = subjectID;
             CorrectAnswers = correctAnswers;
             Attempts = attempts;
+            LastAttempt = lastAttempt;
         }
 
         public UserSubject() { }
@@ -373,15 +376,17 @@ namespace wazniak_forever.Model
         public int ExerciseId { get; set; }
         public int Attempts { get; set; }
         public int CorrectAnswers { get; set; }
+        public System.DateTime LastAttempt { get; set; }
 
         public UserExercise() { }
 
-        public UserExercise(string userId, int exerciseId, int attempts, int correctAnswers)
+        public UserExercise(string userId, int exerciseId, int attempts, int correctAnswers, System.DateTime lastAttempt)
         {
             UserId = userId;
             ExerciseId = exerciseId;
             Attempts = attempts;
             CorrectAnswers = correctAnswers;
+            LastAttempt = lastAttempt;
         }
     }
 

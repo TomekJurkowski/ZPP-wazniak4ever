@@ -647,7 +647,7 @@ namespace wazniak_forever.ViewModel
                 MyCourses.Add(new Subject(subject.ID, subject.Name, 
                     subject.Description, subject.LastUpdated));
                 _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID, 
-                    subject.ID, subject.CorrectAnswers, subject.Attempts));
+                    subject.ID, subject.CorrectAnswers, subject.Attempts, subject.LastAttempt));
             });
 
             MyCourses.Sort(compareSubjects);
@@ -684,6 +684,7 @@ namespace wazniak_forever.ViewModel
             //    (currentMapping.Attempts * currentMapping.Percentage + results) / (currentMapping.Attempts + 1);
             currentUserSubjectMapping.CorrectAnswers += correctAnswers;
             currentUserSubjectMapping.Attempts += attempts;
+            currentUserSubjectMapping.LastAttempt = System.DateTime.Now;
 
             await db.UsersAndSubjects.UpdateAsync(currentUserSubjectMapping);
             foreach (KeyValuePair<int, bool> t in _givenAnswers)
@@ -692,13 +693,14 @@ namespace wazniak_forever.ViewModel
                     .Where(ue => ue.UserId == db.User.UserId && ue.ExerciseId == t.Key).ToListAsync()).FirstOrDefault();
                 if (userExerciseMap == null)
                 {
-                    UserExercise newUE = new UserExercise(db.User.UserId, t.Key, 1, t.Value ? 1 : 0);
+                    UserExercise newUE = new UserExercise(db.User.UserId, t.Key, 1, t.Value ? 1 : 0, System.DateTime.Now);
                     await db.UsersAndExercises.InsertAsync(newUE);
                 }
                 else
                 {
                     userExerciseMap.Attempts++;
                     if (t.Value) userExerciseMap.CorrectAnswers++;
+                    userExerciseMap.LastAttempt = System.DateTime.Now;
                     await db.UsersAndExercises.UpdateAsync(userExerciseMap);
                 }
             }
