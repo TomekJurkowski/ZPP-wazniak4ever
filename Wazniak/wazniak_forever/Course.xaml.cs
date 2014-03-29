@@ -49,8 +49,6 @@ namespace wazniak_forever
 
         private async void SelectExercise(CourseType type)
         {
-            //await App.ViewModel.LoadExercises();
-            System.Diagnostics.Debug.WriteLine("Beginning of SelectExercise()");
             App.ViewModel.CourseType = type;
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", App.ViewModel.LoadExercises);
             if (App.ViewModel.Solutions.Count <= 0) return;
@@ -61,7 +59,6 @@ namespace wazniak_forever
                 var timer = App.ViewModel.Timer;
                 if (!timer.IsEnabled())
                 {
-                    System.Diagnostics.Debug.WriteLine("Timer not enabled!");
                     timer.HandleTick += App.ViewModel.TimerModeTickHandler;
                     timer.Start(1, 20);
                 }

@@ -42,9 +42,7 @@ namespace wazniak_forever.Controls
 
         private void CourseSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(CourseSearch.Text);
             List<Subject> SearchList = App.ViewModel.DownloadedCourses;
-            System.Diagnostics.Debug.WriteLine(this.Name);
             switch (this.Name)
             {
                 case MY_COURSES_NAME:

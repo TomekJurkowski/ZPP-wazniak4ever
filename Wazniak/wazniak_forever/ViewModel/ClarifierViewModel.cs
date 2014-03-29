@@ -295,13 +295,6 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task LoadExercises()
         {
-            /*var exercises = await db.Tasks.Where(task => task.SubjectID == CurrentCourseID)
-                .ToListAsync();
-            var exerciseIds = exercises.Select(task => task.ID).ToList();*/
-
-            System.Diagnostics.Debug.WriteLine("Beginning of LoadExercises()");
-
-
             var tasksWithAnswers = OnlineMode ? 
                 await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).LoadAllAync() :
                 await db.LoadExercisesOffline(CurrentCourseID);
@@ -313,13 +306,6 @@ namespace wazniak_forever.ViewModel
             var singleChoiceExerciseOptions = OnlineMode ?
                 await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).IncludeTotalCount().LoadAllAync() :
                 await db.LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(CurrentCourseID);
-            
-            System.Diagnostics.Debug.WriteLine("Request Total Count: " + db.SingleChoiceOptions.IncludeTotalCount().RequestTotalCount);
-
-            System.Diagnostics.Debug.WriteLine("tasks with answer: " + tasksWithAnswers.Count);
-            /*var exerciseAnswer = from exercise in exercises
-                                 join answer in answers on exercise.ID equals answer.TaskID
-                                 select new { exercise, answer };*/
 
             Exercises = new List<RegularExercise>();
             Solutions = new List<Solution>();
@@ -327,13 +313,10 @@ namespace wazniak_forever.ViewModel
 
             foreach (var task in tasksWithAnswers)
             {
-                System.Diagnostics.Debug.WriteLine("Beginning of foreach");
                 
                 if (task.AnswerDiscriminator == "TextAnswer" && CourseType != CourseType.Classic) continue;
 
                 Solution solution = null;
-
-                System.Diagnostics.Debug.WriteLine("task title: " + task.Title);
 
                 switch (task.AnswerDiscriminator) 
                 {
@@ -356,11 +339,8 @@ namespace wazniak_forever.ViewModel
                         break;
                     case "SingleChoiceAnswer":
                         var sChoices = new List<string>();
-                        System.Diagnostics.Debug.WriteLine("Exercise id: " + task.TaskID);
                         singleChoiceExerciseOptions.FindAll(option => option.TaskID == task.TaskID)
                             .ForEach(option => sChoices.Add(option.ChoiceString));
-                        //if (sChoices.Count == 0) continue;
-                        System.Diagnostics.Debug.WriteLine("Exercise id: " + task.TaskID);
                         var answer = sChoices[task.CorrectAnswer];
                         solution = new SingleChoiceSolution(task.TaskID, sChoices, answer, null);
                         break;
@@ -368,33 +348,28 @@ namespace wazniak_forever.ViewModel
 
                 Solutions.Add(solution);
 
-                System.Diagnostics.Debug.WriteLine("answer discriminator: " + task.AnswerDiscriminator);
-
                 switch (task.TaskDiscriminator)
                 {
                     case "RegularTask":
-                        System.Diagnostics.Debug.WriteLine("RegularTask");
                         var subject = OnlineMode ?
-                            AllCourses.Where(course => course.ID == CurrentCourseID).First() :
-                            DownloadedCourses.Where(course => course.ID == CurrentCourseID).First();
+                            AllCourses.First(course => course.ID == CurrentCourseID) :
+                            DownloadedCourses.First(course => course.ID == CurrentCourseID);
                         var ex = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
                             task.Title, task.Text1, 
                             subject,
                             solution);
-                        System.Diagnostics.Debug.WriteLine("Regular Exercise ex created");
                         solution.Exercise = ex;
                         Exercises.Add(ex);
-                        System.Diagnostics.Debug.WriteLine("Regular Exercise added to exercises");
                         break;
                 }                      
             }
-            System.Diagnostics.Debug.WriteLine("Finished");
 
             if (Exercises.Count == 0)
             {
                 MessageBox.Show("Unfortunately, there are no exercises for this course yet!");
                 return;
             }
+
             if (CourseType == CourseType.FixedNumber)
             {
                 var RandomExercises = new List<RegularExercise>();
@@ -792,8 +767,6 @@ namespace wazniak_forever.ViewModel
             }
             if (count == 5) MessageBox.Show("Clarifier cannot complete this operation!");
             DeactivateProgressForTimeConsumingProcess(depObject);
-            System.Diagnostics.Debug.WriteLine("Finished job!!!");
-
         }
 
         public void ShowToast(string message)
@@ -836,7 +809,6 @@ namespace wazniak_forever.ViewModel
 
         public void TimerModeTickHandler(int time)
         {
-            System.Diagnostics.Debug.WriteLine("Tick! + Current time: " + time);
             CurrentTime = time;
             if (time == 0)
             {
@@ -880,7 +852,7 @@ namespace wazniak_forever.ViewModel
             var results = await query.ToEnumerableAsync();
             if (results == null) return null;
             var count = ((ITotalCountProvider) results).TotalCount;
-            if (count <= 0) return null;
+            if (count <= 0) return new List<T>();
             var updates = new List<T>();
             while (updates.Count < count)
             {

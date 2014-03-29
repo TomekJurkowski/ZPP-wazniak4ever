@@ -18,23 +18,6 @@ namespace wazniak_forever.Model
 
         private int counter;
 
-       /* private static DTimer instance;
-
-        private DTimer() { timer = new DispatcherTimer(); }
-        
-        public static DTimer Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new DTimer();
-                }
-                return instance;
-            }
-        }
-        */
-
         public DTimer() 
         { 
             timer = new DispatcherTimer(); 
@@ -66,8 +49,6 @@ namespace wazniak_forever.Model
 
         public bool IsEnabled()
         {
-            if (HandleTick != null) System.Diagnostics.Debug.WriteLine("The Event handler is not null!");
-            else System.Diagnostics.Debug.WriteLine("The Event handler is null");
             return timer.IsEnabled;
         }
     }

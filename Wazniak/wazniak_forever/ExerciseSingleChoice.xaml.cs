@@ -29,8 +29,6 @@ namespace wazniak_forever
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            System.Diagnostics.Debug.WriteLine("Navigated to Exercise Single Choice");
-            System.Diagnostics.Debug.WriteLine((Application.Current.RootVisual as PhoneApplicationFrame).BackStack.First().Source.OriginalString);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
         }
 
