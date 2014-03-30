@@ -157,12 +157,15 @@ namespace wazniak_forever.ViewModel
 
         private int getWeight(double ratio, System.DateTime lastAttempt) 
         {
-            return (int) ratio;
+            TimeSpan t = System.DateTime.Now - lastAttempt;
+            double lastAttemptWeight = Math.Pow(2.0, (double)t.TotalDays + 1);
+            return (int)((1 - ratio) * 100 + lastAttemptWeight);
         }
 
         private int compareExerciseData(int correctAnswers1, int attempts1, System.DateTime lastAttempt1, int correctAnswers2, int attempts2, System.DateTime lastAttempt2)
         {
-            return getWeight(correctAnswers1 / attempts1, lastAttempt1) - getWeight(correctAnswers2 / attempts2, lastAttempt2);
+            int result = getWeight(correctAnswers1 / attempts1, lastAttempt1) - getWeight(correctAnswers2 / attempts2, lastAttempt2);
+            return result;
         }
 
         private int compareSubjects(Subject s1, Subject s2)
@@ -184,8 +187,8 @@ namespace wazniak_forever.ViewModel
             UserExercise uE2 = _userExerciseMappings.Find(mapping =>
                 mapping.ExerciseId == ex2.ID && mapping.UserId == db.User.UserId);
             if (uE1 == null && uE2 == null) return 0;
-            else if (uE1 == null) return -1;
-            else if (uE2 == null) return 1;
+            if (uE1 == null) return -1;
+            if (uE2 == null) return 1;
             return compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE1.LastAttempt, uE2.CorrectAnswers, uE2.Attempts, uE2.LastAttempt);
         }
 
@@ -656,8 +659,6 @@ namespace wazniak_forever.ViewModel
                 mapping.SubjectID == CurrentCourseID
                 && mapping.UserID == db.User.UserId);
 
-            //currentMapping.Percentage = 
-            //    (currentMapping.Attempts * currentMapping.Percentage + results) / (currentMapping.Attempts + 1);
             currentUserSubjectMapping.CorrectAnswers += correctAnswers;
             currentUserSubjectMapping.Attempts += attempts;
             currentUserSubjectMapping.LastAttempt = System.DateTime.Now;
