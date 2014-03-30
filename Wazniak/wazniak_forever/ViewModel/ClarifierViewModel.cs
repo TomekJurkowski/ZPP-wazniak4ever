@@ -155,13 +155,14 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        private int getWeight(double ratio, System.DateTime lastAttempt) 
+        {
+            return (int) ratio;
+        }
+
         private int compareExerciseData(int correctAnswers1, int attempts1, System.DateTime lastAttempt1, int correctAnswers2, int attempts2, System.DateTime lastAttempt2)
         {
-            double ratio1 = correctAnswers1 / attempts1;
-            double ratio2 = correctAnswers2 / attempts2;
-            if (ratio1 < ratio2) return -1;
-            else if (ratio1 > ratio2) return 1;
-            return 0;
+            return getWeight(correctAnswers1 / attempts1, lastAttempt1) - getWeight(correctAnswers2 / attempts2, lastAttempt2);
         }
 
         private int compareSubjects(Subject s1, Subject s2)
