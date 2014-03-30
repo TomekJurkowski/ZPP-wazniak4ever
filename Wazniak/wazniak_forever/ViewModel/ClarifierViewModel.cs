@@ -155,11 +155,8 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private int compareExerciseData(int correctAnswers1, int attempts1, int correctAnswers2, int attempts2)
+        private int compareExerciseData(int correctAnswers1, int attempts1, System.DateTime lastAttempt1, int correctAnswers2, int attempts2, System.DateTime lastAttempt2)
         {
-            if (attempts1 == 0 && attempts2 == 0) return 0;
-            else if (attempts1 == 0) return -1;
-            else if (attempts2 == 0) return 1;
             double ratio1 = correctAnswers1 / attempts1;
             double ratio2 = correctAnswers2 / attempts2;
             if (ratio1 < ratio2) return -1;
@@ -173,7 +170,10 @@ namespace wazniak_forever.ViewModel
                 mapping.SubjectID == s1.ID && mapping.UserID == db.User.UserId);
             UserSubject uS2 = _userSubjectMappings.Find(mapping =>
                 mapping.SubjectID == s2.ID && mapping.UserID == db.User.UserId);
-            return compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS2.CorrectAnswers, uS2.Attempts);
+            if (uS1.Attempts == 0 && uS2.Attempts == 0) return 0;
+            else if (uS1.Attempts == 0) return -1;
+            else if (uS2.Attempts == 0) return 1;
+            return compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS1.LastAttempt, uS2.CorrectAnswers, uS2.Attempts, uS2.LastAttempt);
         }
 
         private int compareExercises(Exercise ex1, Exercise ex2)
@@ -185,7 +185,7 @@ namespace wazniak_forever.ViewModel
             if (uE1 == null && uE2 == null) return 0;
             else if (uE1 == null) return -1;
             else if (uE2 == null) return 1;
-            return compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE2.CorrectAnswers, uE2.Attempts);
+            return compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE1.LastAttempt, uE2.CorrectAnswers, uE2.Attempts, uE2.LastAttempt);
         }
 
         private List<Solution> matchSolutions()
