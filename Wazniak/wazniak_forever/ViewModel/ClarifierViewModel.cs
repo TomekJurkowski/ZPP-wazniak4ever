@@ -191,7 +191,7 @@ namespace wazniak_forever.ViewModel
             if (uE1 == null && uE2 == null) return 0;
             if (uE1 == null) return -1;
             if (uE2 == null) return 1;
-            return compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE1.LastAttempt, uE2.CorrectAnswers, uE2.Attempts, uE2.LastAttempt);
+            return -compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE1.LastAttempt, uE2.CorrectAnswers, uE2.Attempts, uE2.LastAttempt);
         }
 
         private List<Solution> matchSolutions()
