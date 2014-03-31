@@ -207,6 +207,7 @@ namespace wazniak_forever.ViewModel
         public void sortExercisesByProgress()
         {
             Exercises.Sort(compareExercises);
+            Exercises.Reverse();
             Solutions = matchSolutions();
             CurrentExercise = Exercises[0];
             CurrentSolution = Solutions[0];
