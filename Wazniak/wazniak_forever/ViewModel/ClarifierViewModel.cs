@@ -179,7 +179,7 @@ namespace wazniak_forever.ViewModel
             if (uS1.Attempts == 0 && uS2.Attempts == 0) return 0;
             else if (uS1.Attempts == 0) return -1;
             else if (uS2.Attempts == 0) return 1;
-            return compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS1.LastAttempt, uS2.CorrectAnswers, uS2.Attempts, uS2.LastAttempt);
+            return -compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS1.LastAttempt, uS2.CorrectAnswers, uS2.Attempts, uS2.LastAttempt);
         }
 
         private int compareExercises(Exercise ex1, Exercise ex2)
@@ -207,7 +207,6 @@ namespace wazniak_forever.ViewModel
         public void sortExercisesByProgress()
         {
             Exercises.Sort(compareExercises);
-            Exercises.Reverse();
             Solutions = matchSolutions();
             CurrentExercise = Exercises[0];
             CurrentSolution = Solutions[0];
