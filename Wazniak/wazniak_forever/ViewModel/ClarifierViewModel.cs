@@ -166,7 +166,7 @@ namespace wazniak_forever.ViewModel
         {
             int weight1 = getWeight(correctAnswers1 / attempts1, lastAttempt1);
             int weight2 = getWeight(correctAnswers2 / attempts2, lastAttempt2);
-            int result = weight1 + attempts1 - weight2 - attempts2;
+            int result = weight1 - attempts1 - weight2 + attempts2;
             return result;
         }
 
