@@ -158,7 +158,7 @@ namespace wazniak_forever.ViewModel
         private int getWeight(double ratio, System.DateTime lastAttempt) 
         {
             TimeSpan t = System.DateTime.Now - lastAttempt;
-            double lastAttemptWeight = Math.Pow(2.0, (double)t.TotalDays + 1);
+            double lastAttemptWeight = (double)t.TotalDays + 1;
             return (int)((1 - ratio) * 100 + lastAttemptWeight);
         }
 
