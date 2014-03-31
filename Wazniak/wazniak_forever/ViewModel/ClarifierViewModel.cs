@@ -162,11 +162,11 @@ namespace wazniak_forever.ViewModel
             return (int)((1 - ratio) * 10 + lastAttemptWeight);
         }
 
-        private int compareExerciseData(int correctAnswers1, int attempts1, System.DateTime lastAttempt1, int correctAnswers2, int attempts2, System.DateTime lastAttempt2)
+        private int compareExerciseData(int correctAnswers1, int attempts1, System.DateTime lastAttempt1, int correctAnswers2, int attempts2, System.DateTime lastAttempt2, int attemptFactor)
         {
             int weight1 = getWeight(correctAnswers1 / attempts1, lastAttempt1);
             int weight2 = getWeight(correctAnswers2 / attempts2, lastAttempt2);
-            int result = weight1 - (attempts1*2)- weight2 + (attempts2*2);
+            int result = weight1 - (attempts1 * attemptFactor)- weight2 + (attempts2 * attemptFactor);
             return result;
         }
 
@@ -179,7 +179,7 @@ namespace wazniak_forever.ViewModel
             if (uS1.Attempts == 0 && uS2.Attempts == 0) return 0;
             else if (uS1.Attempts == 0) return -1;
             else if (uS2.Attempts == 0) return 1;
-            return -compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS1.LastAttempt, uS2.CorrectAnswers, uS2.Attempts, uS2.LastAttempt);
+            return -compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS1.LastAttempt, uS2.CorrectAnswers, uS2.Attempts, uS2.LastAttempt, 0);
         }
 
         private int compareExercises(Exercise ex1, Exercise ex2)
@@ -191,7 +191,7 @@ namespace wazniak_forever.ViewModel
             if (uE1 == null && uE2 == null) return 0;
             if (uE1 == null) return -1;
             if (uE2 == null) return 1;
-            return -compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE1.LastAttempt, uE2.CorrectAnswers, uE2.Attempts, uE2.LastAttempt);
+            return -compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE1.LastAttempt, uE2.CorrectAnswers, uE2.Attempts, uE2.LastAttempt, 2);
         }
 
         private List<Solution> matchSolutions()

@@ -10,8 +10,7 @@ namespace wazniak_forever.Model
     {
         MyCourses, Downloads,
         Settings, Start, StudyWithClarifier, FixedNumber, Timer, AddToMyCourses, Download,
-        Login, Logout, Update, DeleteFromMyCourses,
-        DeleteFromDownloads
+        Login, Logout, Update, DeleteFromMyCourses, DeleteFromDownloads
     }
 
     public class Option
