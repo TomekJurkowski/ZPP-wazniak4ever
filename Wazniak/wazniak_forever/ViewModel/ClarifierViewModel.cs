@@ -159,12 +159,14 @@ namespace wazniak_forever.ViewModel
         {
             TimeSpan t = System.DateTime.Now - lastAttempt;
             double lastAttemptWeight = (double)t.TotalDays + 1;
-            return (int)((1 - ratio) * 100 + lastAttemptWeight);
+            return (int)((1 - ratio) * 10 + lastAttemptWeight);
         }
 
         private int compareExerciseData(int correctAnswers1, int attempts1, System.DateTime lastAttempt1, int correctAnswers2, int attempts2, System.DateTime lastAttempt2)
         {
-            int result = getWeight(correctAnswers1 / attempts1, lastAttempt1) - getWeight(correctAnswers2 / attempts2, lastAttempt2);
+            int weight1 = getWeight(correctAnswers1 / attempts1, lastAttempt1);
+            int weight2 = getWeight(correctAnswers2 / attempts2, lastAttempt2);
+            int result = weight1 + attempts1 - weight2 - attempts2;
             return result;
         }
 
