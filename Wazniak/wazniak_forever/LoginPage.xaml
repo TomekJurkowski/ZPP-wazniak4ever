@@ -53,17 +53,17 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="1" Margin="12,17,0,28">
-            <TextBlock 
-                Text="CLARIFIER" 
-                Margin="9,7,0,0" 
-                Style="{StaticResource PhoneTextTitle1Style}"
-                FontWeight="ExtraBold"
-                Foreground="{StaticResource PageNameColor}"
-                HorizontalAlignment="Left"/>
-            <TextBlock Text="STUDENTS' FIRST AID"
-                Margin="15,5,0,0"
+            <Image Width="Auto" 
+                Height="Auto"
+                Margin="15,15,70,15"
+                Source="/Assets/Logo_Czarek_white.png" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
+            <TextBlock Text="Sign in"
+                Margin="38,5,0,0"
+                FontSize="48"
                 Style="{StaticResource PhoneTextNormalStyle}"
-                Foreground="{StaticResource PageNameColor}"/>
+                Foreground="{StaticResource TileBackgroundColor}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
