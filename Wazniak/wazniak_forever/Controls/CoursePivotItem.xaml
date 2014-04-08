@@ -27,7 +27,8 @@
                      KeyUp="CourseSearch_KeyUp"
                      Grid.Column="0"
                      Foreground="{StaticResource PageNameColor}"
-                     Background="{StaticResource TextBoxColor}" SelectionBackground="{Binding Source={StaticResource MenuItemColor}}"/>
+                     Background="{StaticResource TextBoxColor}" 
+                     SelectionBackground="{Binding Source={StaticResource MenuItemColor}}"/>
             <Grid Grid.Column="1"
                      Width="50"
                      Height="50"

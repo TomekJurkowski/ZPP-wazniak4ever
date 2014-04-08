@@ -20,8 +20,14 @@
         <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
             <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="3">
             </controls:Exercise>
-            <TextBox Name="AnswerBox" Height="80" Width="360" VerticalAlignment="Center"></TextBox>
-            
+            <TextBox 
+                Name="AnswerBox" 
+                Height="80" 
+                Width="360" 
+                VerticalAlignment="Center"
+                Foreground="{StaticResource PageNameColor}"
+                Background="{StaticResource TextBoxColor}" 
+                SelectionBackground="{Binding Source={StaticResource MenuItemColor}}"/>
         </Grid>
     </ScrollViewer>
 
