@@ -184,7 +184,7 @@ namespace WazniakWebsite.Controllers
             {
                 ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
             }
-            Subject subject = db.Subjects.Find(id);
+            var subject = db.Subjects.Find(id);
             if (subject == null)
             {
                 return HttpNotFound();

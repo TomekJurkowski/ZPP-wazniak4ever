@@ -34,6 +34,7 @@ namespace WazniakWebsite.Controllers
             return View(mathematicaltask);
         }
 
+        // Private function responsible for filling the ViewBag with proper values.
         private void FillTheViewBag(string subjectName, int subjectId, string previousAns = Answer.NO_ANSWER)
         {
             ViewBag.SubjectName = subjectName;
@@ -57,12 +58,10 @@ namespace WazniakWebsite.Controllers
         }
 
         // POST: /MathematicalTask/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask, string subjectName, int subjectId,
-            string answerType, string valueAns, string textAns)
+        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
+            string subjectName, int subjectId, string answerType, string valueAns, string textAns)
         {
             try
             {
@@ -163,8 +162,6 @@ namespace WazniakWebsite.Controllers
         }
 
         // POST: /MathematicalTask/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask, int isAnswerChanged, string answerType,
