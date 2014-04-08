@@ -11,7 +11,7 @@ namespace WazniakWebsite.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "This page is yet to be updated. Stay tunned for fresh updates on the work progress!";
+            ViewBag.Message = "This page is yet to be updated. Stay tuned for fresh updates on the work progress!";
 
             return View();
         }

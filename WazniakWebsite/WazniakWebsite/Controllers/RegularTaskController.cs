@@ -167,10 +167,8 @@ namespace WazniakWebsite.Controllers
                             return View(regulartask);
                     }
 
-                    // Update subject time
                     var sub = db.Subjects.Find(regulartask.SubjectID);
-                    sub.UpdateLastUpdatedTime();
-                    db.Entry(sub).State = EntityState.Modified;
+                    UpdateSubjectTime(sub);
 
                     regulartask.CorrectAnswers = 0;
                     regulartask.Attempts = 0;
@@ -231,9 +229,7 @@ namespace WazniakWebsite.Controllers
                     // If it's not then we have an easy case to deal with
                     if (isAnswerChanged == 0)
                     {
-                        // Update subject time
-                        sub.UpdateLastUpdatedTime();
-                        db.Entry(sub).State = EntityState.Modified;
+                        UpdateSubjectTime(sub);
 
                         regulartask.CorrectAnswers = 0;
                         regulartask.Attempts = 0;
@@ -385,7 +381,7 @@ namespace WazniakWebsite.Controllers
                                     // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
                                     // Every invalid value will be interpreted as 'False'
                                     var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
-                                    var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = regulartask.ID }; ;
+                                    var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = regulartask.ID };
                                     db.MultiChoices.Add(multiChoice);
                                 }
                             }
@@ -412,9 +408,7 @@ namespace WazniakWebsite.Controllers
                             break;
                     }
 
-                    // Update subject time
-                    sub.UpdateLastUpdatedTime();
-                    db.Entry(sub).State = EntityState.Modified;
+                    UpdateSubjectTime(sub);
 
                     regulartask.CorrectAnswers = 0;
                     regulartask.Attempts = 0;
@@ -488,30 +482,12 @@ namespace WazniakWebsite.Controllers
 
             try
             {
-                // Update subject time
-                var sub = db.Subjects.Find(regulartask.SubjectID);
-                sub.UpdateLastUpdatedTime();
-                db.Entry(sub).State = EntityState.Modified;
-
-                if (regulartask.Answer.className() == Answer.SINGLE_CHOICE_ANSWER)
-                {
-                    var choices = db.SingleChoices.Where(choice => choice.SingleChoiceAnswerID == id).ToArray();
-                    for (var j = choices.Length - 1; j >= 0; --j)
-                    {
-                        db.SingleChoices.Remove(choices[j]);
-                    }
-                }
-                if (regulartask.Answer.className() == Answer.MULTIPLE_CHOICE_ANSWER)
-                {
-                    var choices = db.MultiChoices.Where(choice => choice.MultipleChoiceAnswerID == id).ToArray();
-                    for (var j = choices.Length - 1; j >= 0; --j)
-                    {
-                        db.MultiChoices.Remove(choices[j]);
-                    }
-                }
-
-                db.Answers.Remove(regulartask.Answer);
+                // Let's delete the Answer and then the RegularTask itself.
+                DeleteRegularTasksAnswer(regulartask, id);
                 db.RegularTasks.Remove(regulartask);
+
+                var sub = db.Subjects.Find(subjectId);
+                UpdateSubjectTime(sub);
 
                 db.SaveChanges();
             }
@@ -522,6 +498,40 @@ namespace WazniakWebsite.Controllers
             }
 
             return RedirectToAction("Details", "Subject", new { id = subjectId });
+        }
+
+        // Private function that gets a RegularTask instance and its id
+        // and deletes the Answer associated with that task. 
+        private void DeleteRegularTasksAnswer(RegularTask rt, int id)
+        {
+            // If the Answer is either SingleChoiceAnswer or MultipleChoiceAnswer we need to
+            // take care of choices linked with that Answer.
+            if (rt.Answer.className() == Answer.SINGLE_CHOICE_ANSWER)
+            {
+                var choices = db.SingleChoices.Where(choice => choice.SingleChoiceAnswerID == id).ToArray();
+                for (var j = choices.Length - 1; j >= 0; --j)
+                {
+                    db.SingleChoices.Remove(choices[j]);
+                }
+            }
+            if (rt.Answer.className() == Answer.MULTIPLE_CHOICE_ANSWER)
+            {
+                var choices = db.MultiChoices.Where(choice => choice.MultipleChoiceAnswerID == id).ToArray();
+                for (var j = choices.Length - 1; j >= 0; --j)
+                {
+                    db.MultiChoices.Remove(choices[j]);
+                }
+            }
+
+            db.Answers.Remove(rt.Answer);
+        }
+
+        // Private helper function, that updates given Subject's LastUpdatedTime attribute
+        // and changes its database state to 'Modified'.
+        private void UpdateSubjectTime(Subject s)
+        {
+            s.UpdateLastUpdatedTime();
+            db.Entry(s).State = EntityState.Modified;
         }
 
         protected override void Dispose(bool disposing)
