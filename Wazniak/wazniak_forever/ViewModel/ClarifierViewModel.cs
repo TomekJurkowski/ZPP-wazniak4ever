@@ -347,27 +347,32 @@ namespace wazniak_forever.ViewModel
                         var sChoices = new List<string>();
                         singleChoiceExerciseOptions.FindAll(option => option.TaskID == task.TaskID)
                             .ForEach(option => sChoices.Add(option.ChoiceString));
-                        var answer = sChoices[task.CorrectAnswer];
-                        solution = new SingleChoiceSolution(task.TaskID, sChoices, answer, null);
+                        if (sChoices.Count > 0)
+                        {
+                            var answer = sChoices[task.CorrectAnswer];
+                            solution = new SingleChoiceSolution(task.TaskID, sChoices, answer, null);
+                        }
                         break;
                 }
-
-                Solutions.Add(solution);
-
-                switch (task.TaskDiscriminator)
+                if (solution != null)
                 {
-                    case "RegularTask":
-                        var subject = OnlineMode ?
-                            AllCourses.First(course => course.ID == CurrentCourseID) :
-                            DownloadedCourses.First(course => course.ID == CurrentCourseID);
-                        var ex = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
-                            task.Title, task.Text1, 
-                            subject,
-                            solution);
-                        solution.Exercise = ex;
-                        Exercises.Add(ex);
-                        break;
-                }                      
+                    Solutions.Add(solution);
+
+                    switch (task.TaskDiscriminator)
+                    {
+                        case "RegularTask":
+                            var subject = OnlineMode ?
+                                AllCourses.First(course => course.ID == CurrentCourseID) :
+                                DownloadedCourses.First(course => course.ID == CurrentCourseID);
+                            var ex = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
+                                task.Title, task.Text1,
+                                subject,
+                                solution);
+                            solution.Exercise = ex;
+                            Exercises.Add(ex);
+                            break;
+                    }
+                }  
             }
 
             if (Exercises.Count == 0)
