@@ -251,180 +251,8 @@ namespace WazniakWebsite.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // First let's see if the answer for the task is being changed or not.
-                    // If it's not then we have an easy case to deal with
-                    if (isAnswerChanged == 0)
-                    {
-                        UpdateSubjectTime(sub);
-
-                        regulartask.CorrectAnswers = 0;
-                        regulartask.Attempts = 0;
-                        db.Entry(regulartask).State = EntityState.Modified;
-                        db.SaveChanges();
-                        return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });                        
-                    }
-
-                    // Variable holding answer that belongs to the task
-                    var ans = db.Answers.Find(regulartask.ID);
-
-                    // And now let's cope with the case when the answer is being changed as well as the task.
-                    switch (answerType)
-                    {
-                        case Answer.SINGLE_VALUE_ANSWER:
-                            if (String.IsNullOrEmpty(valueAns))
-                            {
-                                // In this case we want to reload the Edit page with the original RegularTask
-                                return ReloadPageWithStatement(db.RegularTasks.Find(regulartask.ID), answerType, sub.Name, sub.ID);
-                            }
-
-                            if (ans.className() == answerType)
-                            {
-                                // We don't have to create a completely new Answer, only update the current one
-                                ((SingleValueAnswer)ans).Value = valueAns;
-                                db.Entry(ans).State = EntityState.Modified;
-                            }
-                            else
-                            {
-                                // Delete previous answer and create new SingleValueAnswer
-                                removeOldChoices(ans.className(), regulartask.ID);
-                                db.Answers.Remove(ans);
-                                db.SaveChanges();
-
-                                var singleValueAnswer = new SingleValueAnswer(valueAns);
-                                db.SingleValueAnswers.Add(singleValueAnswer);
-                            }
-
-                            break;
-                        case Answer.TEXT_ANSWER:
-                            if (String.IsNullOrEmpty(textAns))
-                            {
-                                // In this case we want to reload the Edit page with the original RegularTask
-                                return ReloadPageWithStatement(db.RegularTasks.Find(regulartask.ID), answerType, sub.Name, sub.ID);
-                            }
-
-                            if (ans.className() == answerType)
-                            {
-                                // We don't have to create a completely new Answer, only update the current one
-                                ((TextAnswer)ans).Text = textAns;
-                                db.Entry(ans).State = EntityState.Modified;
-                            }
-                            else
-                            {
-                                // Delete previous answer and create new TextAnswer
-                                removeOldChoices(ans.className(), regulartask.ID);
-                                db.Answers.Remove(ans);
-                                db.SaveChanges();
-
-                                var textAnswer = new TextAnswer(textAns);
-                                db.TextAnswers.Add(textAnswer);      
-                            }
-
-                            break;
-                        case Answer.SINGLE_CHOICE_ANSWER:
-                            if (singleCorrectNo >= singleChoiceList.Length || singleCorrectNo < 0)
-                            {
-                                throw new RetryLimitExceededException("The number of the correct Choice for SingleChoiceAnswer is beyond valid range.");
-                            }
-
-                            // Case when we haven't got any valid Choices for the SingleChoiceAnswer or some choices are empty
-                            if (singleChoiceList.Length == 0 || singleChoiceList.Count(String.IsNullOrEmpty) != 0)
-                            {
-                                // In this case we want to reload the Edit page with the original RegularTask
-                                return ReloadPageWithStatement(db.RegularTasks.Find(regulartask.ID), answerType, sub.Name, sub.ID);
-                            }
-
-                            if (ans.className() == answerType)
-                            {
-                                // We don't have to create a completely new Answer, only update the current one
-                                ((SingleChoiceAnswer)ans).CorrectAnswer = singleCorrectNo;
-                                db.Entry(ans).State = EntityState.Modified;
-
-                                // Let's remove old choices ...
-                                removeOldChoices(ans.className(), regulartask.ID);
-
-                                // ... and add new ones
-                                foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s) { SingleChoiceAnswerID = regulartask.ID }))
-                                {
-                                    singleChoice.SingleChoiceAnswerID = regulartask.ID;
-                                    db.SingleChoices.Add(singleChoice);
-                                }
-                            }
-                            else
-                            {
-                                // Delete previous answer and create new SingleChoiceAnswer
-                                removeOldChoices(ans.className(), regulartask.ID);
-                                db.Answers.Remove(ans);
-                                db.SaveChanges();
-
-                                var singleChoiceAnswer = new SingleChoiceAnswer(singleCorrectNo) { TaskID = regulartask.ID };
-                                db.SingleChoiceAnswers.Add(singleChoiceAnswer);
-
-                                foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s) { SingleChoiceAnswerID = regulartask.ID }))
-                                {
-                                    db.SingleChoices.Add(singleChoice);
-                                }
-                            }
-
-                            break;
-                        case Answer.MULTIPLE_CHOICE_ANSWER:
-                            if (multiChoiceList.Length != multiAnswerList.Length)
-                            {
-                                throw new RetryLimitExceededException("The number of Options doesn't equal the number of true-false answers.");
-                            }
-
-                            // Case when we haven't got any valid Choices for the MultiChoiceAnswer
-                            if (multiChoiceList.Count(t => !String.IsNullOrEmpty(t)) == 0)
-                            {
-                                // In this case we want to reload the Edit page with the original RegularTask
-                                return ReloadPageWithStatement(db.RegularTasks.Find(regulartask.ID), answerType, sub.Name, sub.ID);
-                            }
-
-                            if (ans.className() == answerType)
-                            {
-                                // We don't have to create a completely new Answer, only update the current one
-                                // Let's remove old choices ...
-                                removeOldChoices(ans.className(), regulartask.ID);
-
-                                // ... and add new ones
-                                for (var i = 0; i < multiChoiceList.Length; i++)
-                                {
-                                    // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
-                                    // Every invalid value will be interpreted as 'False'
-                                    var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
-                                    var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = regulartask.ID };
-                                    db.MultiChoices.Add(multiChoice);
-                                }
-                            }
-                            else
-                            {
-                                // Delete previous answer and create new MultipleChoiceAnswer
-                                removeOldChoices(ans.className(), regulartask.ID);
-                                db.Answers.Remove(ans);
-                                db.SaveChanges();
-
-                                var multiChoiceAnswer = new MultipleChoiceAnswer { TaskID = regulartask.ID };
-                                db.MultipleChoiceAnswers.Add(multiChoiceAnswer);
-
-                                for (var i = 0; i < multiChoiceList.Length; i++)
-                                {
-                                    // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
-                                    // Every invalid value will be interpreted as 'False'
-                                    var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
-                                    var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = regulartask.ID };
-                                    db.MultiChoices.Add(multiChoice);
-                                }
-                            }
-
-                            break;
-                    }
-
-                    UpdateSubjectTime(sub);
-
-                    regulartask.CorrectAnswers = 0;
-                    regulartask.Attempts = 0;
-                    db.Entry(regulartask).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });
+                    return EditTaskInternal(regulartask, sub, isAnswerChanged, answerType, valueAns, textAns,
+                        multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -439,6 +267,190 @@ namespace WazniakWebsite.Controllers
 
             // In this case we want to reload the Edit page with the original RegularTask
             return View(db.RegularTasks.Find(regulartask.ID));
+        }
+
+        // Private function used by POST Edit method. It is the major part of that method,
+        // since it is responsible for the actual edition of an existing RegularTask (and its Answer).
+        // This function returns a proper ActionResult depending whether the action was successful 
+        // or failed at some point.
+        private ActionResult EditTaskInternal(RegularTask regulartask, Subject sub, int isAnswerChanged,
+            string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
+            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
+        {
+            // First let's see if the answer for the task is being changed or not.
+            // If it's not then we have an easy case to deal with.
+            if (isAnswerChanged == 0)
+            {
+                UpdateSubjectTime(sub);
+
+                regulartask.CorrectAnswers = 0;
+                regulartask.Attempts = 0;
+                db.Entry(regulartask).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });
+            }
+
+            // Variable holding answer that belongs to the task
+            var ans = db.Answers.Find(regulartask.ID);
+
+            // And now let's cope with the case when the answer is being changed as well as the task.
+            switch (answerType)
+            {
+                case Answer.SINGLE_VALUE_ANSWER:
+                    if (String.IsNullOrEmpty(valueAns))
+                    {
+                        // In this case we want to reload the Edit page with the original RegularTask
+                        return ReloadPageWithStatement(db.RegularTasks.Find(regulartask.ID), answerType, sub.Name, sub.ID);
+                    }
+
+                    if (ans.className() == answerType)
+                    {
+                        // We don't have to create a completely new Answer, only update the current one
+                        ((SingleValueAnswer)ans).Value = valueAns;
+                        db.Entry(ans).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        // Delete previous answer and create new SingleValueAnswer
+                        removeOldChoices(ans.className(), regulartask.ID);
+                        db.Answers.Remove(ans);
+                        db.SaveChanges();
+
+                        var singleValueAnswer = new SingleValueAnswer(valueAns);
+                        db.SingleValueAnswers.Add(singleValueAnswer);
+                    }
+
+                    break;
+                case Answer.TEXT_ANSWER:
+                    if (String.IsNullOrEmpty(textAns))
+                    {
+                        // In this case we want to reload the Edit page with the original RegularTask
+                        return ReloadPageWithStatement(db.RegularTasks.Find(regulartask.ID), answerType, sub.Name, sub.ID);
+                    }
+
+                    if (ans.className() == answerType)
+                    {
+                        // We don't have to create a completely new Answer, only update the current one
+                        ((TextAnswer)ans).Text = textAns;
+                        db.Entry(ans).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        // Delete previous answer and create new TextAnswer
+                        removeOldChoices(ans.className(), regulartask.ID);
+                        db.Answers.Remove(ans);
+                        db.SaveChanges();
+
+                        var textAnswer = new TextAnswer(textAns);
+                        db.TextAnswers.Add(textAnswer);
+                    }
+
+                    break;
+                case Answer.SINGLE_CHOICE_ANSWER:
+                    if (singleCorrectNo >= singleChoiceList.Count || singleCorrectNo < 0)
+                    {
+                        throw new RetryLimitExceededException("The number of the correct Choice for SingleChoiceAnswer is beyond valid range.");
+                    }
+
+                    // Case when we haven't got any valid Choices for the SingleChoiceAnswer or some choices are empty
+                    if (singleChoiceList.Count == 0 || singleChoiceList.Count(String.IsNullOrEmpty) != 0)
+                    {
+                        // In this case we want to reload the Edit page with the original RegularTask
+                        return ReloadPageWithStatement(db.RegularTasks.Find(regulartask.ID), answerType, sub.Name, sub.ID);
+                    }
+
+                    if (ans.className() == answerType)
+                    {
+                        // We don't have to create a completely new Answer, only update the current one
+                        ((SingleChoiceAnswer)ans).CorrectAnswer = singleCorrectNo;
+                        db.Entry(ans).State = EntityState.Modified;
+
+                        // Let's remove old choices ...
+                        removeOldChoices(ans.className(), regulartask.ID);
+
+                        // ... and add new ones
+                        foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s) { SingleChoiceAnswerID = regulartask.ID }))
+                        {
+                            singleChoice.SingleChoiceAnswerID = regulartask.ID;
+                            db.SingleChoices.Add(singleChoice);
+                        }
+                    }
+                    else
+                    {
+                        // Delete previous answer and create new SingleChoiceAnswer
+                        removeOldChoices(ans.className(), regulartask.ID);
+                        db.Answers.Remove(ans);
+                        db.SaveChanges();
+
+                        var singleChoiceAnswer = new SingleChoiceAnswer(singleCorrectNo) { TaskID = regulartask.ID };
+                        db.SingleChoiceAnswers.Add(singleChoiceAnswer);
+
+                        foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s) { SingleChoiceAnswerID = regulartask.ID }))
+                        {
+                            db.SingleChoices.Add(singleChoice);
+                        }
+                    }
+
+                    break;
+                case Answer.MULTIPLE_CHOICE_ANSWER:
+                    if (multiChoiceList.Count != multiAnswerList.Count)
+                    {
+                        throw new RetryLimitExceededException("The number of Options doesn't equal the number of true-false answers.");
+                    }
+
+                    // Case when we haven't got any valid Choices for the MultiChoiceAnswer
+                    if (multiChoiceList.Count(t => !String.IsNullOrEmpty(t)) == 0)
+                    {
+                        // In this case we want to reload the Edit page with the original RegularTask
+                        return ReloadPageWithStatement(db.RegularTasks.Find(regulartask.ID), answerType, sub.Name, sub.ID);
+                    }
+
+                    if (ans.className() == answerType)
+                    {
+                        // We don't have to create a completely new Answer, only update the current one
+                        // Let's remove old choices ...
+                        removeOldChoices(ans.className(), regulartask.ID);
+
+                        // ... and add new ones
+                        for (var i = 0; i < multiChoiceList.Count; i++)
+                        {
+                            // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                            // Every invalid value will be interpreted as 'False'
+                            var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
+                            var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = regulartask.ID };
+                            db.MultiChoices.Add(multiChoice);
+                        }
+                    }
+                    else
+                    {
+                        // Delete previous answer and create new MultipleChoiceAnswer
+                        removeOldChoices(ans.className(), regulartask.ID);
+                        db.Answers.Remove(ans);
+                        db.SaveChanges();
+
+                        var multiChoiceAnswer = new MultipleChoiceAnswer { TaskID = regulartask.ID };
+                        db.MultipleChoiceAnswers.Add(multiChoiceAnswer);
+
+                        for (var i = 0; i < multiChoiceList.Count; i++)
+                        {
+                            // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                            // Every invalid value will be interpreted as 'False'
+                            var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
+                            var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = regulartask.ID };
+                            db.MultiChoices.Add(multiChoice);
+                        }
+                    }
+
+                    break;
+            }
+
+            UpdateSubjectTime(sub);
+
+            regulartask.CorrectAnswers = 0;
+            regulartask.Attempts = 0;
+            db.Entry(regulartask).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });
         }
 
         private void removeOldChoices(string answerType, int id)
@@ -493,7 +505,7 @@ namespace WazniakWebsite.Controllers
             try
             {
                 // Let's delete the Answer and then the RegularTask itself.
-                DeleteRegularTasksAnswer(regulartask, id);
+                DeleteRegularTasksAnswer(id);
                 db.RegularTasks.Remove(regulartask);
 
                 UpdateSubjectTime(db.Subjects.Find(subjectId));
@@ -509,10 +521,12 @@ namespace WazniakWebsite.Controllers
             return RedirectToAction("Details", "Subject", new { id = subjectId });
         }
 
-        // Private function that gets a RegularTask instance and its id
-        // and deletes the Answer associated with that task. 
-        private void DeleteRegularTasksAnswer(RegularTask rt, int id)
+        // Private function that gets an id of a RegularTask and deletes the Answer
+        // associated with that task. 
+        private void DeleteRegularTasksAnswer(int id)
         {
+            var rt = db.RegularTasks.Find(id);
+            
             // If the Answer is either SingleChoiceAnswer or MultipleChoiceAnswer we need to
             // take care of choices linked with that Answer.
             if (rt.Answer.className() == Answer.SINGLE_CHOICE_ANSWER)
