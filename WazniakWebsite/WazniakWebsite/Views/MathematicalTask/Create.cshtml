@@ -15,19 +15,101 @@
 {
     <style>
          #Text, #MathBuffer, #MathPreview, #textOutTitle, #textInTitle {
-        width: 100%;
+            width: 100%;
              padding-left: 5px;
              padding-right: 5px;
          }
+
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
 
         #Text {
             background-color: #F7F5FA;
             max-width: 100% !important;
             width: 100% !important;
         }
+
+        div[id^="multiRow_"], div[id^="singleRow_"] {
+            margin-bottom: 15px;
+        }
     </style>
     
     <script type="text/javascript">
+
+        // variable and 2 functions responsible for adding/removing rows for SingleChoiceAnswer
+        var rowNumForSingle = 3;
+        function addRowForSingle() {
+            var row = '<div class="row" id="singleRow_' + rowNumForSingle + '"><div class="col-md-5">' +
+                '<input class="form-control" type="text" name="singleChoiceList" /></div><div class="col-md-3">' +
+                '<input type="radio" id="singleAnsRadio_' + rowNumForSingle + '"  name="singleRadios" onclick="singleRadioOnClick(' + rowNumForSingle + ')" />' +
+                '<label class="PurpleText" id="singleAnsLabel_' + rowNumForSingle + '"></label>' +
+                '</div><div class="col-md-1">' +
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRowForSingle(' + rowNumForSingle + ')"></span>' +
+                '</div></div>';
+
+            jQuery('#singleContainer').append(row);
+            rowNumForSingle++;
+        }
+
+        function removeRowForSingle(id) {
+            if ($("#singleAnsRadio_" + id).is(':checked')) {
+                $("#singleAnsRadio_0").prop("checked", true);
+                singleRadioOnClick(0);
+            }
+
+            jQuery('#singleRow_' + id).remove();
+
+            // Let's update the actual number of the option that is selected
+            $("[name='singleCorrectNo']").val(
+                $("[id^='singleAnsRadio_']").index($("input[id^='singleAnsRadio_']:checked"))
+            );
+        }
+
+        // variable and 2 functions responsible for adding/removing rows for MultipleChoiceAnswer
+        var rowNumForMultiple = 3;
+        function addRowForMultiple() {
+            var row = '<div class="row" id="multiRow_' + rowNumForMultiple + '"><div class="col-md-5">' +
+                '<input class="form-control" type="text" name="multiChoiceList" /></div><div class="col-md-3">' +
+                '<input type="checkbox" id="multiAnsCheckbox_' + rowNumForMultiple + '" onclick="multiCheckboxOnClick(' + rowNumForMultiple + ')" />' +
+                '<input type="text" name="multiAnswerList" id="multiAnsHiddenInput_' + rowNumForMultiple + '" value="False" hidden="" />' +
+                '<label class="PurpleText" id="multiAnsLabel_' + rowNumForMultiple + '">False</label>' +
+                '</div><div class="col-md-1">' +
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRowForMultiple(' + rowNumForMultiple + ')"></span>' +
+                '</div></div>';
+
+            jQuery('#multiContainer').append(row);
+            rowNumForMultiple++;
+        }
+
+        function removeRowForMultiple(id) {
+            jQuery('#multiRow_' + id).remove();
+        }
+
+        function singleRadioOnClick(id) {
+            $("[id^='singleAnsLabel_']").empty();
+            $("#singleAnsLabel_" + id).append("Correct");
+
+            // The code below will update the actual number of the option that is selected
+            $("[name='singleCorrectNo']").val(
+                $("[id^='singleAnsRadio_']").index($("#singleAnsRadio_" + id))
+            );
+        }
+
+        function multiCheckboxOnClick(id) {
+            if ($("#multiAnsCheckbox_" + id).is(':checked')) {
+                $("#multiAnsLabel_" + id).empty();
+                $("#multiAnsLabel_" + id).append("True");
+                $("#multiAnsHiddenInput_" + id).val("True");
+            } else {
+                $("#multiAnsLabel_" + id).empty();
+                $("#multiAnsLabel_" + id).append("False");
+                $("#multiAnsHiddenInput_" + id).val("False");
+            }
+        }
 
         function selectPreviousAnswer() {
             switch ("@ViewBag.PreviouslySelectedAnswer") {
@@ -52,7 +134,7 @@
 
         $(function () {
             $("#SubjectID").val("@ViewBag.SubjectId");
-            
+
             selectPreviousAnswer();
 
             $("#answerTypeInput").hide();
@@ -85,15 +167,18 @@
                 animated: 'fade',
                 placement: 'bottom'
             });
+
+            $("#singleAnsRadio_0").prop("checked", true);
+            singleRadioOnClick(0);
         });
-        
-        function goToByScroll() {
-            // Scroll
-            $("html,body").animate(
-                { scrollTop: $("#pill_content").offset().top },
-                'slow');
-        }
-        
+
+            function goToByScroll() {
+                // Scroll
+                $("html,body").animate(
+                    { scrollTop: $("#pill_content").offset().top },
+                    'slow');
+            }
+
     </script>
 
     <script type="text/javascript">
@@ -210,13 +295,13 @@
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4 class="PurpleText">Create exercise containing mathematical expressions and add it to the <b><i>@ViewBag.SubjectName</i></b> subject.</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.SubjectID)
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
             <div class="col-md-10">
@@ -224,8 +309,8 @@
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
         </div>
-        
-        <br/>
+
+        <br />
         <h5 id="description" class=" col-md-10 col-md-offset-2 PurpleText">
             <b>
                 Type in the content of the exercise to the text input. If you want to insert a mathematical expression
@@ -234,7 +319,7 @@
                 displayed in the box bellow.
             </b>
         </h5>
-        
+
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
             <div class="col-md-10">
@@ -247,67 +332,132 @@
             <label class="control-label col-md-2 PurpleText" for="Text">Preview</label>
             <div class="col-md-10">
                 <div id="MathPreview" class="well-lg alert lightPurpleBackground"></div>
-                <div id="MathBuffer" class="well-lg alert lightPurpleBackground" style="visibility:hidden; position:absolute; top:0; left: 0"></div>   
+                <div id="MathBuffer" class="well-lg alert lightPurpleBackground" style="visibility:hidden; position:absolute; top:0; left: 0"></div>
             </div>
         </div>
-        
+
         <br />
         <h4 class="PurpleText">What kind of Answer do you want for this Exercise?</h4>
         <br />
-        
-        <ul class="nav nav-pills">
-            <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
-            <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
-            <li><a href="#AbcdAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
-            <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
-        </ul>
 
-        <br />
-
-        <div class="pill-content" id="pill_content">
-
-            <input id="answerTypeInput" type="text" name="answerType" value="@ViewBag.NoAnswer" />
-            <input id="subjectNameInput" type="text" name="subjectName" value="@ViewBag.SubjectName" />
-            <input id="subjectIdInput" type="number" name="subjectId" value="@ViewBag.SubjectId" />
-
-            <div class=" pill-pane fade" id="SingleValueAnswer_pill">
-                <div class="well">
-                    <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
-                </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-md-10">
+                <ul class="nav nav-pills">
+                    <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
+                    <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
+                    <li><a href="#SingleChoiceAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+                    <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
+                </ul>
 
                 <br />
 
-                <input class="form-control" id="valueInput" type="text" name="valueAns" />
-                <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
-            </div>
+                <div class="pill-content" id="pill_content">
 
-            <div class="pill-pane fade" id="TextAnswer_pill">
-                <div class="well">
-                    <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+                    <input id="answerTypeInput" type="text" name="answerType" value="@ViewBag.NoAnswer" />
+                    <input id="subjectNameInput" type="text" name="subjectName" value="@ViewBag.SubjectName" />
+                    <input id="subjectIdInput" type="number" name="subjectId" value="@ViewBag.SubjectId" />
+
+                    <div class=" pill-pane fade" id="SingleValueAnswer_pill">
+                        <div class="well">
+                            <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
+                        </div>
+
+                        <br />
+
+                        <input class="form-control" id="valueInput" type="text" name="valueAns" />
+                        <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
+                    </div>
+
+                    <div class="pill-pane fade" id="TextAnswer_pill">
+                        <div class="well">
+                            <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+                        </div>
+
+                        <br />
+
+                        <textarea class="form-control" id="textInput" name="textAns" rows="8"></textarea>
+                        <span class="field-validation-error">@ViewBag.TextStatement</span>
+                    </div>
+
+                    <div class="pill-pane fade" id="SingleChoiceAnswer_pill">
+                        <div class="well">
+                            <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
+                        </div>
+
+                        <br />
+
+                        <div class="container" id="singleContainer">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h5 class="PurpleText">Type the options below</h5>
+                                </div>
+                                <div class="col-md-3">
+                                    <h5 class="PurpleText">Select the correct one</h5>
+                                </div>
+                                <div class="col-md-offset-1 col-md-2">
+                                    <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRowForSingle()" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <input type="number" name="singleCorrectNo" hidden="" />
+
+                            @for (var i = 0; i < 3; i++)
+                            {
+                                <div class="row" id="singleRow_@(i)">
+                                    <div class="col-md-5">
+                                        <input class="form-control" type="text" name="singleChoiceList" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="radio" id="singleAnsRadio_@(i)" name="singleRadios" onclick="singleRadioOnClick(@i)" />
+                                        <label class="PurpleText" id="singleAnsLabel_@(i)"></label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="field-validation-error">@ViewBag.SingleChoiceStatement</span>
+                    </div>
+
+                    <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
+                        <div class="well">
+                            <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
+                        </div>
+
+                        <br />
+
+                        <div class="container" id="multiContainer">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h5 class="PurpleText">Type the options below</h5>
+                                </div>
+                                <div class="col-md-3">
+                                    <h5 class="PurpleText">Select the ones which are true</h5>
+                                </div>
+                                <div class="col-md-offset-1 col-md-2">
+                                    <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRowForMultiple()" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            @for (var i = 0; i < 3; i++)
+                            {
+                                <div class="row" id="multiRow_@(i)">
+                                    <div class="col-md-5">
+                                        <input class="form-control" type="text" name="multiChoiceList" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="checkbox" id="multiAnsCheckbox_@(i)" onclick="multiCheckboxOnClick(@i)" />
+                                        <input type="text" name="multiAnswerList" id="multiAnsHiddenInput_@(i)" value="False" hidden="" />
+                                        <label class="PurpleText" id="multiAnsLabel_@(i)">False</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="field-validation-error">@ViewBag.MultiChoiceStatement</span>
+                    </div>
                 </div>
-
-                <br />
-
-                <textarea class="form-control" id="textInput" name="textAns" rows="8"></textarea>
-                <span class="field-validation-error">@ViewBag.TextStatement</span>
-            </div>
-
-            <div class="pill-pane fade" id="AbcdAnswer_pill">
-                <div class="well">
-                    <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
-                </div>
-
-                <br />
-
-            </div>
-
-            <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
-                <div class="well">
-                    <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
-                </div>
-
-                <br />
-
             </div>
         </div>
 
@@ -316,16 +466,15 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn PurpleBtn" />
+                <span class="field-validation-error">@ViewBag.NoAnswerPickedStatement</span>
             </div>
         </div>
     </div>
-    
-    <script>
-        Preview.Init();
-    </script>
-}
 
-<hr />
+<script>
+    Preview.Init();
+</script>
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

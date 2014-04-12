@@ -114,18 +114,18 @@
                 $(this).tab('show');
             
                 switch ($(this).attr('id')) {
-                case "tooltip1":
-                    $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
-                    break;
-                case "tooltip2":
-                    $("#answerTypeInput").val("@ViewBag.TextAnswer");
-                    break;
-                case "tooltip3":
-                    $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
-                    break;
-                case "tooltip4":
-                    $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
-                    break;
+                    case "tooltip1":
+                        $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                        break;
+                    case "tooltip2":
+                        $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                        break;
+                    case "tooltip3":
+                        $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                        break;
+                    case "tooltip4":
+                        $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                        break;
                 }
 
                 goToByScroll();

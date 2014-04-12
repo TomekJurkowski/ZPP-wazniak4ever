@@ -241,8 +241,9 @@ namespace WazniakWebsite.Controllers
         // POST: /MathematicalTask/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask, int isAnswerChanged, string answerType,
-            string valueAns, string textAns)
+        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
+            int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
+            string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
             var sub = db.Subjects.Find(mathematicaltask.SubjectID);
 
@@ -250,122 +251,8 @@ namespace WazniakWebsite.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // First let's see if the answer for the task is being changed or not.
-                    // If it's not then we have an easy case to deal with
-                    if (isAnswerChanged == 0)
-                    {
-                        // Update subject time
-                        sub.UpdateLastUpdatedTime();
-                        db.Entry(sub).State = EntityState.Modified;
-
-                        mathematicaltask.CorrectAnswers = 0;
-                        mathematicaltask.Attempts = 0;
-                        db.Entry(mathematicaltask).State = EntityState.Modified;
-                        db.SaveChanges();
-                        return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
-                    }
-
-                    // Variable holding answer that belongs to the task
-                    var ans = db.Answers.Find(mathematicaltask.ID);
-
-                    // And now let's cope with the case when the answer is being changed as well as the task.
-                    switch (answerType)
-                    {
-                        case Answer.SINGLE_VALUE_ANSWER:
-                            if (String.IsNullOrEmpty(valueAns))
-                            {
-                                // Reload page with proper statement
-                                ViewBag.SingleValueStatement = SINGLE_VALUE_STATEMENT;
-                                @ViewBag.ReloadPage = 1;
-                                FillTheViewBag(sub.Name, sub.ID, Answer.SINGLE_VALUE_ANSWER);
-
-                                // In this case we want to reload the Edit page with the original MathematicalTask
-                                return View(db.MathematicalTasks.Find(mathematicaltask.ID));
-                            }
-
-                            if (ans.className() == answerType)
-                            {
-                                // We don't have to create a completely new Answer, only update the current one
-                                ((SingleValueAnswer)ans).Value = valueAns;
-                                db.Entry(ans).State = EntityState.Modified;
-                            }
-                            else
-                            {
-                                // Delete previous answer and create new SingleValueAnswer
-                                db.Answers.Remove(ans);
-                                db.SaveChanges();
-
-                                var singleValueAnswer = new SingleValueAnswer(valueAns);
-                                db.SingleValueAnswers.Add(singleValueAnswer);
-                            }
-
-                            break;
-                        case Answer.TEXT_ANSWER:
-                            if (String.IsNullOrEmpty(textAns))
-                            {
-                                // Reload page with proper statement
-                                ViewBag.TextStatement = TEXT_STATEMENT;
-                                @ViewBag.ReloadPage = 1;
-                                FillTheViewBag(sub.Name, sub.ID, Answer.TEXT_ANSWER);
-
-                                // In this case we want to reload the Edit page with the original MathematicalTask
-                                return View(db.MathematicalTasks.Find(mathematicaltask.ID));
-                            }
-
-                            if (ans.className() == answerType)
-                            {
-                                // We don't have to create a completely new Answer, only update the current one
-                                ((TextAnswer)ans).Text = textAns;
-                                db.Entry(ans).State = EntityState.Modified;
-                            }
-                            else
-                            {
-                                // Delete previous answer and create new TextAnswer
-                                db.Answers.Remove(ans);
-                                db.SaveChanges();
-
-                                var textAnswer = new TextAnswer(textAns);
-                                db.TextAnswers.Add(textAnswer);
-                            }
-
-                            break;
-                        case Answer.SINGLE_CHOICE_ANSWER:
-
-                            if (mathematicaltask.Answer.className() == answerType)
-                            {
-                                // We don't have to create a completely new Answer, only update the current one
-
-                            }
-                            else
-                            {
-
-                            }
-
-                            break;
-                        case Answer.MULTIPLE_CHOICE_ANSWER:
-
-                            if (mathematicaltask.Answer.className() == answerType)
-                            {
-                                // We don't have to create a completely new Answer, only update the current one
-
-                            }
-                            else
-                            {
-
-                            }
-
-                            break;
-                    }
-
-                    // Update subject time
-                    sub.UpdateLastUpdatedTime();
-                    db.Entry(sub).State = EntityState.Modified;
-
-                    mathematicaltask.CorrectAnswers = 0;
-                    mathematicaltask.Attempts = 0;
-                    db.Entry(mathematicaltask).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
+                    return EditTaskInternal(mathematicaltask, sub, isAnswerChanged, answerType, valueAns,
+                        textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -374,7 +261,225 @@ namespace WazniakWebsite.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
+            // Edit view does not really require the first two arguments to be passed into ViewBag,
+            // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
+            FillTheViewBag(sub.Name, sub.ID, db.Answers.Find(mathematicaltask.ID).className());
+
+            // In this case we want to reload the Edit page with the original MathematicalTask
             return View(mathematicaltask);
+        }
+
+        // Private function used by POST Edit method. It is the major part of that method,
+        // since it is responsible for the actual edition of an existing MathematicalTask (and its Answer).
+        // This function returns a proper ActionResult depending whether the action was successful 
+        // or failed at some point.
+        private ActionResult EditTaskInternal(MathematicalTask mathematicaltask, Subject sub, int isAnswerChanged,
+            string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
+            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
+        {
+            // First let's see if the answer for the task is being changed or not.
+            // If it's not then we have an easy case to deal with.
+            if (isAnswerChanged == 0)
+            {
+                UpdateSubjectTime(sub);
+
+                mathematicaltask.CorrectAnswers = 0;
+                mathematicaltask.Attempts = 0;
+                db.Entry(mathematicaltask).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
+            }
+
+            // Variable holding answer that belongs to the task
+            var ans = db.Answers.Find(mathematicaltask.ID);
+
+            // And now let's cope with the case when the answer is being changed as well as the task.
+            switch (answerType)
+            {
+                case Answer.SINGLE_VALUE_ANSWER:
+                    if (String.IsNullOrEmpty(valueAns))
+                    {
+                        // In this case we want to reload the Edit page with the original MathematicalTask
+                        return ReloadPageWithStatement(db.MathematicalTasks.Find(mathematicaltask.ID), answerType, sub.Name, sub.ID);
+                    }
+
+                    if (ans.className() == answerType)
+                    {
+                        // We don't have to create a completely new Answer, only update the current one
+                        ((SingleValueAnswer)ans).Value = valueAns;
+                        db.Entry(ans).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        // Delete previous answer and create new SingleValueAnswer
+                        removeOldChoices(ans.className(), mathematicaltask.ID);
+                        db.Answers.Remove(ans);
+                        db.SaveChanges();
+
+                        var singleValueAnswer = new SingleValueAnswer(valueAns);
+                        db.SingleValueAnswers.Add(singleValueAnswer);
+                    }
+
+                    break;
+                case Answer.TEXT_ANSWER:
+                    if (String.IsNullOrEmpty(textAns))
+                    {
+                        // In this case we want to reload the Edit page with the original MathematicalTask
+                        return ReloadPageWithStatement(db.MathematicalTasks.Find(mathematicaltask.ID), answerType, sub.Name, sub.ID);
+                    }
+
+                    if (ans.className() == answerType)
+                    {
+                        // We don't have to create a completely new Answer, only update the current one
+                        ((TextAnswer)ans).Text = textAns;
+                        db.Entry(ans).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        // Delete previous answer and create new TextAnswer
+                        removeOldChoices(ans.className(), mathematicaltask.ID);
+                        db.Answers.Remove(ans);
+                        db.SaveChanges();
+
+                        var textAnswer = new TextAnswer(textAns);
+                        db.TextAnswers.Add(textAnswer);
+                    }
+
+                    break;
+                case Answer.SINGLE_CHOICE_ANSWER:
+                    if (singleCorrectNo >= singleChoiceList.Count || singleCorrectNo < 0)
+                    {
+                        throw new RetryLimitExceededException("The number of the correct Choice for SingleChoiceAnswer is beyond valid range.");
+                    }
+
+                    // Case when we haven't got any valid Choices for the SingleChoiceAnswer or some choices are empty
+                    if (singleChoiceList.Count == 0 || singleChoiceList.Count(String.IsNullOrEmpty) != 0)
+                    {
+                        // In this case we want to reload the Edit page with the original MathematicalTask
+                        return ReloadPageWithStatement(db.MathematicalTasks.Find(mathematicaltask.ID), answerType, sub.Name, sub.ID);
+                    }
+
+                    if (ans.className() == answerType)
+                    {
+                        // We don't have to create a completely new Answer, only update the current one
+                        ((SingleChoiceAnswer)ans).CorrectAnswer = singleCorrectNo;
+                        db.Entry(ans).State = EntityState.Modified;
+
+                        // Let's remove old choices ...
+                        removeOldChoices(ans.className(), mathematicaltask.ID);
+
+                        // ... and add new ones
+                        foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s) { SingleChoiceAnswerID = mathematicaltask.ID }))
+                        {
+                            singleChoice.SingleChoiceAnswerID = mathematicaltask.ID;
+                            db.SingleChoices.Add(singleChoice);
+                        }
+                    }
+                    else
+                    {
+                        // Delete previous answer and create new SingleChoiceAnswer
+                        removeOldChoices(ans.className(), mathematicaltask.ID);
+                        db.Answers.Remove(ans);
+                        db.SaveChanges();
+
+                        var singleChoiceAnswer = new SingleChoiceAnswer(singleCorrectNo) { TaskID = mathematicaltask.ID };
+                        db.SingleChoiceAnswers.Add(singleChoiceAnswer);
+
+                        foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s) { SingleChoiceAnswerID = mathematicaltask.ID }))
+                        {
+                            db.SingleChoices.Add(singleChoice);
+                        }
+                    }
+
+                    break;
+                case Answer.MULTIPLE_CHOICE_ANSWER:
+                    if (multiChoiceList.Count != multiAnswerList.Count)
+                    {
+                        throw new RetryLimitExceededException("The number of Options doesn't equal the number of true-false answers.");
+                    }
+
+                    // Case when we haven't got any valid Choices for the MultiChoiceAnswer
+                    if (multiChoiceList.Count(t => !String.IsNullOrEmpty(t)) == 0)
+                    {
+                        // In this case we want to reload the Edit page with the original MathematicalTask
+                        return ReloadPageWithStatement(db.MathematicalTasks.Find(mathematicaltask.ID), answerType, sub.Name, sub.ID);
+                    }
+
+                    if (ans.className() == answerType)
+                    {
+                        // We don't have to create a completely new Answer, only update the current one
+                        // Let's remove old choices ...
+                        removeOldChoices(ans.className(), mathematicaltask.ID);
+
+                        // ... and add new ones
+                        for (var i = 0; i < multiChoiceList.Count; i++)
+                        {
+                            // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                            // Every invalid value will be interpreted as 'False'
+                            var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
+                            var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = mathematicaltask.ID };
+                            db.MultiChoices.Add(multiChoice);
+                        }
+                    }
+                    else
+                    {
+                        // Delete previous answer and create new MultipleChoiceAnswer
+                        removeOldChoices(ans.className(), mathematicaltask.ID);
+                        db.Answers.Remove(ans);
+                        db.SaveChanges();
+
+                        var multiChoiceAnswer = new MultipleChoiceAnswer { TaskID = mathematicaltask.ID };
+                        db.MultipleChoiceAnswers.Add(multiChoiceAnswer);
+
+                        for (var i = 0; i < multiChoiceList.Count; i++)
+                        {
+                            // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                            // Every invalid value will be interpreted as 'False'
+                            var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
+                            var multiChoice = new MultiChoice(multiChoiceList[i], tempAns) { MultipleChoiceAnswerID = mathematicaltask.ID };
+                            db.MultiChoices.Add(multiChoice);
+                        }
+                    }
+
+                    break;
+            }
+
+            UpdateSubjectTime(sub);
+
+            mathematicaltask.CorrectAnswers = 0;
+            mathematicaltask.Attempts = 0;
+            db.Entry(mathematicaltask).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
+        }
+
+        // Private function that checks whether the value of answerType argument
+        // is one of the following: SINGLE_CHOICE_ANSWER or MULTIPLE_CHOICE_ANSWER.
+        // If it is, the function removes from database all choices associated with
+        // Answer instance with ID attribute == id.
+        private void removeOldChoices(string answerType, int id)
+        {
+            switch (answerType)
+            {
+                case Answer.SINGLE_CHOICE_ANSWER:
+                    var previousSingleChoices =
+                        db.SingleChoices.Where(s => s.SingleChoiceAnswerID == id).ToArray();
+                    for (var j = previousSingleChoices.Length - 1; j >= 0; --j)
+                    {
+                        db.SingleChoices.Remove(previousSingleChoices[j]);
+                    }
+
+                    break;
+                case Answer.MULTIPLE_CHOICE_ANSWER:
+                    var previousMultiChoices =
+                        db.MultiChoices.Where(s => s.MultipleChoiceAnswerID == id).ToArray();
+                    for (var j = previousMultiChoices.Length - 1; j >= 0; --j)
+                    {
+                        db.MultiChoices.Remove(previousMultiChoices[j]);
+                    }
+
+                    break;
+            }
         }
 
         // GET: /MathematicalTask/Delete/5
@@ -403,23 +508,34 @@ namespace WazniakWebsite.Controllers
 
             try
             {
-                // Update subject time
-                var sub = db.Subjects.Find(mathematicaltask.SubjectID);
-                sub.UpdateLastUpdatedTime();
-                db.Entry(sub).State = EntityState.Modified;
-
-                db.Answers.Remove(mathematicaltask.Answer);
+                // Let's delete the Answer and then the MathematicalTask itself.
+                DeleteMathematicalTasksAnswer(id);
                 db.MathematicalTasks.Remove(mathematicaltask);
+
+                UpdateSubjectTime(db.Subjects.Find(subjectId));
 
                 db.SaveChanges();
             }
             catch (RetryLimitExceededException /* dex */)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
+                // Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
             return RedirectToAction("Details", "Subject", new { id = subjectId });
+        }
+
+        // Private function that gets an id of a RegularTask and deletes the Answer
+        // associated with that task. 
+        private void DeleteMathematicalTasksAnswer(int id)
+        {
+            var rt = db.MathematicalTasks.Find(id);
+
+            // If the Answer is either SingleChoiceAnswer or MultipleChoiceAnswer we need to
+            // take care of choices linked with that Answer.
+            removeOldChoices(rt.Answer.className(), id);
+
+            db.Answers.Remove(rt.Answer);
         }
 
         // Private helper function, that updates given Subject's LastUpdatedTime attribute

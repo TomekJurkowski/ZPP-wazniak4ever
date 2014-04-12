@@ -453,6 +453,10 @@ namespace WazniakWebsite.Controllers
             return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });
         }
 
+        // Private function that checks whether the value of answerType argument
+        // is one of the following: SINGLE_CHOICE_ANSWER or MULTIPLE_CHOICE_ANSWER.
+        // If it is, the function removes from database all choices associated with
+        // Answer instance with ID attribute == id.
         private void removeOldChoices(string answerType, int id)
         {
             switch (answerType)
@@ -514,7 +518,7 @@ namespace WazniakWebsite.Controllers
             }
             catch (RetryLimitExceededException /* dex */)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
+                // Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
@@ -529,22 +533,7 @@ namespace WazniakWebsite.Controllers
             
             // If the Answer is either SingleChoiceAnswer or MultipleChoiceAnswer we need to
             // take care of choices linked with that Answer.
-            if (rt.Answer.className() == Answer.SINGLE_CHOICE_ANSWER)
-            {
-                var choices = db.SingleChoices.Where(choice => choice.SingleChoiceAnswerID == id).ToArray();
-                for (var j = choices.Length - 1; j >= 0; --j)
-                {
-                    db.SingleChoices.Remove(choices[j]);
-                }
-            }
-            if (rt.Answer.className() == Answer.MULTIPLE_CHOICE_ANSWER)
-            {
-                var choices = db.MultiChoices.Where(choice => choice.MultipleChoiceAnswerID == id).ToArray();
-                for (var j = choices.Length - 1; j >= 0; --j)
-                {
-                    db.MultiChoices.Remove(choices[j]);
-                }
-            }
+            removeOldChoices(rt.Answer.className(), id);
 
             db.Answers.Remove(rt.Answer);
         }

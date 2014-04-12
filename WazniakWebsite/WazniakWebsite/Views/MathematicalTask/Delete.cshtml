@@ -6,6 +6,16 @@
 
 @section HeadScripts
 {
+    <style>
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+            font-size: 125%;
+        }
+    </style>
+
     <script type="text/javascript">
         $(function () {
             $("#tooltipDelete").tooltip({
@@ -53,9 +63,7 @@
     <div class="form-group">
         <label class="myLabel control-label col-md-2 PurpleText">Exercise Solution</label>
         <div class="col-md-10">
-            <div class="alert lightPurpleBackground">
-                @Model.Answer.ToString()
-            </div>
+            <textarea class="alert lightPurpleBackground" rows="6" disabled="">@Model.Answer.ToString()</textarea>
         </div>
     </div>
 
