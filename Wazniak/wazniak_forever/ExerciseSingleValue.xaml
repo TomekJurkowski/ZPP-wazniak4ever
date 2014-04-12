@@ -23,6 +23,7 @@
             Name="AnswerBox" 
             Height="80" 
             Width="360" 
+            FontSize="30"
             VerticalAlignment="Center"
             Foreground="{StaticResource PageNameColor}"
             Background="{StaticResource TextBoxColor}" 

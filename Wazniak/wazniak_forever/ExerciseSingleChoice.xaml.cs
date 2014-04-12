@@ -57,7 +57,7 @@ namespace wazniak_forever
                 SingleChoiceViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
                 RadioButton radioButton1 = new RadioButton();
                 radioButton1.Content = s;
-                radioButton1.FontSize = 20;
+                radioButton1.FontSize = 25;
                 radioButton1.GroupName = "SingleChoices";
                 radioButton1.Foreground = Application.Current.Resources["MenuItemColor"] as System.Windows.Media.Brush;
                 radioButton1.Checked += RadioButton_Checked;

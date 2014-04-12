@@ -41,6 +41,7 @@
                     <TextBlock Name="CourseName"
                                     Margin="9,-7,0,0"
                                     TextWrapping="Wrap"
+                                    FontSize="60"
                                     Style="{StaticResource PhoneTextTitle1Style}"
                                     Foreground="{StaticResource PageNameColor}"/>
                 </StackPanel>
@@ -48,14 +49,14 @@
                 <TextBlock x:Name="TimerTextBlock"
                             Text="{Binding CurrentTime,
                                     Converter={StaticResource TimeToStringConverter}}"
-                            FontSize="30"
+                            FontSize="40"
                             Margin="30,10,10,10"
                             Grid.Row="1"
                             Visibility="Collapsed"/>
 
                 <TextBlock x:Name="QuestionContent" 
                                 Text="{Binding CurrentExercise.Question}"
-                                FontSize="25"
+                                FontSize="30"
                                 Margin="30,30,30,30"
                                 Foreground="{StaticResource MenuItemColor}"
                                 TextWrapping="Wrap"
@@ -63,7 +64,7 @@
 
                 <TextBlock x:Name="StatisticTitle" 
                                 Text="Results"
-                                FontSize="35"
+                                FontSize="40"
                                 Margin="30,30,30,30"
                                 Foreground="{StaticResource MenuItemColor}"
                                 Grid.Row="2"
@@ -71,7 +72,7 @@
 
 
                 <TextBlock x:Name="StatisticContent" 
-                                FontSize="25"
+                                FontSize="30"
                                 Grid.Row="3"
                                 Margin="30,30,30,30"
                                 TextWrapping="Wrap"
@@ -80,7 +81,7 @@
 
                 <StackPanel x:Name="ExplanationPanel"
                                 Grid.Row="3"
-                                Margin="15,10,15,10"
+                                Margin="30,10,30,10"
                                 Visibility="Collapsed">
                     <TextBlock x:Name="ExplanationHeader"
                                     FontSize="30"
@@ -112,7 +113,7 @@
                     x:Name="SubmitAnswer"
                     Height="100"
                     Width="200"
-                    Foreground="{StaticResource MenuItemColor}"
+                    Foreground="{StaticResource PageNameColor}"
                     HorizontalAlignment="Left">Submit</Button>
 
                 <MediaElement x:Name="CorrectAnswerMediaElement"
@@ -130,7 +131,7 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Right"
-                    Foreground="{StaticResource MenuItemColor}"
+                    Foreground="{StaticResource PageNameColor}"
                     Click="NextQuestion_Click"
                     Visibility="Collapsed">Next</Button>
 
@@ -139,7 +140,7 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Left"
-                    Foreground="{StaticResource MenuItemColor}"
+                    Foreground="{StaticResource PageNameColor}"
                     Click="Finish_Click"
                     Visibility="Collapsed">Finish</Button>
 
@@ -148,7 +149,7 @@
                     Height="100"
                     Width="200"
                     HorizontalAlignment="Center"
-                    Foreground="{StaticResource MenuItemColor}"
+                    Foreground="{StaticResource PageNameColor}"
                     Visibility="Collapsed"
                     Click="Return_Click">Back</Button>
             </Grid>
