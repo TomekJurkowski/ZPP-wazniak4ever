@@ -15,20 +15,18 @@
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
     
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <!--LayoutRoot is the root grid where all page content is placed-->
-        <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
-            <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="3">
-            </controls:Exercise>
-            <TextBox 
-                Name="AnswerBox" 
-                Height="80" 
-                Width="360" 
-                VerticalAlignment="Center"
-                Foreground="{StaticResource PageNameColor}"
-                Background="{StaticResource TextBoxColor}" 
-                SelectionBackground="{Binding Source={StaticResource MenuItemColor}}"/>
-        </Grid>
-    </ScrollViewer>
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
+        <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="3">
+        </controls:Exercise>
+        <TextBox 
+            Name="AnswerBox" 
+            Height="80" 
+            Width="360" 
+            VerticalAlignment="Center"
+            Foreground="{StaticResource PageNameColor}"
+            Background="{StaticResource TextBoxColor}" 
+            SelectionBackground="{Binding Source={StaticResource MenuItemColor}}"/>
+    </Grid>
 
 </phone:PhoneApplicationPage>

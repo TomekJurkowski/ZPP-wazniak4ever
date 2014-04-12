@@ -29,7 +29,7 @@ namespace wazniak_forever.Controls
         public void AddElement(FrameworkElement element)
         {
             Grid.SetRow(element, 3);
-            LayoutRoot.Children.Add(element);
+            ContentPanel.Children.Add(element);
         }
 
         public void NextExerciseVisible()
@@ -42,7 +42,7 @@ namespace wazniak_forever.Controls
 
         public void SubmitAnswerClick(StringBuilder headerBuilder, StringBuilder builder)
         {
-            foreach (FrameworkElement element in LayoutRoot.Children)
+            foreach (FrameworkElement element in ContentPanel.Children)
             {
                 if (Grid.GetRow(element) == 3) element.Visibility = Visibility.Collapsed;
             }

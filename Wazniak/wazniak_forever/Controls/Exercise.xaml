@@ -16,106 +16,116 @@
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+           
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,110">
+            <Grid x:Name="ContentPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <!--<TextBlock Text="CLARIFIER"
-                       Style="{StaticResource PhoneTextNormalStyle}"
-                       Margin="12,0"
-                       Foreground="{StaticResource PageNameColor}"/>-->
-            <Image Width="Auto" 
-                Height="Auto"
-                Margin="12,0,370,15"
-                Source="/Assets/Logo_small.png" 
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"/>
-            <TextBlock Name="CourseName"
-                           Margin="9,-7,0,0"
-                           TextWrapping="Wrap"
-                           Style="{StaticResource PhoneTextTitle1Style}"
-                           Foreground="{StaticResource PageNameColor}"/>
-        </StackPanel>
-        
-        <TextBlock x:Name="TimerTextBlock"
-                   Text="{Binding CurrentTime,
-                            Converter={StaticResource TimeToStringConverter}}"
-                   FontSize="30"
-                   Margin="30,10,10,10"
-                   Grid.Row="1"
-                   Visibility="Collapsed"/>
-        
-        <TextBlock x:Name="QuestionContent" 
-                       Text="{Binding CurrentExercise.Question}"
-                       FontSize="25"
-                       Margin="30,30,30,30"
-                       Foreground="{StaticResource MenuItemColor}"
-                       TextWrapping="Wrap"
-                       Grid.Row="2"/>
+                <!--TitlePanel contains the name of the application and page title-->
+                <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+                    <!--<TextBlock Text="CLARIFIER"
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                Margin="12,0"
+                                Foreground="{StaticResource PageNameColor}"/>-->
+                    <Image Width="Auto" 
+                        Height="Auto"
+                        Margin="12,0,370,15"
+                        Source="/Assets/Logo_small.png" 
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+                    <TextBlock Name="CourseName"
+                                    Margin="9,-7,0,0"
+                                    TextWrapping="Wrap"
+                                    Style="{StaticResource PhoneTextTitle1Style}"
+                                    Foreground="{StaticResource PageNameColor}"/>
+                </StackPanel>
 
-        <TextBlock x:Name="StatisticTitle" 
-                       Text="Results"
-                       FontSize="35"
-                       Margin="30,30,30,30"
-                       Foreground="{StaticResource MenuItemColor}"
-                       Grid.Row="2"
-                       Visibility="Collapsed"/>
-        
+                <TextBlock x:Name="TimerTextBlock"
+                            Text="{Binding CurrentTime,
+                                    Converter={StaticResource TimeToStringConverter}}"
+                            FontSize="30"
+                            Margin="30,10,10,10"
+                            Grid.Row="1"
+                            Visibility="Collapsed"/>
 
-        <TextBlock x:Name="StatisticContent" 
-                       FontSize="25"
-                       Grid.Row="3"
-                       Margin="30,30,30,30"
-                       TextWrapping="Wrap"
-                       Foreground="{StaticResource MenuItemColor}"
-                       Visibility="Collapsed"/>
+                <TextBlock x:Name="QuestionContent" 
+                                Text="{Binding CurrentExercise.Question}"
+                                FontSize="25"
+                                Margin="30,30,30,30"
+                                Foreground="{StaticResource MenuItemColor}"
+                                TextWrapping="Wrap"
+                                Grid.Row="2"/>
 
-        <StackPanel x:Name="ExplanationPanel"
-                        Grid.Row="3"
-                        Margin="15,10,15,10"
-                        Visibility="Collapsed">
-            <TextBlock x:Name="ExplanationHeader"
-                           FontSize="30"
-                           HorizontalAlignment="Center"
-                           Margin="0,15,0,15"
-                           TextWrapping="Wrap"
-                           Foreground="{StaticResource MenuItemColor}"/>
+                <TextBlock x:Name="StatisticTitle" 
+                                Text="Results"
+                                FontSize="35"
+                                Margin="30,30,30,30"
+                                Foreground="{StaticResource MenuItemColor}"
+                                Grid.Row="2"
+                                Visibility="Collapsed"/>
 
-            <TextBlock x:Name="Explanation" 
-                           FontSize="25"
-                           Margin="0,15,0,15"
-                           TextWrapping="Wrap"
-                           Foreground="{StaticResource MenuItemColor}"/>
-        </StackPanel>
 
-        <Grid
-                Grid.Row="4"
+                <TextBlock x:Name="StatisticContent" 
+                                FontSize="25"
+                                Grid.Row="3"
+                                Margin="30,30,30,30"
+                                TextWrapping="Wrap"
+                                Foreground="{StaticResource MenuItemColor}"
+                                Visibility="Collapsed"/>
+
+                <StackPanel x:Name="ExplanationPanel"
+                                Grid.Row="3"
+                                Margin="15,10,15,10"
+                                Visibility="Collapsed">
+                    <TextBlock x:Name="ExplanationHeader"
+                                    FontSize="30"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,15,0,15"
+                                    TextWrapping="Wrap"
+                                    Foreground="{StaticResource MenuItemColor}"/>
+
+                    <TextBlock x:Name="Explanation" 
+                                    FontSize="25"
+                                    Margin="0,15,0,15"
+                                    TextWrapping="Wrap"
+                                    Foreground="{StaticResource MenuItemColor}"/>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <Border Name="TitleBorder" 
+            Background="{StaticResource TextBoxColor}"
+            Margin="0,216,0,0" 
+            Height="{Binding ElementName=TitleText, Path=Height}" 
+            VerticalAlignment="Bottom">
+
+            <Grid
+
                 VerticalAlignment="Bottom" 
                 HorizontalAlignment="Stretch">
-            <Button 
+                <Button 
                     x:Name="SubmitAnswer"
                     Height="100"
                     Width="200"
                     Foreground="{StaticResource MenuItemColor}"
                     HorizontalAlignment="Left">Submit</Button>
 
-            <MediaElement x:Name="CorrectAnswerMediaElement"
-                          Source="/Assets/Sound1.wav"
-                          Volume="1"
-                          AutoPlay="False"/>
+                <MediaElement x:Name="CorrectAnswerMediaElement"
+                            Source="/Assets/Sound1.wav"
+                            Volume="1"
+                            AutoPlay="False"/>
 
-            <MediaElement x:Name="WrongAnswerMediaElement"
-                          Source="/Assets/Wrong4.wav"
-                          Volume="1"
-                          AutoPlay="False"/>
+                <MediaElement x:Name="WrongAnswerMediaElement"
+                            Source="/Assets/Wrong4.wav"
+                            Volume="1"
+                            AutoPlay="False"/>
 
-            <Button 
+                <Button 
                     x:Name="NextQuestion"
                     Height="100"
                     Width="200"
@@ -124,7 +134,7 @@
                     Click="NextQuestion_Click"
                     Visibility="Collapsed">Next</Button>
 
-            <Button 
+                <Button 
                     x:Name="Finish"
                     Height="100"
                     Width="200"
@@ -133,7 +143,7 @@
                     Click="Finish_Click"
                     Visibility="Collapsed">Finish</Button>
 
-            <Button 
+                <Button 
                     x:Name="Return"
                     Height="100"
                     Width="200"
@@ -141,7 +151,7 @@
                     Foreground="{StaticResource MenuItemColor}"
                     Visibility="Collapsed"
                     Click="Return_Click">Back</Button>
-        </Grid>
-        
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

@@ -15,13 +15,12 @@
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
     
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
         <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="5">
         </controls:Exercise>
-        
-            <toolkit:LongListMultiSelector
+
+        <toolkit:LongListMultiSelector
                     x:Name="MultipleChoiceAnswerInput"
                     VerticalAlignment="Top"
                     
@@ -29,16 +28,15 @@
                     ItemsSource="{Binding UserChoices}"
                     LayoutMode="List"
                     IsSelectionEnabled="True">
-                <toolkit:LongListMultiSelector.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock x:Name="Choice"
+            <toolkit:LongListMultiSelector.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock x:Name="Choice"
                                    Foreground="{StaticResource MenuItemColor}"
                                    Text="{Binding}" 
                                    TextWrapping="Wrap"
                                    FontSize="30"/>
-                    </DataTemplate>
-                </toolkit:LongListMultiSelector.ItemTemplate>
-            </toolkit:LongListMultiSelector>
-        </Grid>
-    </ScrollViewer>
+                </DataTemplate>
+            </toolkit:LongListMultiSelector.ItemTemplate>
+        </toolkit:LongListMultiSelector>
+    </Grid>
 </phone:PhoneApplicationPage>
