@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
@@ -14,6 +16,8 @@ namespace WazniakWebsite.Controllers
         private const string NO_ANSWER_PICKED_STATEMENT = "You must create an answer for your exercise!";
         private const string SINGLE_VALUE_STATEMENT = "You must provide a value for the Single Value Answer.";
         private const string TEXT_STATEMENT = "You must provide some text for the Text Answer.";
+        private const string MULTI_STATEMENT = "You must provide at least 1 (preferably at least 3) statements for Multiple Choice Answer.";
+        private const string SINGLE_STATEMENT = "You must provide at least 1 (preferably at least 3) statements for Single Choice Answer and none of the statements can be empty.";
 
         private SchoolContext db = new SchoolContext();
 
@@ -61,70 +65,15 @@ namespace WazniakWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
-            string subjectName, int subjectId, string answerType, string valueAns, string textAns)
+            string subjectName, int subjectId, string answerType, string valueAns, string textAns,
+            string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    switch (answerType)
-                    {
-                        case Answer.SINGLE_VALUE_ANSWER:
-                            if (String.IsNullOrEmpty(valueAns))
-                            {
-                                // Reload page with proper statement
-                                ViewBag.SingleValueStatement = SINGLE_VALUE_STATEMENT;
-                                FillTheViewBag(subjectName, subjectId, Answer.SINGLE_VALUE_ANSWER);
-
-                                return View(mathematicaltask);
-                            }
-
-                            // Create new SingleValueAnswer
-                            var singleValueAnswer = new SingleValueAnswer(valueAns);
-                            db.SingleValueAnswers.Add(singleValueAnswer);
-                            break;
-                        case Answer.TEXT_ANSWER:
-                            if (String.IsNullOrEmpty(textAns))
-                            {
-                                // Reload page with proper statement
-                                ViewBag.TextStatement = TEXT_STATEMENT;
-                                FillTheViewBag(subjectName, subjectId, Answer.TEXT_ANSWER);
-
-                                return View(mathematicaltask);
-                            }
-
-                            // Create new TextAnswer
-                            var textAnswer = new TextAnswer(textAns);
-                            db.TextAnswers.Add(textAnswer);
-                            break;
-                        case Answer.SINGLE_CHOICE_ANSWER:
-
-
-
-                            break;
-                        case Answer.MULTIPLE_CHOICE_ANSWER:
-
-
-
-                            break;
-                        default:
-                            // No answer has been selected - let's remind the user that he has to pick one
-                            ViewBag.NoAnswerPickedStatement = NO_ANSWER_PICKED_STATEMENT;
-                            FillTheViewBag(subjectName, subjectId);
-
-                            return View(mathematicaltask);
-                    }
-
-                    // Update subject time
-                    var sub = db.Subjects.Find(mathematicaltask.SubjectID);
-                    sub.UpdateLastUpdatedTime();
-                    db.Entry(sub).State = EntityState.Modified;
-
-                    mathematicaltask.CorrectAnswers = 0;
-                    mathematicaltask.Attempts = 0;
-                    db.MathematicalTasks.Add(mathematicaltask);
-                    db.SaveChanges();
-                    return RedirectToAction("Details", "Subject", new { id = subjectId });
+                    return CreateTaskInternal(mathematicaltask, subjectName, subjectId, answerType, valueAns,
+                        textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -135,6 +84,134 @@ namespace WazniakWebsite.Controllers
             }
 
             FillTheViewBag(subjectName, subjectId);
+            return View(mathematicaltask);
+        }
+
+        // Private function used by POST Create method. It is the major part of that method,
+        // since it is responsible for the actual creation of a new MathematicalTask with its Answer
+        // and inserting those objects into the database. This function returns a proper ActionResult
+        // depending whether the creation/insertion was successful or failed at some point.
+        private ActionResult CreateTaskInternal(MathematicalTask mathematicaltask, string subjectName, int subjectId,
+            string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
+            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
+        {
+            switch (answerType)
+            {
+                case Answer.SINGLE_VALUE_ANSWER:
+                    if (String.IsNullOrEmpty(valueAns))
+                    {
+                        return ReloadPageWithStatement(mathematicaltask, answerType, subjectName, subjectId);
+                    }
+
+                    // Create new SingleValueAnswer
+                    var singleValueAnswer = new SingleValueAnswer(valueAns);
+                    db.SingleValueAnswers.Add(singleValueAnswer);
+                    
+                    break;
+                case Answer.TEXT_ANSWER:
+                    if (String.IsNullOrEmpty(textAns))
+                    {
+                        return ReloadPageWithStatement(mathematicaltask, answerType, subjectName, subjectId);
+                    }
+
+                    // Create new TextAnswer
+                    var textAnswer = new TextAnswer(textAns);
+                    db.TextAnswers.Add(textAnswer);
+
+                    break;
+                case Answer.SINGLE_CHOICE_ANSWER:
+                    if (singleCorrectNo >= singleChoiceList.Count || singleCorrectNo < 0)
+                    {
+                        throw new RetryLimitExceededException("The number of the correct Choice for SingleChoiceAnswer is beyond valid range.");
+                    }
+
+                    // Case when we haven't got any valid Choices for the SingleChoiceAnswer or some choices are empty
+                    if (singleChoiceList.Count == 0 || singleChoiceList.Count(String.IsNullOrEmpty) != 0)
+                    {
+                        return ReloadPageWithStatement(mathematicaltask, answerType, subjectName, subjectId);
+                    }
+
+                    // Create new SingleChoiceAnswer
+                    var singleChoiceAnswer = new SingleChoiceAnswer(singleCorrectNo);
+                    db.SingleChoiceAnswers.Add(singleChoiceAnswer);
+
+                    foreach (var singleChoice in singleChoiceList.Select(s => new SingleChoice(s)))
+                    {
+                        db.SingleChoices.Add(singleChoice);
+                    }
+
+                    break;
+                case Answer.MULTIPLE_CHOICE_ANSWER:
+                    if (multiChoiceList.Count != multiAnswerList.Count)
+                    {
+                        throw new RetryLimitExceededException("The number of Options doesn't equal the number of true-false answers.");
+                    }
+
+                    // Case when we haven't got any valid Choices for the MultiChoiceAnswer
+                    if (multiChoiceList.Count(t => !String.IsNullOrEmpty(t)) == 0)
+                    {
+                        return ReloadPageWithStatement(mathematicaltask, answerType, subjectName, subjectId);
+                    }
+
+                    // Create new MultiChoiceAnswer
+                    var multiChoiceAnswer = new MultipleChoiceAnswer();
+                    db.MultipleChoiceAnswers.Add(multiChoiceAnswer);
+
+                    for (var i = 0; i < multiChoiceList.Count; i++)
+                    {
+                        // No safety check whether the values send by POST are valid ones ('True' and 'False' are valid).
+                        // Every invalid value will be interpreted as 'False'
+                        var tempAns = (multiAnswerList[i].Equals("True", StringComparison.OrdinalIgnoreCase));
+                        var multiChoice = new MultiChoice(multiChoiceList[i], tempAns);
+                        db.MultiChoices.Add(multiChoice);
+                    }
+
+                    break;
+                default:
+                    // No answer has been selected - let's remind the user that he has to pick one
+                    return ReloadPageWithStatement(mathematicaltask, answerType, subjectName, subjectId);
+            }
+
+            UpdateSubjectTime(db.Subjects.Find(mathematicaltask.SubjectID));
+
+            mathematicaltask.CorrectAnswers = 0;
+            mathematicaltask.Attempts = 0;
+            db.MathematicalTasks.Add(mathematicaltask);
+            db.SaveChanges();
+            return RedirectToAction("Details", "Subject", new { id = subjectId });
+        }
+
+        // This function is called, when user does not provide us with all the necessary
+        // data, that is needed to create/edit a task. It basically puts a proper statement
+        // for the user into the ViewBag and returns an ActionResult that will display
+        // the Create/Edit page once again with those statements.
+        private ActionResult ReloadPageWithStatement(MathematicalTask mathematicaltask, string answerType,
+            string subjectName, int subjectId)
+        {
+            switch (answerType)
+            {
+                case Answer.SINGLE_VALUE_ANSWER:
+                    ViewBag.SingleValueStatement = SINGLE_VALUE_STATEMENT;
+                    break;
+                case Answer.TEXT_ANSWER:
+                    ViewBag.TextStatement = TEXT_STATEMENT;
+                    break;
+                case Answer.SINGLE_CHOICE_ANSWER:
+                    ViewBag.SingleChoiceStatement = SINGLE_STATEMENT;
+                    break;
+                case Answer.MULTIPLE_CHOICE_ANSWER:
+                    ViewBag.MultiChoiceStatement = MULTI_STATEMENT;
+                    break;
+                default:
+                    ViewBag.NoAnswerPickedStatement = NO_ANSWER_PICKED_STATEMENT;
+                    break;
+            }
+
+            // Create Page does not use ReloadPage, but it's easier to leave it like that,
+            // because it does not damage that page
+            ViewBag.ReloadPage = 1;
+            FillTheViewBag(subjectName, subjectId, answerType);
+
             return View(mathematicaltask);
         }
 
@@ -343,6 +420,14 @@ namespace WazniakWebsite.Controllers
             }
 
             return RedirectToAction("Details", "Subject", new { id = subjectId });
+        }
+
+        // Private helper function, that updates given Subject's LastUpdatedTime attribute
+        // and changes its database state to 'Modified'.
+        private void UpdateSubjectTime(Subject s)
+        {
+            s.UpdateLastUpdatedTime();
+            db.Entry(s).State = EntityState.Modified;
         }
 
         protected override void Dispose(bool disposing)
