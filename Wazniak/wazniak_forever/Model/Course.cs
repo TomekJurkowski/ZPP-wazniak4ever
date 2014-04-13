@@ -436,6 +436,12 @@ namespace wazniak_forever.Model
         }
     }
 
+    public class Module
+    {
+        [PrimaryKey]
+        public int ID { get; set; }
+    }
+
     public abstract class Exercise
     {
         [PrimaryKey]

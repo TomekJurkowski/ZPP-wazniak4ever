@@ -260,6 +260,17 @@ namespace wazniak_forever.ViewModel
         }
         public int CurrentCourseID { get; set; }
 
+        private List<Module> _modules;
+        public List<Module> Modules
+        {
+            get { return _modules; }
+            set
+            {
+                _modules = value;
+                NotifyPropertyChanged("Modules");
+            }
+        }
+
         private List<RegularExercise> _exercises;
         public List<RegularExercise> Exercises
         {
