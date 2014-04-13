@@ -316,7 +316,7 @@ namespace WazniakWebsite.Controllers
                         db.Answers.Remove(ans);
                         db.SaveChanges();
 
-                        var singleValueAnswer = new SingleValueAnswer(valueAns);
+                        var singleValueAnswer = new SingleValueAnswer(valueAns) { TaskID = mathematicaltask.ID };
                         db.SingleValueAnswers.Add(singleValueAnswer);
                     }
 
@@ -341,7 +341,7 @@ namespace WazniakWebsite.Controllers
                         db.Answers.Remove(ans);
                         db.SaveChanges();
 
-                        var textAnswer = new TextAnswer(textAns);
+                        var textAnswer = new TextAnswer(textAns) { TaskID = mathematicaltask.ID };
                         db.TextAnswers.Add(textAnswer);
                     }
 

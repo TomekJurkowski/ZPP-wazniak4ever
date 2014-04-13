@@ -241,7 +241,7 @@ namespace WazniakWebsite.Controllers
         // POST: /RegularTask/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID,SubjectID")] RegularTask regulartask,
+        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] RegularTask regulartask,
             int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
             string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
@@ -316,7 +316,7 @@ namespace WazniakWebsite.Controllers
                         db.Answers.Remove(ans);
                         db.SaveChanges();
 
-                        var singleValueAnswer = new SingleValueAnswer(valueAns);
+                        var singleValueAnswer = new SingleValueAnswer(valueAns) { TaskID = regulartask.ID };
                         db.SingleValueAnswers.Add(singleValueAnswer);
                     }
 
@@ -341,7 +341,7 @@ namespace WazniakWebsite.Controllers
                         db.Answers.Remove(ans);
                         db.SaveChanges();
 
-                        var textAnswer = new TextAnswer(textAns);
+                        var textAnswer = new TextAnswer(textAns) { TaskID = regulartask.ID };
                         db.TextAnswers.Add(textAnswer);
                     }
 
