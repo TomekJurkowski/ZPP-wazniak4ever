@@ -65,7 +65,7 @@ namespace wazniak_forever
             }
             else if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.sortExercisesByProgress();
 
-            string navTo;
+            string navTo = "";
             switch (App.ViewModel.Solutions[0].Answer.Type)
             {
                 case SolutionType.Open:
