@@ -26,8 +26,8 @@
 <p>
     @using (Html.BeginForm())
     {
-        @Html.AntiForgeryToken();
-        @Html.TextArea("text", new {rows = 30, cols = 50});
+        @Html.AntiForgeryToken()
+        @Html.TextArea("text", new {rows = 30, cols = 50})
         <input type="submit" value="Parse and Upload"/>
     }
 </p>

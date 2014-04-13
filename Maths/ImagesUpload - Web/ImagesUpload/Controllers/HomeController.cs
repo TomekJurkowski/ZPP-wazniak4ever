@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using Microsoft.Ajax.Utilities;
-using WebGrease.Css.Extensions;
 
 namespace ImagesUpload.Controllers
 {
@@ -124,7 +119,7 @@ namespace ImagesUpload.Controllers
         public string DeleteImage(string name)
         {
             var uri = new Uri(name);
-            var fileName = System.IO.Path.GetFileName(uri.LocalPath);
+            var fileName = Path.GetFileName(uri.LocalPath);
             var blobContainer = _blobStorageService.GetCloudBLobContainer();
             var blob = blobContainer.GetBlockBlobReference(fileName);
 
