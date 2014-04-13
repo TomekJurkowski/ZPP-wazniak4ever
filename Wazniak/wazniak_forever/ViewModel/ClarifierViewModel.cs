@@ -260,8 +260,8 @@ namespace wazniak_forever.ViewModel
         }
         public int CurrentCourseID { get; set; }
 
-        private List<Module> _modules;
-        public List<Module> Modules
+        private List<string> _modules;
+        public List<string> Modules
         {
             get { return _modules; }
             set
@@ -308,6 +308,21 @@ namespace wazniak_forever.ViewModel
         private Solution prepareSolution(Answer ans)
         {
             return null;
+        }
+
+        public void LoadModules()
+        {
+            Modules = new List<string>();
+            Modules.Add("Module 1");
+            Modules.Add("Module 2");
+            Modules.Add("Module 3");
+            Modules.Add("Module 4");
+            Modules.Add("Module 5");
+            Modules.Add("Module 6");
+            Modules.Add("Module 7");
+            Modules.Add("Module 8");
+            Modules.Add("Module 9");
+            Modules.Add("Module 10");
         }
 
         public async System.Threading.Tasks.Task LoadExercises()

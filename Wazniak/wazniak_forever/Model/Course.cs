@@ -440,6 +440,12 @@ namespace wazniak_forever.Model
     {
         [PrimaryKey]
         public int ID { get; set; }
+        public string Name { get; set; }
+
+        public Module(string Name)
+        {
+            this.Name = Name;
+        }
     }
 
     public abstract class Exercise

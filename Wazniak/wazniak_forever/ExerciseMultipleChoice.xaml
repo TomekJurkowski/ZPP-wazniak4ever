@@ -23,7 +23,6 @@
         <toolkit:LongListMultiSelector
                     x:Name="MultipleChoiceAnswerInput"
                     VerticalAlignment="Top"
-                    
                     Visibility="Visible"
                     ItemsSource="{Binding UserChoices}"
                     LayoutMode="List"

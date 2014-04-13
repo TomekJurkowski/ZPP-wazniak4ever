@@ -37,13 +37,12 @@
     </toolkit:TransitionService.NavigationOutTransition>
     
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <controls:OnlineInfo Grid.Row="0"/>
@@ -62,20 +61,53 @@
                         Style="{StaticResource PhoneTextTitle1Style}" 
                         Foreground="{StaticResource PageNameColor}"/>
             </StackPanel>
-
-            <TextBlock 
-                        Name="CourseDescription"
-                        FontSize="25"
-                        Margin="30,30,30,30"
-                        Foreground="{StaticResource MenuItemColor}"
-                        TextWrapping="Wrap"
-                        Grid.Row="2"/>
             <!--ContentPanel - place additional content here-->
-            <Grid x:Name="ContentPanel" Grid.Row="3" Margin="12,0,12,0">
-                <toolkit:LongListMultiSelector Name="ModuleSelector">
-                    
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="12,0,12,0">
+                <TextBlock
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Foreground="{StaticResource PageNameColor}"
+                    FontSize="30"
+                    FontWeight="ExtraBold">
+                    CHOOSE MODULES:
+                </TextBlock>
+                <TextBlock Height="40"></TextBlock>
+
+                <toolkit:LongListMultiSelector x:Name="ModuleSelector"
+                    VerticalAlignment="Top"
+                    Visibility="Visible"
+                    ItemsSource="{Binding Modules}"
+                    LayoutMode="List"
+                    IsSelectionEnabled="True">
+                    <toolkit:LongListMultiSelector.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Name="Choice"
+                                Foreground="{StaticResource MenuItemColor}"
+                                Text="{Binding}" 
+                                TextWrapping="Wrap"
+                                FontSize="30">
+
+                            </TextBlock>
+                        </DataTemplate>
+                    </toolkit:LongListMultiSelector.ItemTemplate>
                 </toolkit:LongListMultiSelector>
-            </Grid>
-        </Grid>
-    </ScrollViewer>
+            </StackPanel>
+        </ScrollViewer>
+        <Border Name="TitleBorder"
+                Grid.Row="3"
+                Background="{StaticResource TextBoxColor}"
+                Height="{Binding ElementName=TitleText, Path=Height}" 
+                VerticalAlignment="Bottom">
+            <Button
+                    x:Name="SubmitModules"
+                    Height="100"
+                    Width="200"
+                    Foreground="{StaticResource PageNameColor}"
+                    HorizontalAlignment="Right"
+                    Click="SubmitModules_Click"
+                    Content="Start">
+            </Button>
+        </Border>
+    </Grid>
 </phone:PhoneApplicationPage>

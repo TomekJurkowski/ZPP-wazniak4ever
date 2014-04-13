@@ -51,6 +51,7 @@ namespace wazniak_forever
         {
             App.ViewModel.CourseType = type;
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", App.ViewModel.LoadExercises);
+            App.ViewModel.LoadModules();
             if (App.ViewModel.Solutions.Count <= 0) return;
 
             if (App.ViewModel.CourseType == CourseType.Time)
@@ -65,23 +66,7 @@ namespace wazniak_forever
             }
             else if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.sortExercisesByProgress();
 
-            string navTo = "";
-            switch (App.ViewModel.Solutions[0].Answer.Type)
-            {
-                case SolutionType.Open:
-                    navTo = string.Format("/ExerciseOpen.xaml?courseName={0}", CourseName.Text);
-                    break;
-                case SolutionType.Value:
-                    navTo = string.Format("/ExerciseSingleValue.xaml?courseName={0}", CourseName.Text);
-                    break;
-                case SolutionType.Multiple:
-                    navTo = string.Format("/ExerciseMultipleChoice.xaml?courseName={0}", CourseName.Text);
-                    break;
-                case SolutionType.Single:
-                    navTo = string.Format("/ExerciseSingleChoice.xaml?courseName={0}", CourseName.Text);
-                    break;
-            }
-            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(navTo, UriKind.Relative));
+            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}", CourseName.Text), UriKind.Relative));
         }
 
         private async void CoursePageOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
