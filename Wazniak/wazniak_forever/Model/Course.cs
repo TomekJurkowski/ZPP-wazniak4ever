@@ -88,6 +88,8 @@ namespace wazniak_forever.Model
         public IMobileServiceTable<SingleChoiceExerciseOption> SingleChoiceOptions =
             MobileService.GetTable<SingleChoiceExerciseOption>();
 
+        public IMobileServiceTable<Module> Modules = MobileService.GetTable<Module>(); 
+
 
         public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
             Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
@@ -385,6 +387,7 @@ namespace wazniak_forever.Model
         public string AnswerText { get; set; }
         public int CorrectAnswer { get; set; }
         public string AnswerDiscriminator { get; set; }
+        public int ModuleID { get; set; }
     }
 
     public class Task
@@ -440,11 +443,12 @@ namespace wazniak_forever.Model
     {
         [PrimaryKey]
         public int ID { get; set; }
+        public int CourseID { get; set; }
         public string Name { get; set; }
 
-        public Module(string Name)
+        public Module(string name)
         {
-            this.Name = Name;
+            this.Name = name;
         }
     }
 

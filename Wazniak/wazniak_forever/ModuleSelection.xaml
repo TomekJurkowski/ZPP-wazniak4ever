@@ -84,7 +84,7 @@
                         <DataTemplate>
                             <TextBlock x:Name="Choice"
                                 Foreground="{StaticResource MenuItemColor}"
-                                Text="{Binding}" 
+                                Text="{Binding Name}" 
                                 TextWrapping="Wrap"
                                 FontSize="30">
 

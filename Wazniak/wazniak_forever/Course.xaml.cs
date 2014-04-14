@@ -50,7 +50,8 @@ namespace wazniak_forever
         private async void SelectExercise(CourseType type)
         {
             App.ViewModel.CourseType = type;
-            await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", App.ViewModel.LoadExercises);
+            await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", 
+                async () => await App.ViewModel.LoadExercises(new List<int>()));
             App.ViewModel.LoadModules();
             if (App.ViewModel.Solutions.Count <= 0) return;
 
@@ -69,6 +70,12 @@ namespace wazniak_forever
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}", CourseName.Text), UriKind.Relative));
         }
 
+        private void NavigateToModuleSelectionPage(CourseType courseType)
+        {
+            App.ViewModel.LoadModules();
+            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}&courseType={1}", CourseName.Text, courseType), UriKind.Relative));
+        }
+
         private async void CoursePageOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Option option = CoursePageOptions.SelectedItem as Option;
@@ -81,16 +88,20 @@ namespace wazniak_forever
                 switch (option.Type)
                 {
                     case OptionType.Start:
-                        SelectExercise(CourseType.Classic);
+                        NavigateToModuleSelectionPage(CourseType.Classic);
+                        //SelectExercise(CourseType.Classic);
                         break;
                     case OptionType.StudyWithClarifier:
+                        //NavigateToModuleSelectionPage(CourseType.StudyWithClarifier);
                         SelectExercise(CourseType.StudyWithClarifier);
                         break;
                     case OptionType.FixedNumber:
-                        SelectExercise(CourseType.FixedNumber);
+                        NavigateToModuleSelectionPage(CourseType.FixedNumber);
+                        //SelectExercise(CourseType.FixedNumber);
                         break;
                     case OptionType.Timer:
-                        SelectExercise(CourseType.Time);
+                        NavigateToModuleSelectionPage(CourseType.Time);
+                        //SelectExercise(CourseType.Time);
                         break;
                     case OptionType.AddToMyCourses:
                         await App.ViewModel.PerformTimeConsumingProcess(this, "Adding to My Courses...", App.ViewModel.AddToMyCourses);                                             

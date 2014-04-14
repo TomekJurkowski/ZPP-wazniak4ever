@@ -260,8 +260,8 @@ namespace wazniak_forever.ViewModel
         }
         public int CurrentCourseID { get; set; }
 
-        private List<string> _modules;
-        public List<string> Modules
+        private List<Module> _modules;
+        public List<Module> Modules
         {
             get { return _modules; }
             set
@@ -312,24 +312,49 @@ namespace wazniak_forever.ViewModel
 
         public void LoadModules()
         {
-            Modules = new List<string>();
-            Modules.Add("Module 1");
-            Modules.Add("Module 2");
-            Modules.Add("Module 3");
-            Modules.Add("Module 4");
-            Modules.Add("Module 5");
-            Modules.Add("Module 6");
-            Modules.Add("Module 7");
-            Modules.Add("Module 8");
-            Modules.Add("Module 9");
-            Modules.Add("Module 10");
+            //Modules = await db.Modules.Where(module => module.CourseID == CurrentCourseID).ToListAsync();
+
+            Modules = new List<Module>
+            {
+                new Module("Module 1"),
+                new Module("Module 2"),
+                new Module("Module 3"),
+                new Module("Module 4")
+            };
         }
 
-        public async System.Threading.Tasks.Task LoadExercises()
+        public async System.Threading.Tasks.Task LoadExercises(IEnumerable<int> moduleIdList)
         {
-            var tasksWithAnswers = OnlineMode ? 
-                await db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).LoadAllAync() :
-                await db.LoadExercisesOffline(CurrentCourseID);
+            /*var tasksWithAnswers = new List<TaskAnswer>();
+            var multipleChoiceExerciseOptions = new List<MultipleChoiceExerciseOption>();
+            var singleChoiceExerciseOptions = new List<SingleChoiceExerciseOption>();
+            foreach (var id in moduleIdList)
+            {
+                tasksWithAnswers.AddRange(OnlineMode 
+                    ? await 
+                        db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID && task.ModuleID == id)
+                            .LoadAllAync() 
+                    : await db.LoadExercisesOffline(CurrentCourseID));
+
+                multipleChoiceExerciseOptions.AddRange(OnlineMode
+                    ? await 
+                        db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID && option.ModuleID == id)
+                            .LoadAllAync()
+                    : await db.LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(CurrentCourseID));
+
+                singleChoiceExerciseOptions.AddRange(OnlineMode
+                    ? await
+                        db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID && option.ModuleID == id)
+                            .IncludeTotalCount()
+                            .LoadAllAync()
+                    : await db.LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(CurrentCourseID));
+            }*/
+
+            var tasksWithAnswers = OnlineMode
+                ? await
+                    db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID)
+                        .LoadAllAync()
+                : await db.LoadExercisesOffline(CurrentCourseID);
 
             var multipleChoiceExerciseOptions = OnlineMode ?
                 await db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).LoadAllAync() :
