@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
@@ -20,6 +25,7 @@ namespace WazniakWebsite.Controllers
         private const string SINGLE_STATEMENT = "You must provide at least 1 (preferably at least 3) statements for Single Choice Answer and none of the statements can be empty.";
 
         private SchoolContext db = new SchoolContext();
+        private BlobStorageService _blobStorageService = new BlobStorageService();
 
         // GET: /MathematicalTask/Details/5
         public ActionResult Details(int? id)
@@ -64,7 +70,7 @@ namespace WazniakWebsite.Controllers
         // POST: /MathematicalTask/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
+        public async Task<ActionResult> Create([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
             string subjectName, int subjectId, string answerType, string valueAns, string textAns,
             string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
@@ -72,7 +78,7 @@ namespace WazniakWebsite.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    return CreateTaskInternal(mathematicaltask, subjectName, subjectId, answerType, valueAns,
+                    return await CreateTaskInternal(mathematicaltask, subjectName, subjectId, answerType, valueAns,
                         textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
                 }
             }
@@ -91,7 +97,7 @@ namespace WazniakWebsite.Controllers
         // since it is responsible for the actual creation of a new MathematicalTask with its Answer
         // and inserting those objects into the database. This function returns a proper ActionResult
         // depending whether the creation/insertion was successful or failed at some point.
-        private ActionResult CreateTaskInternal(MathematicalTask mathematicaltask, string subjectName, int subjectId,
+        private async Task<ActionResult> CreateTaskInternal(MathematicalTask mathematicaltask, string subjectName, int subjectId,
             string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
             IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
         {
@@ -176,8 +182,14 @@ namespace WazniakWebsite.Controllers
 
             mathematicaltask.CorrectAnswers = 0;
             mathematicaltask.Attempts = 0;
+            
             db.MathematicalTasks.Add(mathematicaltask);
             db.SaveChanges();
+
+            mathematicaltask.Text = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);
+            db.Entry(mathematicaltask).State = EntityState.Modified;
+            db.SaveChanges();
+
             return RedirectToAction("Details", "Subject", new { id = subjectId });
         }
 
@@ -553,6 +565,61 @@ namespace WazniakWebsite.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private static async Task<Stream> LoadEquationImage(string exp, bool isInline)
+        {
+            var requestUri = isInline
+                ? "http://latex.codecogs.com/png.download?%5Cinline%20" + exp
+                : "http://latex.codecogs.com/png.download?%20" + exp;
+            using (var client = new HttpClient())
+            {
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri);
+                var responseMessage = await client.SendAsync(requestMessage);
+                return await responseMessage.Content.ReadAsStreamAsync();
+            }
+        }
+
+        private void UploadImages(IReadOnlyList<Stream> imgStreams, IReadOnlyList<string> fileNames)
+        {
+            for (var i = 0; i < imgStreams.Count; i++)
+            {
+                var blobContainer = _blobStorageService.GetCloudBLobContainer();
+                var blob = blobContainer.GetBlockBlobReference(fileNames[i]);
+                blob.UploadFromStream(imgStreams[i]);
+            }
+        }
+
+        public async Task<string> UploadImagesToBlob(string text, int task_id)
+        {
+            var regex = new Regex("(\\$[^\\$]+?\\$)|(\\$\\$[^\\$]+?\\$\\$)");
+            var start = 0;
+            var newText = "";
+            var i = 0;
+            var imgStreams = new List<Stream>();
+            var imgNames = new List<string>();
+            foreach (Match match in regex.Matches(text))
+            {
+                //System.Diagnostics.Debug.WriteLine("Value: " + match.Value);
+                var matchVal = match.Value;
+                var notInline = matchVal.StartsWith("$$");
+                var imgStream = notInline
+                    ? await LoadEquationImage(match.Value.Substring(2, match.Value.Length - 4), false)
+                    : await LoadEquationImage(match.Value.Substring(1, match.Value.Length - 2), true);
+                imgStreams.Add(imgStream);
+                imgNames.Add("task_" + task_id + "_img_" + i.ToString(CultureInfo.InvariantCulture));
+                newText += text.Substring(start, match.Index - start);
+
+                newText += notInline
+                    ? "$$[task_" + task_id + "_img_" + i.ToString(CultureInfo.InvariantCulture) + "]$$"
+                    : "$[task_" + task_id + "_img_" + i.ToString(CultureInfo.InvariantCulture) + "]$";
+                start = match.Index + match.Length;
+                i++;
+            }
+            UploadImages(imgStreams, imgNames);
+            newText += text.Substring(start, text.Length - start);
+            //System.Diagnostics.Debug.WriteLine("New text: " + newText);
+            return newText;
         }
     }
 }

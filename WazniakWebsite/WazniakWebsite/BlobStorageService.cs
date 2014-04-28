@@ -10,7 +10,7 @@ namespace WazniakWebsite
         public CloudBlobContainer GetCloudBLobContainer()
         {
             //var storageAccount =
-                //CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("ClarifierBlobConnectionString"));
+            //    CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("ClarifierBlobConnectionString"));
             var storageAccount = CloudStorageAccount.Parse(
                 CloudConfigurationManager.GetSetting("ClarifierBlobConnectionString"));
 
