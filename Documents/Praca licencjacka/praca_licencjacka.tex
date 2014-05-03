@@ -1,0 +1,149 @@
+%
+% Niniejszy plik stanowi przyk�ad formatowania pracy magisterskiej na
+% Wydziale MIM UW.  Szkielet u�ytych polece� mo�na wykorzystywa� do
+% woli, np. formatujac wlasna prace.
+%
+% Zawartosc merytoryczna stanowi oryginalnosiagniecie
+% naukowosciowe Marcina Wolinskiego.  Wszelkie prawa zastrze�one.
+%
+% Copyright (c) 2001 by Marcin Woli�ski <M.Wolinski@gust.org.pl>
+% Poprawki spowodowane zmianami przepis�w - Marcin Szczuka, 1.10.2004
+% Poprawki spowodowane zmianami przepisow i ujednolicenie 
+% - Seweryn Kar�owicz, 05.05.2006
+% dodaj opcj� [licencjacka] dla pracy licencjackiej
+\documentclass{pracamgr}
+
+\usepackage{polski}
+
+%Jesli uzywasz kodowania polskich znakow ISO-8859-2 nastepna linia powinna byc 
+%odkomentowana
+%\usepackage[latin2]{inputenc}
+
+\usepackage[utf8]{inputenc}
+%Jesli uzywasz kodowania polskich znakow CP-1250 to ta linia powinna byc 
+%odkomentowana
+%\usepackage[cp1250]{inputenc}
+
+% Dane magistranta:
+
+\author{Tomasz Jurkowski\\ 
+Cezary Lasocki\\ 
+Małgorzata Salak\\
+Krzysztof Wytrykowski}
+
+\nralbumu{320682, 320813, 305549, 306481}
+
+\title{Projekt Clarifier}
+
+\tytulang{The Clarifier project}
+
+%kierunek: Matematyka, Informatyka, ...
+\kierunek{Informatyka}
+
+% informatyka - nie okreslamy zakresu (opcja zakomentowana)
+% matematyka - zakres moze pozostac nieokreslony,
+% a jesli ma byc okreslony dla pracy mgr,
+% to przyjmuje jedna z wartosci:
+% {metod matematycznych w finansach}
+% {metod matematycznych w ubezpieczeniach}
+% {matematyki stosowanej}
+% {nauczania matematyki}
+% Dla pracy licencjackiej mamy natomiast
+% mozliwosc wpisania takiej wartosci zakresu:
+% {Jednoczesnych Studiow Ekonomiczno--Matematycznych}
+
+% \zakres{Tu wpisac, jesli trzeba, jedna z opcji podanych wyzej}
+
+% Praca wykonana pod kierunkiem:
+% (poda� tytu�/stopie� imi� i nazwisko opiekuna
+% Instytut
+% ew. Wydzia� ew. Uczelnia (je�eli nie MIM UW))
+\opiekun{dra Jacka Sroki\\
+  Instytut Informatyki\\
+  }
+
+% miesi�c i~rok:
+\date{Czerwiec 2014}
+
+%Poda� dziedzin� wg klasyfikacji Socrates-Erasmus:
+\dziedzina{ 
+%11.0 Matematyka, Informatyka:\\ 
+%11.1 Matematyka\\ 
+%11.2 Statystyka\\ 
+11.3 Informatyka\\ 
+%11.4 Sztuczna inteligencja\\ 
+%11.5 Nauki aktuarialne\\
+%11.9 Inne nauki matematyczne i informatyczne
+}
+
+%Klasyfikacja tematyczna wedlug AMS (matematyka) lub ACM (informatyka)
+\klasyfikacja{D.1.5 Object-oriented Programming\\
+  D.2.6 Programming Environments\\}
+
+% S�owa kluczowe:
+\keywords{clarifier, nauka, student, wykładowca, zapamiętywanie, aplikacja mobilna, ASP.NET, azure, windows phone}
+
+% Tu jest dobre miejsce na Twoje w�asne makra i~�rodowiska:
+\newtheorem{defi}{Definicja}[section]
+
+% koniec definicji
+
+\begin{document}
+\maketitle
+
+%tu idzie streszczenie na strone poczatkowa
+\begin{abstract}
+W pracy opisano realizację projektu Clarifier. Jest to system wspomagający studentów w utrwalaniu materiałów objętych programami nauczania na uczelniach wyższych. System umożliwia wybór przedmiotów i zagadnień do utrwalania oraz oferuje różne tryby nauki. Ponadto, Clarifer pozwala wykładowcom na dodawanie własnych zadań, a także dostarcza dane na temat wyników uzyskiwanych przez studentów. W niniejszej pracy opisujemy motywację, architekturę, proces tworzenia oraz funkcjonalność systemu Clarifier. 
+\end{abstract}
+
+\tableofcontents
+%\listoffigures
+%\listoftables
+
+\chapter*{Wprowadzenie}
+\addcontentsline{toc}{chapter}{Wprowadzenie}
+
+\section{Wstęp}
+
+Wiedza zdobywana przez studentów w trakcie studiów niezwykle często jest przez nich zapominana wkrótce po zaliczeniu egzaminów. Większość studentów uczy się z własnych notatek lub materiałów dostarczanych przez
+wykładowców. Materiały te zazwyczaj ukierunkowane są na krótkotrwałe zapamiętywanie zagadnień o dużym stopniu szczegółowości, a ich forma nie zachęca do utrwalania
+wiedzy z danego przedmiotu po zdaniu egzaminu. Również samo zaliczenie przedmiotu poprzez zapamiętywanie pojęć bez pełnego zrozumienia ich sensu i zastosowań nie prowadzi do podniesienia swoich kwalifikacji.
+\par W praktyce trwała i dogłębna znajomość pewnych zagadnień i umiejętność rozwiązywania określonych typów zadań jest niezbędna w takich sytuacjach jak rozmowy kwalifikacyjne czy egzaminy licencjackie i magisterskie, które w dzisiejszych czasach dotyczą większości studentów i absolwentów uczelni wyższych. Stąd istnieje potrzeba utrwalania i pogłębiania wiedzy zdobywanej w
+trakcie studiów. Istotnym problemem, z jakim boryka się wielu studentów, którzy korzystają z systemów i aplikacji wspomagających naukę, jest brak informacji zwrotnej o aktualnym stopniu opanowania danego przedmiotu lub zagadnienia. Także wykładowcy nie mają zwykle dostępu do informacji o postępach swoich studentów i w efekcie nie są w stanie dostosować treści przekazywanych na zajęciach do wiedzy i umiejętności uczestników.  
+\par Celem naszego projektu jest stworzenie systemu wspomagającego utrawalanie wiedzy zdobywanej na studiach, który jednocześnie dostarcza studentom i wykładowcom informacje o osiąganych wynikach. Niniejszy tekst jest dokumentacją naszej pracy włożonej w realizację tego systemu.
+
+\section{Definicje}
+
+Podstawowe pojęcia używane w niniejszej pracy:
+
+\chapter{Wizja systemu}\label{r:vision}
+
+\chapter{Opis architektury}\label{r:architecture}
+
+\chapter{Organizacja pracy}\label{r:org}
+
+\chapter{Dokumentacja użytkowa}\label{r:documentation}
+
+\chapter{Podsumowanie}
+
+\appendix
+
+\chapter{Zawartość dysku CD}
+
+\chapter{Podział pracy}
+
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{Bibliografia}
+
+
+
+\end{thebibliography}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% coding: latin-2
+%%% End:
