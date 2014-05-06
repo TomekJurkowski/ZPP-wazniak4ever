@@ -432,12 +432,17 @@ namespace wazniak_forever.ViewModel
                 return;
             }
 
-            if (CourseType == CourseType.FixedNumber)
+            if (CourseType == CourseType.FixedNumber || CourseType == CourseType.Time)
             {
                 var RandomExercises = new List<RegularExercise>();
                 var RandomSolutions = new List<Solution>();
                 var r = new Random();
-                while (RandomExercises.Count < 10 && Exercises.Count > 0)
+                
+                int maxExercises;
+                if (CourseType == CourseType.FixedNumber) { maxExercises = 10; }
+                else { maxExercises = Exercises.Count; }
+                
+                while (RandomExercises.Count < maxExercises && Exercises.Count > 0)
                 {
                     var index = r.Next(0, Exercises.Count);
                     RandomExercises.Add(Exercises.ElementAt(index));
