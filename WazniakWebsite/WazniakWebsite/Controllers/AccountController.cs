@@ -47,8 +47,16 @@ namespace WazniakWebsite.Controllers
                 var user = await UserManager.FindAsync(model.UserName, model.Password);
                 if (user != null)
                 {
-                    await SignInAsync(user, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
+
+                    if (user.EmailConfirmed)
+                    {
+                        await SignInAsync(user, model.RememberMe);
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Confirm Email Address.");
+                    }
                 }
                 else
                 {
@@ -77,12 +85,34 @@ namespace WazniakWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser() { UserName = model.UserName };
+                var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+
+                    var m = new System.Net.Mail.MailMessage(
+                        new System.Net.Mail.MailAddress("clarifierclarifier@gmail.com", "Clarifier Admin Registration"),
+                        new System.Net.Mail.MailAddress(user.Email))
+                    {
+                        Subject = "Email confirmation",
+                        Body =
+                            string.Format(
+                                "Dear {0} Thank you for your registration, please click on the below link to complete your registration: <a href=\"{1}\"title=\"User Email Confirm\">{1}</a>",
+                                user.UserName,
+                                Url.Action("ConfirmEmail", "Account", new {Token = user.Id, Email = user.Email},
+                                    Request.Url.Scheme)),
+                        IsBodyHtml = true
+                    };
+
+                    var smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com")
+                    {
+                        Credentials = new System.Net.NetworkCredential("clarifierclarifier@gmail.com", "clarifier54326"),
+                        EnableSsl = true
+                    };
+                    smtp.Send(m);
+                    return RedirectToAction("Confirm", "Account", new { Email = user.Email });
+                    /*await SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");*/
                 }
                 else
                 {
@@ -92,6 +122,12 @@ namespace WazniakWebsite.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult Confirm(string Email)
+        {
+            ViewBag.Email = Email; return View();
         }
 
         //
@@ -306,6 +342,30 @@ namespace WazniakWebsite.Controllers
             var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
             ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail(string Token, string Email)
+        {
+            ApplicationUser user = this.UserManager.FindById(Token);
+            if (user != null)
+            {
+                if (user.Email == Email)
+                {
+                    user.EmailConfirmed = true;
+                    await UserManager.UpdateAsync(user);
+                    await SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home", new { ConfirmedEmail = user.Email });
+                }
+                else
+                {
+                    return RedirectToAction("Confirm", "Account", new { Email = user.Email });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Confirm", "Account", new { Email = "" });
+            }
         }
 
         protected override void Dispose(bool disposing)
