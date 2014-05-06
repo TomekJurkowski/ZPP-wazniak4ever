@@ -235,6 +235,22 @@
     <Compile Include="Migrations\201403231743186_ProgressFeedback.Designer.cs">
       <DependentUpon>201403231743186_ProgressFeedback.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201405061856459_OriginalTextAttributeInMathematicalTask.cs" />
+    <Compile Include="Migrations\201405061856459_OriginalTextAttributeInMathematicalTask.Designer.cs">
+      <DependentUpon>201405061856459_OriginalTextAttributeInMathematicalTask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201405061952084_TasksTextAttributeMadeRequired.cs" />
+    <Compile Include="Migrations\201405061952084_TasksTextAttributeMadeRequired.Designer.cs">
+      <DependentUpon>201405061952084_TasksTextAttributeMadeRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201405062119123_TasksTextAttributeMadeRequired1.cs" />
+    <Compile Include="Migrations\201405062119123_TasksTextAttributeMadeRequired1.Designer.cs">
+      <DependentUpon>201405062119123_TasksTextAttributeMadeRequired1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201405062135330_OriginalTextAttrChangedIntoModifiedText.cs" />
+    <Compile Include="Migrations\201405062135330_OriginalTextAttrChangedIntoModifiedText.Designer.cs">
+      <DependentUpon>201405062135330_OriginalTextAttrChangedIntoModifiedText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ClarifierUser.cs" />
     <Compile Include="Models\MultiChoice.cs" />
@@ -341,6 +357,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201403231743186_ProgressFeedback.resx">
       <DependentUpon>201403231743186_ProgressFeedback.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405061856459_OriginalTextAttributeInMathematicalTask.resx">
+      <DependentUpon>201405061856459_OriginalTextAttributeInMathematicalTask.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405061952084_TasksTextAttributeMadeRequired.resx">
+      <DependentUpon>201405061952084_TasksTextAttributeMadeRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405062119123_TasksTextAttributeMadeRequired1.resx">
+      <DependentUpon>201405062119123_TasksTextAttributeMadeRequired1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405062135330_OriginalTextAttrChangedIntoModifiedText.resx">
+      <DependentUpon>201405062135330_OriginalTextAttrChangedIntoModifiedText.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

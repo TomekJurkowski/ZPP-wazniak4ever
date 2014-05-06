@@ -97,8 +97,8 @@ namespace WazniakWebsite.Controllers
         // since it is responsible for the actual creation of a new MathematicalTask with its Answer
         // and inserting those objects into the database. This function returns a proper ActionResult
         // depending whether the creation/insertion was successful or failed at some point.
-        private async Task<ActionResult> CreateTaskInternal(MathematicalTask mathematicaltask, string subjectName, int subjectId,
-            string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
+        private async Task<ActionResult> CreateTaskInternal(MathematicalTask mathematicaltask, string subjectName,
+            int subjectId, string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
             IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
         {
             switch (answerType)
@@ -182,11 +182,11 @@ namespace WazniakWebsite.Controllers
 
             mathematicaltask.CorrectAnswers = 0;
             mathematicaltask.Attempts = 0;
-            
+
             db.MathematicalTasks.Add(mathematicaltask);
             db.SaveChanges();
 
-            mathematicaltask.Text = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);
+            mathematicaltask.ModifiedText = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);
             db.Entry(mathematicaltask).State = EntityState.Modified;
             db.SaveChanges();
 
@@ -253,7 +253,7 @@ namespace WazniakWebsite.Controllers
         // POST: /MathematicalTask/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
             int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
             string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
@@ -263,7 +263,7 @@ namespace WazniakWebsite.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    return EditTaskInternal(mathematicaltask, sub, isAnswerChanged, answerType, valueAns,
+                    return await EditTaskInternal(mathematicaltask, sub, isAnswerChanged, answerType, valueAns,
                         textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
                 }
             }
@@ -285,8 +285,8 @@ namespace WazniakWebsite.Controllers
         // since it is responsible for the actual edition of an existing MathematicalTask (and its Answer).
         // This function returns a proper ActionResult depending whether the action was successful 
         // or failed at some point.
-        private ActionResult EditTaskInternal(MathematicalTask mathematicaltask, Subject sub, int isAnswerChanged,
-            string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
+        private async Task<ActionResult> EditTaskInternal(MathematicalTask mathematicaltask, Subject sub,
+            int isAnswerChanged, string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
             IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
         {
             // First let's see if the answer for the task is being changed or not.
@@ -297,6 +297,10 @@ namespace WazniakWebsite.Controllers
 
                 mathematicaltask.CorrectAnswers = 0;
                 mathematicaltask.Attempts = 0;
+
+                RemoveOldImagesFromBloB(mathematicaltask.ID);
+                mathematicaltask.ModifiedText = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);
+
                 db.Entry(mathematicaltask).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
@@ -460,6 +464,10 @@ namespace WazniakWebsite.Controllers
 
             mathematicaltask.CorrectAnswers = 0;
             mathematicaltask.Attempts = 0;
+
+            RemoveOldImagesFromBloB(mathematicaltask.ID);
+            mathematicaltask.ModifiedText = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);                
+
             db.Entry(mathematicaltask).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Details", "Subject", new { id = mathematicaltask.SubjectID });
@@ -520,8 +528,9 @@ namespace WazniakWebsite.Controllers
 
             try
             {
-                // Let's delete the Answer and then the MathematicalTask itself.
+                // Let's delete the Answer, then images from BLOB Storage and the MathematicalTask itself.
                 DeleteMathematicalTasksAnswer(id);
+                RemoveOldImagesFromBloB(id);
                 db.MathematicalTasks.Remove(mathematicaltask);
 
                 UpdateSubjectTime(db.Subjects.Find(subjectId));
@@ -590,7 +599,7 @@ namespace WazniakWebsite.Controllers
             }
         }
 
-        public async Task<string> UploadImagesToBlob(string text, int task_id)
+        public async Task<string> UploadImagesToBlob(string text, int taskId)
         {
             var regex = new Regex("(\\$[^\\$]+?\\$)|(\\$\\$[^\\$]+?\\$\\$)");
             var start = 0;
@@ -607,12 +616,12 @@ namespace WazniakWebsite.Controllers
                     ? await LoadEquationImage(match.Value.Substring(2, match.Value.Length - 4), false)
                     : await LoadEquationImage(match.Value.Substring(1, match.Value.Length - 2), true);
                 imgStreams.Add(imgStream);
-                imgNames.Add("task_" + task_id + "_img_" + i.ToString(CultureInfo.InvariantCulture));
+                imgNames.Add("task_" + taskId + "_img_" + i.ToString(CultureInfo.InvariantCulture));
                 newText += text.Substring(start, match.Index - start);
 
                 newText += notInline
-                    ? "$$[task_" + task_id + "_img_" + i.ToString(CultureInfo.InvariantCulture) + "]$$"
-                    : "$[task_" + task_id + "_img_" + i.ToString(CultureInfo.InvariantCulture) + "]$";
+                    ? "$$[task_" + taskId + "_img_" + i.ToString(CultureInfo.InvariantCulture) + "]$$"
+                    : "$[task_" + taskId + "_img_" + i.ToString(CultureInfo.InvariantCulture) + "]$";
                 start = match.Index + match.Length;
                 i++;
             }
@@ -620,6 +629,11 @@ namespace WazniakWebsite.Controllers
             newText += text.Substring(start, text.Length - start);
             //System.Diagnostics.Debug.WriteLine("New text: " + newText);
             return newText;
+        }
+
+        private void RemoveOldImagesFromBloB(int taskId)
+        {
+            
         }
     }
 }
