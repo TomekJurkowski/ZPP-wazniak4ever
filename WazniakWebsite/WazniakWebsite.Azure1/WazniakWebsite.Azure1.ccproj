@@ -5,7 +5,11 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>2.3</ProductVersion>
+<<<<<<< HEAD
     <ProjectGuid>57e4670f-9a25-4e51-9807-05665ed545dc</ProjectGuid>
+=======
+    <ProjectGuid>b13248d2-0c17-4d08-a2aa-5b380c4b60c2</ProjectGuid>
+>>>>>>> 21b05857379415b4a43437dca9f48ef175dd7892
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WazniakWebsite.Azure1</RootNamespace>
