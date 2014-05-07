@@ -15,15 +15,6 @@ namespace wazniak_forever.Controls
         public CoursePivotItem()
         {
             InitializeComponent();
-            if (this.Name == MY_COURSES_NAME) clarifyMyCourses();
-        }
-
-        private void clarifyMyCourses()
-        {
-            foreach (Grid CourseGrid in AllCoursesList.ItemsSource)
-            {
-                CourseGrid.Background = new SolidColorBrush(Colors.Cyan);
-            }
         }
 
         public void setBinding(string name)
@@ -68,6 +59,21 @@ namespace wazniak_forever.Controls
             AllCoursesList.ItemsSource = SearchList.
                 Where(course => course.Name.IndexOf(CourseSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0)
                 .ToList();
+        }
+
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.Name == ALL_COURSES_NAME)
+            {
+                GradientStopCollection gSC = new GradientStopCollection();
+                gSC.Add(new GradientStop());
+                gSC.Add(new GradientStop());
+                gSC[0].Color = (Application.Current.Resources["TileBackgroundColor"] as SolidColorBrush).Color;
+                gSC[1].Color = Color.FromArgb(105, 255, 192, 203);
+                gSC[1].Offset = 0.5;
+                LinearGradientBrush lGB = new LinearGradientBrush(gSC, 0.0);
+                (sender as Grid).Background = lGB;
+            }
         }
     }
 }
