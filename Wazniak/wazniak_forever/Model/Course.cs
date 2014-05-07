@@ -388,6 +388,7 @@ namespace wazniak_forever.Model
         public int CorrectAnswer { get; set; }
         public string AnswerDiscriminator { get; set; }
         public int ModuleID { get; set; }
+        public string ModifiedText { get; set; }
     }
 
     public class Task
@@ -461,6 +462,7 @@ namespace wazniak_forever.Model
         public string Title { get; set; }
         public Subject Subject { get; set; }
         public Solution Solution { get; set; }
+        public string ModifiedText { get; set; }
     }
 
     public class RegularExercise : Exercise
@@ -470,7 +472,7 @@ namespace wazniak_forever.Model
         public RegularExercise() {}
 
         public RegularExercise(int id, int subjectId, int solutionId, 
-            string title, string question, Subject subject, Solution solution)
+            string title, string question, Subject subject, Solution solution, string mathText)
         {
             ID = id;
             SubjectID = subjectId;
@@ -478,6 +480,7 @@ namespace wazniak_forever.Model
             Question = question;
             Subject = subject;
             Solution = solution;
+            ModifiedText = mathText;
         }
     }
 
