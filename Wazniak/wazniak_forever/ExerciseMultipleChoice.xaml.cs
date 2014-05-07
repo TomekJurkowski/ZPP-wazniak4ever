@@ -26,10 +26,13 @@ namespace wazniak_forever
             ExControl.AddElement(MultipleChoiceAnswerInput);
         }
 
+        
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
+            ExControl.AdjustQuestionBox();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

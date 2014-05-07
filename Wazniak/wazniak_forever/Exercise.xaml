@@ -62,6 +62,17 @@
                                 TextWrapping="Wrap"
                                 Grid.Row="2"/>
 
+                <RichTextBox x:Name="MathQuestionBox"
+                         Background="{StaticResource BackgroundColor}"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center"
+                         HorizontalContentAlignment="Center"
+                         Grid.Row="2"
+                         HorizontalAlignment="Center"
+                         Visibility="Collapsed"
+                         Height="Auto">
+                </RichTextBox>
+
                 <TextBlock x:Name="StatisticTitle" 
                                 Text="Results"
                                 FontSize="40"

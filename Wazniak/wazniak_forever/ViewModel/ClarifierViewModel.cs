@@ -405,22 +405,24 @@ namespace wazniak_forever.ViewModel
                         }
                         break;
                 }
+
                 if (solution != null)
                 {
                     Solutions.Add(solution);
-
+                    var subject = OnlineMode ?
+                           AllCourses.First(course => course.ID == CurrentCourseID) :
+                           DownloadedCourses.First(course => course.ID == CurrentCourseID);
                     switch (task.TaskDiscriminator)
                     {
-                        case "RegularTask":
-                            var subject = OnlineMode ?
-                                AllCourses.First(course => course.ID == CurrentCourseID) :
-                                DownloadedCourses.First(course => course.ID == CurrentCourseID);
-                            var ex = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
+                       
+                        default:
+                            var regExer = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
                                 task.Title, task.Text1,
                                 subject,
-                                solution);
-                            solution.Exercise = ex;
-                            Exercises.Add(ex);
+                                solution,
+                                task.ModifiedText);
+                            solution.Exercise = regExer;
+                            Exercises.Add(regExer);
                             break;
                     }
                 }  
