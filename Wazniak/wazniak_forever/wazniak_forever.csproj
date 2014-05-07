@@ -96,7 +96,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Exercise.xaml.cs">
+    <Compile Include="Exercise.xaml.cs">
       <DependentUpon>Exercise.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
@@ -163,7 +163,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="Controls\Exercise.xaml">
+    <Page Include="Exercise.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -915,9 +915,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\portable-net45+wp80+win8\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Sqlite, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Sqlite">
       <HintPath>..\packages\sqlite-net-wp8.3.8.4.3\lib\windowsphone8\Sqlite.winmd</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.13\lib\sl4-windowsphone71\System.Net.Http.dll</HintPath>
@@ -930,7 +930,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="SQLite.WP80, Version=3.8.3.1">
+    <SDKReference Include="SQLite.WP80, Version=3.8.4.3">
       <Name>SQLite for Windows Phone</Name>
     </SDKReference>
   </ItemGroup>

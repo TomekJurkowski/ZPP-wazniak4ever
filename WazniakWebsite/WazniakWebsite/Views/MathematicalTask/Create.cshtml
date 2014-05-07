@@ -172,12 +172,16 @@
             singleRadioOnClick(0);
         });
 
-            function goToByScroll() {
-                // Scroll
-                $("html,body").animate(
-                    { scrollTop: $("#pill_content").offset().top },
-                    'slow');
-            }
+        function goToByScroll() {
+            // Scroll
+            $("html,body").animate(
+                { scrollTop: $("#pill_content").offset().top },
+                'slow');
+        }
+        
+        function writeMathSymbol(x) {
+            alert(x);
+        }
 
     </script>
 
@@ -313,8 +317,8 @@
         <br />
         <h5 id="description" class=" col-md-10 col-md-offset-2 PurpleText">
             <b>
-                Type in the content of the exercise to the text input. If you want to insert a mathematical expression
-                simply type sign \$ (or \$\$ if you want the expression to be placed in the next line), then write the expression
+                Type in the content of the exercise. If you want to insert a mathematical expression
+                simply type sign \$ (or \$\$ if you want the expression to be placed in the separate line), then write the expression
                 in LaTeX syntax and finish it with another \$ (\$\$). The preview of the text that you are typing will be dynamically
                 displayed in the box bellow.
             </b>
@@ -325,6 +329,26 @@
             <div class="col-md-10">
                 <textarea class="form-control" id="Text" name="Text" rows="8" onkeyup="Preview.Update()"></textarea>
                 <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn PurpleBtn" onclick="writeMathSymbol('asd')">1</button>
+                        <button type="button" class="btn PurpleBtn" onclick="writeMathSymbol()">2</button>
+                        <button type="button" class="btn PurpleBtn" onclick="writeMathSymbol()">3</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn PurpleBtn" onclick="writeMathSymbol()">4</button>
+                        <button type="button" class="btn PurpleBtn" onclick="writeMathSymbol()">5</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn PurpleBtn" onclick="writeMathSymbol()">6</button>
+                        <button type="button" class="btn PurpleBtn" onclick="writeMathSymbol()">7</button>
+                    </div>
+                </div>
             </div>
         </div>
 
