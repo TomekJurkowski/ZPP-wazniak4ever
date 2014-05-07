@@ -4,7 +4,7 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
-      <Setting name="ClarifierBlobConnectionString" value="DefaultEndpointsProtocol=https;AccountName=clarifierblob;AccountKey=F7iI9YZ0Dbt/WV9rtyhwZou+A/jSxO0Q6D6gBQhUmGRlFuGQ8So98x8IF1KcW5PGkOtem1+R/eRZXwKu1Vv8Qg==" />
+      <Setting name="ClarifierBlobConnectionString" value="DefaultEndpointsProtocol=https;AccountName=clarifierblob;AccountKey=/tKS+vsnffuBgdLrxYsFiVxQWVOPcewcxrTKZ7FjIEVTfqO6pBFmvfgCBXO7CBd7fXNSB+vb6vdqPPipXFIZjQ==" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

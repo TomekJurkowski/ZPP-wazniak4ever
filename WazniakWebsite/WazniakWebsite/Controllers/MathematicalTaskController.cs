@@ -631,9 +631,23 @@ namespace WazniakWebsite.Controllers
             return newText;
         }
 
+        private const string BLOB_URL_PATH =
+            "https://clarifierblob.blob.core.windows.net/clarifiermathimages/task_";
+
         private void RemoveOldImagesFromBloB(int taskId)
         {
-            
+            var str = BLOB_URL_PATH + taskId + "_img_";
+
+            var blobContainer = _blobStorageService.GetCloudBLobContainer();
+            var blobs = blobContainer.ListBlobs().Where(blobItem => blobItem.Uri.ToString().StartsWith(str)).
+                Select(blobItem => blobItem.Uri.ToString()).ToList();
+
+            var tempBlobStrings = blobContainer.ListBlobs().Select(blobItem => blobItem.Uri.ToString()).ToList();
+
+            foreach (var blob in from blobStr in blobs select new Uri(blobStr) into uri select Path.GetFileName(uri.LocalPath) into fileName select blobContainer.GetBlockBlobReference(fileName))
+            {
+                blob.Delete();
+            }
         }
     }
 }
