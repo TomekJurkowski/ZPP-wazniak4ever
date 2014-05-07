@@ -137,3 +137,8 @@ a:focus {
  .clickable {
     cursor: pointer;     
  }
+
+ .math_icon {
+     margin-bottom: 2px;
+     margin-top: 2px;
+ }
