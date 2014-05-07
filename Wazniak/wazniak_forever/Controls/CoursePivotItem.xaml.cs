@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using wazniak_forever.Model;
 
 namespace wazniak_forever.Controls
@@ -14,6 +15,15 @@ namespace wazniak_forever.Controls
         public CoursePivotItem()
         {
             InitializeComponent();
+            if (this.Name == MY_COURSES_NAME) clarifyMyCourses();
+        }
+
+        private void clarifyMyCourses()
+        {
+            foreach (Grid CourseGrid in AllCoursesList.ItemsSource)
+            {
+                CourseGrid.Background = new SolidColorBrush(Colors.Cyan);
+            }
         }
 
         public void setBinding(string name)

@@ -933,6 +933,9 @@
     <SDKReference Include="SQLite.WP80, Version=3.8.3.1">
       <Name>SQLite for Windows Phone %28SQLite.WP80, Version=3.8.3.1%29</Name>
     </SDKReference>
+    <SDKReference Include="SQLite.WP80, Version=3.8.4.3">
+      <Name>SQLite for Windows Phone %28SQLite.WP80, Version=3.8.4.3%29</Name>
+    </SDKReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
