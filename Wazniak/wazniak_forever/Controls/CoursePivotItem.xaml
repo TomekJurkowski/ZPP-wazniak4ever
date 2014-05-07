@@ -46,7 +46,7 @@
                 toolkit:TiltEffect.IsTiltEnabled="True">
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
-                        <Grid 
+                        <Grid
                             Background="{StaticResource TileBackgroundColor}"
                             Margin="10,0,30,10">
                         <StackPanel HorizontalAlignment="Left">
