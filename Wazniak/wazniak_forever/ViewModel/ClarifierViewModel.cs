@@ -434,7 +434,7 @@ namespace wazniak_forever.ViewModel
                 return;
             }
 
-            if (CourseType == CourseType.FixedNumber || CourseType == CourseType.Time)
+            if (CourseType != CourseType.StudyWithClarifier)
             {
                 var RandomExercises = new List<RegularExercise>();
                 var RandomSolutions = new List<Solution>();
