@@ -23,5 +23,11 @@ namespace wazniak_forever
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
             ExControl.HandleFinishAction();
         }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            NavigationService.RemoveBackEntry();
+        }
     }
 }

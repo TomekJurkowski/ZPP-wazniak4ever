@@ -40,12 +40,6 @@ namespace wazniak_forever
         {
             if (!App.ViewModel.HandleCourseExit(e)) return;
             base.OnBackKeyPress(e);
-            /*if (NavigationService.CanGoBack)
-            {
-                e.Cancel = true;
-                NavigationService.RemoveBackEntry();
-                NavigationService.GoBack();
-            }*/
         }
 
         private void AddEvents()

@@ -28,6 +28,12 @@ namespace wazniak_forever
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            NavigationService.RemoveBackEntry();
+        }
+
         private async Task SelectExercise(CourseType type, IEnumerable<int> selectedModuleIdList)
         {
             App.ViewModel.CourseType = type;
