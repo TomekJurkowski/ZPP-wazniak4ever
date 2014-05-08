@@ -63,14 +63,13 @@ namespace wazniak_forever.Controls
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            if (this.Name == MY_COURSES_NAME)
+            if (this.Name == ALL_COURSES_NAME)
             {
                 GradientStopCollection gSC = new GradientStopCollection();
-                gSC.Add(new GradientStop());
-                gSC.Add(new GradientStop());
+                for (int i = 0; i < 2; i++) gSC.Add(new GradientStop());
                 gSC[0].Color = (Application.Current.Resources["TileBackgroundColor"] as SolidColorBrush).Color;
-                gSC[1].Color = Color.FromArgb(255, 200, 120, 180);
-                gSC[1].Offset = 0.2;
+                gSC[1].Color = Color.FromArgb(255, 175, 145, 250);
+                gSC[1].Offset = 0.5;
                 LinearGradientBrush lGB = new LinearGradientBrush(gSC, 0.0);
                 (sender as Grid).Background = lGB;
             }
