@@ -40,6 +40,11 @@
         div[id^="multiRow_"], div[id^="singleRow_"] {
             margin-bottom: 15px;
         }
+
+        .btn-toolbar, .btn-group {
+            text-align: center;
+            float: none !important;
+        }
     </style>
 
     <script type="text/javascript">
@@ -197,6 +202,13 @@
                 'slow');
         }
 
+        function writeMathSymbol(str) {
+            $("#Text").val($('#Text').val() + str);
+        }
+
+        function writeMathSymbolWithSlash(str) {
+            $("#Text").val($('#Text').val() + "\\" + str);
+        }
 
     </script>
 
@@ -354,6 +366,88 @@
             </div>
         </div>
         
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbol('a^{b}')"><img src="~/Images/math_icons/superscript.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbol('a_{b}')"><img src="~/Images/math_icons/subscript.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbol('a_{b}^{c}')"><img src="~/Images/math_icons/x_a^b.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbol('{a_{b}}^{c}')"><img src="~/Images/math_icons/{x_a}^b.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('frac{}{}')"><img src="~/Images/math_icons/fraction.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sqrt{a}')"><img src="~/Images/math_icons/sqrt.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sqrt[n]{a}')"><img src="~/Images/math_icons/sqrt[].png" alt="image"></button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('binom{}{}')"><img src="~/Images/math_icons/binom.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sum_{}^{}')"><img src="~/Images/math_icons/sum.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('prod_{}^{}')"><img src="~/Images/math_icons/prod.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('int')"><img src="~/Images/math_icons/int.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('int_{a}^{b}')"><img src="~/Images/math_icons/int{}{}.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('lim_{x \to n}')"><img src="~/Images/math_icons/lim.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('forall')"><img src="~/Images/math_icons/forall.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('exists')"><img src="~/Images/math_icons/exists.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('infty')"><img src="~/Images/math_icons/infinity.png" alt="image"></button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{N}')"><img src="~/Images/math_icons/natural.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{Z}')"><img src="~/Images/math_icons/integers.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{R}')"><img src="~/Images/math_icons/real.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{Q}')"><img src="~/Images/math_icons/rational.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{C}')"><img src="~/Images/math_icons/complex.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{P}')"><img src="~/Images/math_icons/prime.png" alt="image"></button>
+                    </div>
+                </div>
+                
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('neq')"><img src="~/Images/math_icons/neq.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('geq')"><img src="~/Images/math_icons/geq.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('leq')"><img src="~/Images/math_icons/leq.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('geqslant')"><img src="~/Images/math_icons/geqslant.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('leqslant')"><img src="~/Images/math_icons/leqslant.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('gg')"><img src="~/Images/math_icons/gg.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('ll')"><img src="~/Images/math_icons/ll.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('prec')"><img src="~/Images/math_icons/prec.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('succ')"><img src="~/Images/math_icons/succ.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sim')"><img src="~/Images/math_icons/sim.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('simeq')"><img src="~/Images/math_icons/simeq.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('aprox')"><img src="~/Images/math_icons/aprox.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('vdash')"><img src="~/Images/math_icons/vdash.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('dashv')"><img src="~/Images/math_icons/dashv.png" alt="image"></button>
+                    </div>
+                </div>
+
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('alpha')"><img src="~/Images/math_icons/alpha.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('beta')"><img src="~/Images/math_icons/beta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('gamma')"><img src="~/Images/math_icons/gamma.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('delta')"><img src="~/Images/math_icons/delta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('epsilon')"><img src="~/Images/math_icons/epsilon.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('varepsilon')"><img src="~/Images/math_icons/varepsilon.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('eta')"><img src="~/Images/math_icons/eta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('lambda')"><img src="~/Images/math_icons/lambda.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('pi')"><img src="~/Images/math_icons/pi.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('omega')"><img src="~/Images/math_icons/omega.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('phi')"><img src="~/Images/math_icons/phi.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('varphi')"><img src="~/Images/math_icons/varphi.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('mu')"><img src="~/Images/math_icons/mu.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('psi')"><img src="~/Images/math_icons/psi.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('rho')"><img src="~/Images/math_icons/rho.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sigma')"><img src="~/Images/math_icons/sigma.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('tau')"><img src="~/Images/math_icons/tau.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('theta')"><img src="~/Images/math_icons/theta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('vartheta')"><img src="~/Images/math_icons/vartheta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('zeta')"><img src="~/Images/math_icons/zeta.png" alt="image"></button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="Text">Preview</label>
             <div class="col-md-10">

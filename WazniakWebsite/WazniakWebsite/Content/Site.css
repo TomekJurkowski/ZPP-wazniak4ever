@@ -56,6 +56,7 @@ input[type="checkbox"].input-validation-error {
 
 .PurpleBtn {
     color: #FFFFFF;
+    -ms-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #660066;
     *background-color: #660066;
@@ -78,6 +79,34 @@ input[type="checkbox"].input-validation-error {
 .PurpleBtn[disabled] {
     color: #FFFFFF;
     background-color: #660066;
+    *background-color: #003bb3;
+}
+
+.LightPurpleBtn {
+    color: #660066;
+    -ms-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #ffccff;
+    *background-color: #ffccff;
+    background-image: -moz-linear-gradient(top, #F7F5FA, #ffccff);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#F7F5FA), to(#ffccff));
+    background-image: -webkit-linear-gradient(top, #F7F5FA, #ffccff);
+    background-image: -o-linear-gradient(top, #F7F5FA, #ffccff);
+    background-image: linear-gradient(to bottom, #F7F5FA, #ffccff);
+    background-repeat: repeat-x;
+    border-color: #ffccff;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F7F5FA', endColorstr='#FCC', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.LightPurpleBtn:hover,
+.LightPurpleBtn:active,
+.LightPurpleBtn.active,
+.LightPurpleBtn.disabled,
+.LightPurpleBtn[disabled] {
+    color: #660066;
+    background-color: #ffccff;
     *background-color: #003bb3;
 }
 
@@ -141,4 +170,14 @@ a:focus {
  .math_icon {
      margin-bottom: 2px;
      margin-top: 2px;
+ }
+
+  .math_icon {
+    height: 38px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+ }
+
+ .math_icon img {
+     max-height: 34px;
  }
