@@ -1,0 +1,93 @@
+﻿@model WazniakWebsite.Models.Subject
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@section HeadScripts
+{
+    <style>
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    </style>
+    
+    <script type="text/javascript">
+
+        $(function () {
+            window.onload = function() {
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1;
+
+                var yyyy = today.getFullYear();
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                today = yyyy + '-' + mm + '-' + dd;
+
+                document.getElementById("LastUpdated").innerHTML = today;
+            };
+        });
+        
+    </script>
+
+}
+
+<h2 class="PurpleText">Create</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4 class="PurpleText">New Subject</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2 PurpleText" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2 PurpleText" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @rows = 8 })
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastUpdated, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="well-sm" id="LastUpdated">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn PurpleBtn" />
+            </div>
+        </div>
+    </div>
+}
+
+<hr />
+<div>
+    @Html.ActionLink("Back to List", "Index", new { @class = "PurpleText" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

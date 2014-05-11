@@ -1,0 +1,66 @@
+﻿@model WazniakWebsite.Models.RegularTask
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@section HeadScripts
+{
+    <style>
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+            font-size: 125%;
+        }
+    </style>
+}
+
+<h2 class="PurpleText">Details</h2>
+
+<hr />
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <label class="myLabel control-label col-md-2 PurpleText">Subject</label>
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground">
+                @Html.DisplayFor(model => model.Subject.Name)
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="myLabel control-label col-md-2 PurpleText">Exercise Title</label>
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground text-center">
+                <b>@Html.DisplayFor(model => model.Title)</b>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="myLabel control-label col-md-2 PurpleText">Content</label>
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground">
+                @Html.DisplayFor(model => model.Text)
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="myLabel control-label col-md-2 PurpleText">Solution</label>
+        <div class="col-md-10">
+            <textarea class="alert lightPurpleBackground" rows="6" disabled="">@Model.Answer.ToString()</textarea>
+        </div>
+    </div>
+
+</div>
+
+<hr />
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.ID }) |
+    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new {})
+</div>

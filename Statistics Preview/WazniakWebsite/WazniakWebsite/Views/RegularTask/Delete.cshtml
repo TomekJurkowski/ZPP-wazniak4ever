@@ -1,0 +1,87 @@
+﻿@model WazniakWebsite.Models.RegularTask
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+@section HeadScripts
+{
+    <style>
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+            font-size: 125%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#tooltipDelete").tooltip({
+                animated: 'fade',
+                placement: 'top'
+            });
+        });
+    </script>
+}
+
+<h2 class="PurpleText">Delete</h2>
+
+<h3 class="PurpleText">Are you sure you want to delete this exercise?</h3>
+
+<hr />
+<div class="form-horizontal">
+    
+    <div class="form-group">
+        <label class="myLabel control-label col-md-2 PurpleText">Subject</label>
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground">
+                @Html.DisplayFor(model => model.Subject.Name)
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="myLabel control-label col-md-2 PurpleText">Exercise Title</label>
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground text-center">
+                <b>@Html.DisplayFor(model => model.Title)</b>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="myLabel control-label col-md-2 PurpleText">Exercise Content</label>
+        <div class="col-md-10">
+            <div class="alert lightPurpleBackground">
+                @Html.DisplayFor(model => model.Text)
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="myLabel control-label col-md-2 PurpleText">Exercise Solution</label>
+        <div class="col-md-10">
+            <textarea class="alert lightPurpleBackground" rows="6" disabled="">@Model.Answer.ToString()</textarea>
+        </div>
+    </div>
+
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="tooltipDelete" type="submit" value="Delete" class="btn PurpleBtn" title="This action is irreversible!" />
+            </div>
+        </div>
+    </div>
+}
+
+<hr />
+<div>
+    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { })
+</div>
