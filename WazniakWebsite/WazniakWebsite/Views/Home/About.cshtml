@@ -6,29 +6,63 @@
 {
 <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
+    @* ReSharper disable once DeclarationIsEmpty *@
+    @* ReSharper disable once DeclarationIsEmpty *@
+    @* ReSharper disable once DeclarationIsEmpty *@
+@* ReSharper disable DeclarationIsEmpty *@
     <style type="text/css">
         .LeftFloat {
+            margin-left: 24px;
             float: left;
+            position: relative;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
         }
 
         .RightFloat {
+            margin-right: 12px;
             float: right;
+            position: relative;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
         }
 
         .FieldContainer {
-            border: 1px solid black;
+            background: -webkit-radial-gradient(#9900CC, #FFCCFF); /* Safari 5.1 to 6.0 */
+            background: -o-radial-gradient(#9900CC, #FFCCFF); /* For Opera 11.6 to 12.0 */
+            background: -moz-radial-gradient(#9900CC, #FFCCFF); /* For Firefox 3.6 to 15 */
+            background: radial-gradient(#9900CC, #FFCCFF); /* Standard syntax */
             width: 400px;
-            height: 300px;
+            max-height: 300px;
             overflow-y: auto;
             font-family: tahoma;
+            -ms-border-radius: 6px;
+            border-radius: 6px;
         }
 
         .OrderingField {
-            margin: 3px;
-            border: 1px dashed #0da3fd;
-            height: 50px;
+            margin: 5px;
+            height: 30px;
+            -ms-border-radius: 6px;
+            border-radius: 6px;
         }
+
+        .Up {
+        }
+
+        .Down {
+        }
+
     </style>
+@* ReSharper restore DeclarationIsEmpty *@
 
     <script type="text/javascript">
     //<![CDATA[
@@ -57,27 +91,15 @@
             }
 
             $(".FieldContainer").sortable({ items: ".OrderingField", distance: 10 });
-            $('button').click(function () {
-                var btn = $(this);
-                var val = btn.val();
-                if (val == 'up')
-                    moveUp(btn.parents('.OrderingField'));
-                else
-                    moveDown(btn.parents('.OrderingField'));
+
+            $('.Up').click(function () {
+                moveUp($(this).parents('.OrderingField'));
+            });
+            
+            $('.Down').click(function () {
+                moveDown($(this).parents('.OrderingField'));
             });
         });//]]>
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            $("[id^='tooltipDown']").tooltip({
-                animated: 'fade',
-                placement: 'bottom'
-            });
-            $("[id^='tooltipUp']").tooltip({
-                animated: 'fade',
-                placement: 'top'
-            });
-        });
     </script>
 }
 
@@ -92,8 +114,8 @@
             Item1
         </div>
         <div class="RightFloat">
-            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
-            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+            <span class="glyphicon glyphicon-chevron-up PurpleColor Up clickable" title="Up"></span>
+            <span class="glyphicon glyphicon-chevron-down PurpleColor Down clickable" title="Down"></span>
         </div>
     </div>
     <div class="OrderingField lightPurpleBackground">
@@ -101,8 +123,8 @@
             Item2
         </div>
         <div class="RightFloat">
-            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
-            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+            <span class="glyphicon glyphicon-chevron-up PurpleColor Up clickable" title="Up"></span>
+            <span class="glyphicon glyphicon-chevron-down PurpleColor Down clickable" title="Down"></span>
         </div>
     </div>
     <div class="OrderingField lightPurpleBackground">
@@ -110,8 +132,8 @@
             Item3
         </div>
         <div class="RightFloat">
-            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
-            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+            <span class="glyphicon glyphicon-chevron-up PurpleColor Up clickable" title="Up"></span>
+            <span class="glyphicon glyphicon-chevron-down PurpleColor Down clickable" title="Down"></span>
         </div>
     </div>
     <div class="OrderingField lightPurpleBackground">
@@ -119,8 +141,8 @@
             Item4
         </div>
         <div class="RightFloat">
-            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
-            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+            <span class="glyphicon glyphicon-chevron-up PurpleColor Up clickable" title="Up"></span>
+            <span class="glyphicon glyphicon-chevron-down PurpleColor Down clickable" title="Down"></span>
         </div>
     </div>
     <div class="OrderingField lightPurpleBackground">
@@ -128,17 +150,8 @@
             Item5
         </div>
         <div class="RightFloat">
-            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
-            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
-        </div>
-    </div>
-    <div class="OrderingField lightPurpleBackground">
-        <div class="LeftFloat">
-            Item6
-        </div>
-        <div class="RightFloat">
-            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
-            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+            <span class="glyphicon glyphicon-chevron-up PurpleColor Up clickable" title="Up"></span>
+            <span class="glyphicon glyphicon-chevron-down PurpleColor Down clickable" title="Down"></span>
         </div>
     </div>
 </div>
