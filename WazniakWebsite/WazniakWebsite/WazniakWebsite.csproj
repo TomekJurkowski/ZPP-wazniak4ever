@@ -278,6 +278,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Authentication\IdentityModels.cs" />
     <Compile Include="Models\ClarifierUser.cs" />
+    <Compile Include="Models\Module.cs" />
     <Compile Include="Models\MultiChoice.cs" />
     <Compile Include="Models\MathematicalTask.cs" />
     <Compile Include="Models\RegularTask.cs" />
