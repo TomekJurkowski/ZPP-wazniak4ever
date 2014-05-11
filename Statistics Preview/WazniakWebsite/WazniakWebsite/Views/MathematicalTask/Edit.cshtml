@@ -1,0 +1,644 @@
+﻿@model WazniakWebsite.Models.MathematicalTask
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@section Meta
+{
+    <!-- Copyright (c) 2012-2013 The MathJax Consortium -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+}
+
+@section HeadScripts
+{
+    <style>
+        #Text, #MathBuffer, #MathPreview, #textOutTitle, #textInTitle {
+            width: 100%;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        #Text {
+            background-color: #F7F5FA;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        #MathBuffer, #MathPreview {
+            background-color: #FFCCFF;
+        }
+
+        textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        div[id^="multiRow_"], div[id^="singleRow_"] {
+            margin-bottom: 15px;
+        }
+
+        .btn-toolbar, .btn-group {
+            text-align: center;
+            float: none !important;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        // variable and 2 functions responsible for adding/removing rows for SingleChoiceAnswer
+        var rowNumForSingle = 3;
+        function addRowForSingle() {
+            var row = '<div class="row" id="singleRow_' + rowNumForSingle + '"><div class="col-md-5">' +
+                '<input class="form-control" type="text" name="singleChoiceList" /></div><div class="col-md-3">' +
+                '<input type="radio" id="singleAnsRadio_' + rowNumForSingle + '"  name="singleRadios" onclick="singleRadioOnClick(' + rowNumForSingle + ')" />' +
+                '<label class="PurpleText" id="singleAnsLabel_' + rowNumForSingle + '"></label>' +
+                '</div><div class="col-md-1">' +
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRowForSingle(' + rowNumForSingle + ')"></span>' +
+                '</div></div>';
+
+            jQuery('#singleContainer').append(row);
+            rowNumForSingle++;
+        }
+
+        function removeRowForSingle(id) {
+            if ($("#singleAnsRadio_" + id).is(':checked')) {
+                $("#singleAnsRadio_0").prop("checked", true);
+                singleRadioOnClick(0);
+            }
+
+            jQuery('#singleRow_' + id).remove();
+
+            // Let's update the actual number of the option that is selected
+            $("[name='singleCorrectNo']").val(
+                $("[id^='singleAnsRadio_']").index($("input[id^='singleAnsRadio_']:checked"))
+            );
+        }
+
+        // variable and 2 functions responsible for adding/removing rows for MultipleChoiceAnswer
+        var rowNumForMultiple = 3;
+        function addRowForMultiple() {
+            var row = '<div class="row" id="multiRow_' + rowNumForMultiple + '"><div class="col-md-5">' +
+                '<input class="form-control" type="text" name="multiChoiceList" /></div><div class="col-md-3">' +
+                '<input type="checkbox" id="multiAnsCheckbox_' + rowNumForMultiple + '" onclick="multiCheckboxOnClick(' + rowNumForMultiple + ')" />' +
+                '<input type="text" name="multiAnswerList" id="multiAnsHiddenInput_' + rowNumForMultiple + '" value="False" hidden="" />' +
+                '<label class="PurpleText" id="multiAnsLabel_' + rowNumForMultiple + '">False</label>' +
+                '</div><div class="col-md-1">' +
+                '<span class="glyphicon glyphicon-remove PurpleColor clickable" onclick="removeRowForMultiple(' + rowNumForMultiple + ')"></span>' +
+                '</div></div>';
+
+            jQuery('#multiContainer').append(row);
+            rowNumForMultiple++;
+        }
+
+        function removeRowForMultiple(id) {
+            jQuery('#multiRow_' + id).remove();
+        }
+
+        function singleRadioOnClick(id) {
+            $("[id^='singleAnsLabel_']").empty();
+            $("#singleAnsLabel_" + id).append("Correct");
+
+            // The code below will update the actual number of the option that is selected
+            $("[name='singleCorrectNo']").val(
+                $("[id^='singleAnsRadio_']").index($("#singleAnsRadio_" + id))
+            );
+        }
+
+        function multiCheckboxOnClick(id) {
+            if ($("#multiAnsCheckbox_" + id).is(':checked')) {
+                $("#multiAnsLabel_" + id).empty();
+                $("#multiAnsLabel_" + id).append("True");
+                $("#multiAnsHiddenInput_" + id).val("True");
+            } else {
+                $("#multiAnsLabel_" + id).empty();
+                $("#multiAnsLabel_" + id).append("False");
+                $("#multiAnsHiddenInput_" + id).val("False");
+            }
+        }
+
+        function selectPreviousAnswer() {
+            if ("@ViewBag.PreviouslySelectedAnswer" != "@Model.Answer.className()" || "@ViewBag.ReloadPage" == "1") {
+                $("#newAnswerCheckbox").prop('checked', true);
+                hideOrShowAnswerPanel();
+            }
+
+            switch ("@ViewBag.PreviouslySelectedAnswer") {
+                case "@ViewBag.SingleValueAnswer":
+                    $("#tooltip1").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                    break;
+                case "@ViewBag.TextAnswer":
+                    $("#tooltip2").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                    break;
+                case "@ViewBag.SingleChoiceAnswer":
+                    $("#tooltip3").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                    break;
+                case "@ViewBag.MultipleChoiceAnswer":
+                    $("#tooltip4").tab('show');
+                    $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                    break;
+            }
+        }
+
+        function hideOrShowAnswerPanel() {
+            if ($("#newAnswerCheckbox").is(':checked')) {
+                $("#answerPanel").show("slow");
+                $("#isAnswerChangedInput").val(1);
+            } else {
+                $("#answerPanel").hide("slow");
+                $("#isAnswerChangedInput").val(0);
+            }
+        }
+        
+        $(function () {
+            $("#Text").attr("rows", 8);
+
+            selectPreviousAnswer();
+
+            $("#answerTypeInput").hide();
+            $("#isAnswerChangedInput").hide();
+
+            $('.nav-pills a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+
+                switch ($(this).attr('id')) {
+                    case "tooltip1":
+                        $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                        break;
+                    case "tooltip2":
+                        $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                        break;
+                    case "tooltip3":
+                        $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                        break;
+                    case "tooltip4":
+                        $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                        break;
+                }
+
+                goToByScroll();
+
+                $("#singleAnsRadio_0").prop("checked", true);
+                singleRadioOnClick(0);
+            });
+
+            $("#tooltip1,#tooltip2,#tooltip3,#tooltip4").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
+        });
+
+        function goToByScroll() {
+            // Scroll
+            $("html,body").animate(
+                { scrollTop: $("#pill_content").offset().top },
+                'slow');
+        }
+
+        function writeMathSymbol(str) {
+            $("#Text").val($('#Text').val() + str);
+        }
+
+        function writeMathSymbolWithSlash(str) {
+            $("#Text").val($('#Text').val() + "\\" + str);
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            // update the preview
+            Preview.Update();
+
+            // set the value of the content
+            $("#Text").val("@Model.Text");
+
+            var h = $("#Text").height();
+            $("#MathPreview").css("min-height", function () {
+                return h;
+            });
+            $("#MathBuffer").css("min-height", function () {
+                return h;
+            });
+        })
+    </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        showProcessingMessages: false,
+        tex2jax: {
+        inlineMath: [['$','$'],['\\(','\\)']],
+        processEscapes: true
+        }
+        });
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script>
+        var Preview = {
+            delay: 150,        // delay after keystroke before updating
+
+            preview: null,     // filled in by Init below
+            buffer: null,      // filled in by Init below
+
+            timeout: null,     // store setTimout id
+            mjRunning: false,  // true when MathJax is processing
+            oldText: null,     // used to check if an update is needed
+
+            //
+            //  Get the preview and buffer DIV's
+            //
+            Init: function () {
+                this.preview = document.getElementById("MathPreview");
+                this.buffer = document.getElementById("MathBuffer");
+            },
+
+            //
+            //  Switch the buffer and preview, and display the right one.
+            //  (We use visibility:hidden rather than display:none since
+            //  the results of running MathJax are more accurate that way.)
+            //
+            SwapBuffers: function () {
+                var buffer = this.preview, preview = this.buffer;
+                this.buffer = buffer; this.preview = preview;
+                buffer.style.visibility = "hidden"; buffer.style.position = "absolute";
+                preview.style.position = ""; preview.style.visibility = "";
+            },
+
+            //
+            //  This gets called when a key is pressed in the textarea.
+            //  We check if there is already a pending update and clear it if so.
+            //  Then set up an update to occur after a small delay (so if more keys
+            //  are pressed, the update won't occur until after there has been
+            //  a pause in the typing).
+            //  The callback function is set up below, after the Preview object is set up.
+            //
+            Update: function () {
+                if (this.timeout) {
+                    clearTimeout(this.timeout);
+                }
+                this.timeout = setTimeout(this.callback, this.delay);
+            },
+
+            //
+            //  Creates the preview and runs MathJax on it.
+            //  If MathJax is already trying to render the code, return
+            //  If the text hasn't changed, return
+            //  Otherwise, indicate that MathJax is running, and start the
+            //  typesetting.  After it is done, call PreviewDone.
+            //
+            CreatePreview: function () {
+                Preview.timeout = null;
+                if (this.mjRunning) return;
+                var text = document.getElementById("Text").value;
+                if (text === this.oldtext) return;
+                this.buffer.innerHTML = this.oldtext = text;
+                this.mjRunning = true;
+                MathJax.Hub.Queue(
+                    ["Typeset", MathJax.Hub, this.buffer],
+                    ["PreviewDone", this]
+                );
+            },
+
+            //
+            //  Indicate that MathJax is no longer running,
+            //  and swap the buffers to show the results.
+            //
+            PreviewDone: function () {
+                this.mjRunning = false;
+                this.SwapBuffers();
+            }
+
+        };
+
+        //
+        //  Cache a callback to the CreatePreview action
+        //
+        Preview.callback = MathJax.Callback(["CreatePreview", Preview]);
+        Preview.callback.autoReset = true;  // make sure it can run more than once
+    </script>
+}
+
+
+<h2 class="PurpleText">Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4 class="PurpleText">Change the mathematical exercise and its answer.</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.SubjectID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Title)
+            </div>
+        </div>
+
+        <br />
+        <h5 id="description" class="col-md-10 col-md-offset-2 PurpleText">
+            <b>
+                Change the content of the exercise in field below. Remember that if you want to insert a mathematical expression
+                simply type sign \$ (or \$\$ if you want the expression to be placed in the next line), then write the expression
+                in LaTeX syntax and finish it with another \$ (\$\$). The preview of the text that you are typing will be dynamically
+                displayed in the box bellow.
+            </b>
+        </h5>
+        
+        <div class="form-group">
+            <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
+            <div class="col-md-10">
+                <textarea class="form-control" id="Text" name="Text" rows="8" onkeyup="Preview.Update()"></textarea>
+                <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbol('a^{b}')"><img src="~/Images/math_icons/superscript.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbol('a_{b}')"><img src="~/Images/math_icons/subscript.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbol('a_{b}^{c}')"><img src="~/Images/math_icons/x_a^b.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbol('{a_{b}}^{c}')"><img src="~/Images/math_icons/{x_a}^b.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('frac{}{}')"><img src="~/Images/math_icons/fraction.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sqrt{a}')"><img src="~/Images/math_icons/sqrt.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sqrt[n]{a}')"><img src="~/Images/math_icons/sqrt[].png" alt="image"></button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('binom{}{}')"><img src="~/Images/math_icons/binom.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sum_{}^{}')"><img src="~/Images/math_icons/sum.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('prod_{}^{}')"><img src="~/Images/math_icons/prod.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('int')"><img src="~/Images/math_icons/int.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('int_{a}^{b}')"><img src="~/Images/math_icons/int{}{}.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('lim_{x \to n}')"><img src="~/Images/math_icons/lim.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('forall')"><img src="~/Images/math_icons/forall.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('exists')"><img src="~/Images/math_icons/exists.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('infty')"><img src="~/Images/math_icons/infinity.png" alt="image"></button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{N}')"><img src="~/Images/math_icons/natural.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{Z}')"><img src="~/Images/math_icons/integers.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{R}')"><img src="~/Images/math_icons/real.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{Q}')"><img src="~/Images/math_icons/rational.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{C}')"><img src="~/Images/math_icons/complex.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('\mathbb{P}')"><img src="~/Images/math_icons/prime.png" alt="image"></button>
+                    </div>
+                </div>
+                
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('neq')"><img src="~/Images/math_icons/neq.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('geq')"><img src="~/Images/math_icons/geq.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('leq')"><img src="~/Images/math_icons/leq.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('geqslant')"><img src="~/Images/math_icons/geqslant.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('leqslant')"><img src="~/Images/math_icons/leqslant.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('gg')"><img src="~/Images/math_icons/gg.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('ll')"><img src="~/Images/math_icons/ll.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('prec')"><img src="~/Images/math_icons/prec.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('succ')"><img src="~/Images/math_icons/succ.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sim')"><img src="~/Images/math_icons/sim.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('simeq')"><img src="~/Images/math_icons/simeq.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('aprox')"><img src="~/Images/math_icons/aprox.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('vdash')"><img src="~/Images/math_icons/vdash.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('dashv')"><img src="~/Images/math_icons/dashv.png" alt="image"></button>
+                    </div>
+                </div>
+
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('alpha')"><img src="~/Images/math_icons/alpha.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('beta')"><img src="~/Images/math_icons/beta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('gamma')"><img src="~/Images/math_icons/gamma.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('delta')"><img src="~/Images/math_icons/delta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('epsilon')"><img src="~/Images/math_icons/epsilon.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('varepsilon')"><img src="~/Images/math_icons/varepsilon.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('eta')"><img src="~/Images/math_icons/eta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('lambda')"><img src="~/Images/math_icons/lambda.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('pi')"><img src="~/Images/math_icons/pi.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('omega')"><img src="~/Images/math_icons/omega.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('phi')"><img src="~/Images/math_icons/phi.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('varphi')"><img src="~/Images/math_icons/varphi.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('mu')"><img src="~/Images/math_icons/mu.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('psi')"><img src="~/Images/math_icons/psi.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('rho')"><img src="~/Images/math_icons/rho.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('sigma')"><img src="~/Images/math_icons/sigma.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('tau')"><img src="~/Images/math_icons/tau.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('theta')"><img src="~/Images/math_icons/theta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('vartheta')"><img src="~/Images/math_icons/vartheta.png" alt="image"></button>
+                        <button type="button" class="btn LightPurpleBtn math_icon" onclick="writeMathSymbolWithSlash('zeta')"><img src="~/Images/math_icons/zeta.png" alt="image"></button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2 PurpleText" for="Text">Preview</label>
+            <div class="col-md-10">
+                <div id="MathPreview" class="well-lg alert lightPurpleBackground"></div>
+                <div id="MathBuffer" class="well-lg alert lightPurpleBackground" style="visibility:hidden; position:absolute; top:0; left: 0"></div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="myLabel control-label col-md-2 PurpleText">Current Exercise Solution</label>
+            <div class="col-md-10">
+                <div class="PurpleText">
+                    @{
+                        if (@Model.Answer.className() == ViewBag.TextAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Text Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.SingleValueAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Single Value Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.SingleChoiceAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Single Choice Answer':</b></h5>")
+                        }
+                        else if (@Model.Answer.className() == ViewBag.MultipleChoiceAnswer)
+                        {
+                            @Html.Raw("<h5><b>At the moment the Exercise has a 'Multiple Choice Answer':</b></h5>")
+                        }
+                    }
+
+                </div>
+
+                <textarea class="alert lightPurpleBackground" rows="6" disabled="">@Model.Answer.ToString()</textarea>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="checkbox col-md-offset-2">
+            <label class="PurpleText">
+                Select the checkbox if you want to change the Solution of the Exercise.
+                <input type="checkbox" id="newAnswerCheckbox" onclick="hideOrShowAnswerPanel()">
+            </label>
+        </div>
+
+        <input id="isAnswerChangedInput" type="number" name="isAnswerChanged" value="0" />
+
+        <div id="answerPanel" hidden="">
+            <br />
+            <h4 class="PurpleText">What kind of Answer do you want for this Exercise?</h4>
+            <br />
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <ul class="nav nav-pills">
+                        <li><a href="#SingleValueAnswer_pill" id="tooltip1" class="" data-toggle="tooltip" title="Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.">Single Value Answer</a></li>
+                        <li><a href="#TextAnswer_pill" id="tooltip2" class="" data-toggle="tooltip" title="Text Answer allows you to provide a long solution of an exercise.">Text Answer</a></li>
+                        <li><a href="#SingleChoiceAnswer_pill" id="tooltip3" class="" data-toggle="tooltip" title="Single Choice Answer consists of many options to choose, out of which only one is correct.">Single Choice Answer</a></li>
+                        <li><a href="#MultipleChoiceAnswer_pill" id="tooltip4" class="" data-toggle="tooltip" title="Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.">Multiple Choice Answer</a></li>
+                    </ul>
+
+                    <br />
+
+                    <div class="pill-content" id="pill_content">
+
+                        <input id="answerTypeInput" type="text" name="answerType" value="@ViewBag.NoAnswer" />
+
+                        <div class=" pill-pane fade" id="SingleValueAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Single Value Answer is supposed to be short and simple to enter on a phone, like a number, single word, etc.</h5>
+                            </div>
+
+                            <br />
+
+                            <input class="form-control" id="valueInput" type="text" name="valueAns" />
+                            <span class="field-validation-error">@ViewBag.SingleValueStatement</span>
+                        </div>
+
+                        <div class="pill-pane fade" id="TextAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Text Answer allows you to provide a long solution of an exercise.</h5>
+                            </div>
+
+                            <br />
+
+                            <textarea class="form-control" id="textInput" name="textAns" rows="8"></textarea>
+                            <span class="field-validation-error">@ViewBag.TextStatement</span>
+                        </div>
+
+                        <div class="pill-pane fade" id="SingleChoiceAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Single Choice Answer consists of many options to choose, out of which only one is correct.</h5>
+                            </div>
+
+                            <br />
+
+                            <div class="container" id="singleContainer">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <h5 class="PurpleText">Type the options below</h5>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <h5 class="PurpleText">Select the correct one</h5>
+                                    </div>
+                                    <div class="col-md-offset-1 col-md-2">
+                                        <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRowForSingle()" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <input type="number" name="singleCorrectNo" hidden="" value="-1" />
+
+                                @for (var i = 0; i < 3; i++)
+                                {
+                                    <div class="row" id="singleRow_@(i)">
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" name="singleChoiceList" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="radio" id="singleAnsRadio_@(i)" name="singleRadios" onclick="singleRadioOnClick(@i)" />
+                                            <label class="PurpleText" id="singleAnsLabel_@(i)"></label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <span class="field-validation-error">@ViewBag.SingleChoiceStatement</span>
+                        </div>
+
+                        <div class="pill-pane fade" id="MultipleChoiceAnswer_pill">
+                            <div class="well">
+                                <h5 class="PurpleText">Multiple Choice Answer consists of many options to choose, but (in contrary to Single Choice Answer) every one might be correct or wrong.</h5>
+                            </div>
+
+                            <br />
+
+                            <div class="container" id="multiContainer">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <h5 class="PurpleText">Type the options below</h5>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <h5 class="PurpleText">Select the ones which are true</h5>
+                                    </div>
+                                    <div class="col-md-offset-1 col-md-2">
+                                        <input type="button" value="Add Row" class="btn PurpleBtn" onclick="addRowForMultiple()" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                @for (var i = 0; i < 3; i++)
+                                {
+                                    <div class="row" id="multiRow_@(i)">
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" name="multiChoiceList" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="checkbox" id="multiAnsCheckbox_@(i)" onclick="multiCheckboxOnClick(@i)" />
+                                            <input type="text" name="multiAnswerList" id="multiAnsHiddenInput_@(i)" value="False" hidden="" />
+                                            <label class="PurpleText" id="multiAnsLabel_@(i)">False</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <span class="field-validation-error">@ViewBag.MultiChoiceStatement</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save changes" class="btn PurpleBtn" />
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        Preview.Init();
+    </script>
+}
+
+<div>
+    @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

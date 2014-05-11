@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+
+@section HeadScripts
+{
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <style type="text/css">
+        .LeftFloat {
+            float: left;
+        }
+
+        .RightFloat {
+            float: right;
+        }
+
+        .FieldContainer {
+            border: 1px solid black;
+            width: 400px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: tahoma;
+        }
+
+        .OrderingField {
+            margin: 3px;
+            border: 1px dashed #0da3fd;
+            height: 50px;
+        }
+    </style>
+
+    <script type="text/javascript">
+    //<![CDATA[
+        $(window).load(function () {
+            function moveUp(item) {
+                var prev = item.prev();
+                if (prev.length == 0)
+                    return;
+                prev.css('z-index', 999).css('position', 'relative').animate({ top: item.height() }, 250);
+                item.css('z-index', 1000).css('position', 'relative').animate({ top: '-' + prev.height() }, 300, function () {
+                    prev.css('z-index', '').css('top', '').css('position', '');
+                    item.css('z-index', '').css('top', '').css('position', '');
+                    item.insertBefore(prev);
+                });
+            }
+            function moveDown(item) {
+                var next = item.next();
+                if (next.length == 0)
+                    return;
+                next.css('z-index', 999).css('position', 'relative').animate({ top: '-' + item.height() }, 250);
+                item.css('z-index', 1000).css('position', 'relative').animate({ top: next.height() }, 300, function () {
+                    next.css('z-index', '').css('top', '').css('position', '');
+                    item.css('z-index', '').css('top', '').css('position', '');
+                    item.insertAfter(next);
+                });
+            }
+
+            $(".FieldContainer").sortable({ items: ".OrderingField", distance: 10 });
+            $('button').click(function () {
+                var btn = $(this);
+                var val = btn.val();
+                if (val == 'up')
+                    moveUp(btn.parents('.OrderingField'));
+                else
+                    moveDown(btn.parents('.OrderingField'));
+            });
+        });//]]>
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("[id^='tooltipDown']").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
+            $("[id^='tooltipUp']").tooltip({
+                animated: 'fade',
+                placement: 'top'
+            });
+        });
+    </script>
+}
+
+
+<h2 class="PurpleText">@ViewBag.Title</h2>
+<br />
+
+
+<div class="FieldContainer">
+    <div class="OrderingField lightPurpleBackground">
+        <div class="LeftFloat">
+            Item1
+        </div>
+        <div class="RightFloat">
+            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
+            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+        </div>
+    </div>
+    <div class="OrderingField lightPurpleBackground">
+        <div class="LeftFloat">
+            Item2
+        </div>
+        <div class="RightFloat">
+            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
+            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+        </div>
+    </div>
+    <div class="OrderingField lightPurpleBackground">
+        <div class="LeftFloat">
+            Item3
+        </div>
+        <div class="RightFloat">
+            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
+            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+        </div>
+    </div>
+    <div class="OrderingField lightPurpleBackground">
+        <div class="LeftFloat">
+            Item4
+        </div>
+        <div class="RightFloat">
+            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
+            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+        </div>
+    </div>
+    <div class="OrderingField lightPurpleBackground">
+        <div class="LeftFloat">
+            Item5
+        </div>
+        <div class="RightFloat">
+            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
+            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+        </div>
+    </div>
+    <div class="OrderingField lightPurpleBackground">
+        <div class="LeftFloat">
+            Item6
+        </div>
+        <div class="RightFloat">
+            <button value='up' class="btn-sm LightPurpleBtn"><span id="tooltipUp" class="glyphicon glyphicon-chevron-up PurpleColor" title="Up"></span></button>
+            <button value='down' class="btn-sm LightPurpleBtn"><span id="tooltipDown" class="glyphicon glyphicon-chevron-down PurpleColor" title="Down"></span></button>
+        </div>
+    </div>
+</div>
+
+<h3 class="PurpleText">@ViewBag.Message</h3>
+
+<p class="PurpleText">Soon the short instruction and 'To Do List' will be posted here.</p>

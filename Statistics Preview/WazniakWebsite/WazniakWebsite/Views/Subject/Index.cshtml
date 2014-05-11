@@ -1,0 +1,223 @@
+﻿@model PagedList.IPagedList<WazniakWebsite.Models.Subject>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section HeadScripts
+{
+    <style>
+        .shortDisplay {
+            display: inline-block;
+            max-width: 300px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-right: 30px;
+        }
+        .hiddenRow {
+            padding: 0 !important;
+        }
+    </style>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/drilldown.js"></script>
+
+    <script type="text/javascript">
+        function editExercise(id) {
+            window.location = '/Subject/Edit/' + id;
+        }
+
+        function deleteExercise(id) {
+            window.location = '/Subject/Delete/' + id;
+        }
+
+        function goToExerciseDetails(id) {
+            window.location = '/Subject/Details/' + id;
+        }
+
+        $(function () {
+            $("[id^='tooltipEdit']").tooltip({
+                animated: 'fade',
+                placement: 'bottom'
+            });
+            $("[id^='tooltipRemove']").tooltip({
+                animated: 'fade',
+                placement: 'top'
+            });
+
+        });
+
+        function getModules(courseId) {
+            var url = "/Subject/GetModuleStatistics";
+            $.post(url, { courseId: courseId })
+                .done(function (data) {
+                    var chart = $('#demo_' + courseId).highcharts();
+                    var parsedData = JSON.parse(data);
+                    chart.addSeries(
+                        {
+                            name: 'Modules',
+                            colorByPoint: true,
+                            data: parsedData
+                        }
+                    );
+                });
+        };
+
+        function getExercises(moduleId, point, courseId) {
+            var url = "/Subject/GetExerciseStatistics";
+            var chart = $('#demo_' + courseId).highcharts();
+            chart.showLoading('Downloading exercise statistics ...');
+            $.post(url, { moduleId: moduleId })
+                .done(function (data) {
+                    var parsedData = JSON.parse(data);
+                    chart.hideLoading();
+                    var series = {
+                        name: 'Exercises',
+                        data: parsedData
+                    }
+                    chart.addSeriesAsDrilldown(point, series);
+                });
+        }
+
+        function initialiseChart(subjectId) {
+            $('#demo_' + subjectId).highcharts({
+                chart: {
+                    type: 'column',
+                    events: {
+                        drilldown: function (e) {
+                            if (!e.seriesOptions) {
+                                getExercises(e.point.id, e.point, subjectId);
+                            }
+
+                        }
+                    }
+                },
+                title: {
+                    text: 'Statistics'
+                },
+                xAxis: {
+                    type: 'category'
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'Total percent of correct answers'
+                    }
+                },
+
+                legend: {
+                    enabled: false
+                },
+
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.1f}%'
+                        }
+                    }
+                },
+
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> correct answers<br/>'
+                },
+
+                series: [],
+
+                drilldown: {
+                    series: []
+                }
+            });
+        } 
+
+        function drawChart(subjectId) {
+            initialiseChart(subjectId);
+            getModules(subjectId);
+        }
+
+    </script>
+}
+
+<h2 class="PurpleText">Subjects</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<button data-toggle="collapse" data-target="#demo_16">Click</button>
+
+@using (Html.BeginForm())
+{
+    <div class="form-inline">
+        <div class="form-group">
+            <label class="control-label PurpleText">Find subject by name:</label>
+        </div>
+        <div class="form-group">
+            @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Search" class="btn PurpleBtn">
+        </div>
+    </div>
+}
+
+<br />
+
+<table class="table table-hover">
+    <tr class="PurpleText table table-condensed" style="border-collapse:collapse;">
+        <th>
+            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.SortParam, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Last Updated Time
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+{
+    <tr>
+        <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
+            <span class="shortDisplay">
+                @Html.DisplayFor(modelItem => item.Description)
+            </span>
+        </td>
+        <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
+            @Html.DisplayFor(modelItem => item.LastUpdated)
+        </td>
+        <td>
+            <span id="tooltipEdit" class="glyphicon glyphicon-edit PurpleColor clickable" title="Edit" onclick="editExercise('@item.ID')"></span>
+        </td>
+        <td>
+            <span id="tooltipRemove" class="glyphicon glyphicon-trash PurpleColor clickable" title="Delete" onclick="deleteExercise('@item.ID')"></span>
+        </td>
+        <td>
+            <button data-toggle="collapse" data-target="#demo_@item.ID" onclick="drawChart(@item.ID)">Click</button>
+        </td>
+    </tr>
+    <tr>
+    <td colspan="5" class="hiddenRow">
+        <div class="collapse" id="demo_@item.ID">Demo1</div>
+    </td>
+    </tr>
+}
+</table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
