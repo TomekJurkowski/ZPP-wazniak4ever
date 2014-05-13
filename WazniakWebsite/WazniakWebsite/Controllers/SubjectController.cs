@@ -47,6 +47,16 @@ namespace WazniakWebsite.Controllers
             return View(subjects.ToPagedList(pageNumber, pageSize));
         }
 
+        // Private function creating a list of modules associated with the subject.
+        private void PopulateModulesList(int? subjectId)
+        {
+            var modulesQuery = from m in db.Modules
+                               where m.SubjectID == subjectId
+                               orderby m.SequenceNo
+                               select m;
+            ViewBag.ModuleList = modulesQuery.ToList();
+        }
+
         // GET: /Subject/Details/5
         public ActionResult Details(int? id, string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -94,6 +104,8 @@ namespace WazniakWebsite.Controllers
             var pageNumber = (page ?? 1);
 
             ViewBag.Tasks = tasks.ToPagedList(pageNumber, pageSize);
+
+                PopulateModulesList(id);
 
             return View(subject);
         }

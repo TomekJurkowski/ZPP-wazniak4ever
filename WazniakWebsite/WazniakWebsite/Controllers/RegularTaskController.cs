@@ -53,10 +53,21 @@ namespace WazniakWebsite.Controllers
             ViewBag.PreviouslySelectedAnswer = previousAns;
         }
 
+        // Private function creating a list of modules associated with the subject.
+        private void PopulateModulesDropDownList(int subjectId, object selectedModule = null)
+        {
+            var modulesQuery = from m in db.Modules
+                               where m.SubjectID == subjectId
+                               orderby m.Title
+                               select m;
+            ViewBag.ModuleList = new SelectList(modulesQuery, "ModuleID", "Title", selectedModule);
+        }
+
         // GET: /RegularTask/Create/SubjectName/5
         public ActionResult Create(string subjectName, int subjectId)
         {
             FillTheViewBag(subjectName, subjectId);
+            PopulateModulesDropDownList(subjectId);
 
             return View();
         }
