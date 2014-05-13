@@ -12,6 +12,7 @@ namespace WazniakWebsite.Models
         public string Title { get; set; }
 
         public int SubjectID { get; set; }
+        public int ModuleID { get; set; }
         public int CorrectAnswers { get; set; }
         public int Attempts { get; set; }
         

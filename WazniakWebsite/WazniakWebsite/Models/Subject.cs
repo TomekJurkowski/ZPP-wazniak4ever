@@ -24,6 +24,8 @@ namespace WazniakWebsite.Models
 
         public virtual ICollection<Task> Tasks { get; set; }
 
+        public virtual ICollection<Module> Modules { get; set; }
+
         public void UpdateLastUpdatedTime()
         {
             LastUpdated = DateTime.Now;

@@ -18,7 +18,5 @@ namespace WazniakWebsite.Models
         public int SubjectID { get; set; }
 
         public virtual Subject Subject { get; set; }
-
-        public virtual ICollection<Task> Tasks { get; set; }
     }
 }
