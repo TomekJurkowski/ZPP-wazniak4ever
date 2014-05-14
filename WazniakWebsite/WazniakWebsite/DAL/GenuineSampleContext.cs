@@ -18,6 +18,7 @@ namespace WazniakWebsite.DAL
             modelBuilder.Entity<Subject>().ToTable("Subject", "clarifier");
             modelBuilder.Entity<Task>().ToTable("Task", "clarifier");
             modelBuilder.Entity<Answer>().ToTable("Answer", "clarifier");
+            modelBuilder.Entity<Module>().ToTable("Module", "clarifier");
         }
 
         public DbSet<MathematicalTask> MathematicalTasks { get; set; }
