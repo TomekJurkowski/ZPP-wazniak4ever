@@ -17,7 +17,6 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            
         }
 
         private string GetCourseDescription()
@@ -34,7 +33,7 @@ namespace wazniak_forever
             return currentSubject.Description;
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             App.ViewModel.CheckForNetworkAvailability();
@@ -52,27 +51,14 @@ namespace wazniak_forever
             App.ViewModel.CourseType = type;
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", 
                 async () => await App.ViewModel.LoadExercises(new List<int>()));
-            App.ViewModel.LoadModules();
             if (App.ViewModel.Solutions.Count <= 0) return;
-
-            if (App.ViewModel.CourseType == CourseType.Time)
-            {
-                App.ViewModel.Timer = new DTimer();
-                var timer = App.ViewModel.Timer;
-                if (!timer.IsEnabled())
-                {
-                    timer.HandleTick += App.ViewModel.TimerModeTickHandler;
-                    timer.Start(1, 20);
-                }
-            }
-            else if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.pickExercises();
-
+            await App.ViewModel.LoadModules();
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}", CourseName.Text), UriKind.Relative));
         }
 
-        private void NavigateToModuleSelectionPage(CourseType courseType)
+        private async void NavigateToModuleSelectionPage(CourseType courseType)
         {
-            App.ViewModel.LoadModules();
+            await App.ViewModel.LoadModules();
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}&courseType={1}", CourseName.Text, courseType), UriKind.Relative));
         }
 

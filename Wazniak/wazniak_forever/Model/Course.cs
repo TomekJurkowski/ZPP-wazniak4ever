@@ -476,20 +476,10 @@ namespace wazniak_forever.Model
         public int SubjectID { get; set; }
         public int SequenceNo { get; set; }
         public string Title { get; set; }
-        public virtual Subject Subject { get; set; }
 
         public Module(string name)
         {
             this.Title = name;
-        }
-
-        public Module(int id, int subjectID, int sequenceNo, string title, Subject subject)
-        {
-            this.ID = id;
-            this.SubjectID = subjectID;
-            this.SequenceNo = sequenceNo;
-            this.Title = title;
-            this.Subject = subject;
         }
     }
 

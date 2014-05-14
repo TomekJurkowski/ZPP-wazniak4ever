@@ -19,13 +19,17 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) StartCourse();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
+            if (App.ViewModel.CourseType == CourseType.StudyWithClarifier)
+            {
+                LayoutRoot.Visibility = Visibility.Collapsed;
+                StartCourse();
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -51,27 +55,30 @@ namespace wazniak_forever
                     timer.Start(1, 20);
                 }
             }
-            else if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.sortExercisesByProgress();
-            bool[] b = new bool[1];
+
+            /*bool[] b = new bool[1];
             b[0] = false;
-            await App.ViewModel.db.UserModules.InsertAsync(new UserModule(DatabaseContext.MobileService.CurrentUser.UserId, 0, 0, 0, b));
+            await App.ViewModel.db.UserModules.InsertAsync(new UserModule(DatabaseContext.MobileService.CurrentUser.UserId, 0, 0, 0, b));*/
         }
 
         private async void StartCourse()
         {
-            var type = (CourseType)Enum.Parse(typeof(CourseType), NavigationContext.QueryString["courseType"], true);
-            System.Diagnostics.Debug.WriteLine("Course type: " + type);
-            if (ModuleSelector.SelectedItems.Count == 0)
+            if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.pickExercises();
+            else
             {
-                MessageBox.Show("Please select at least one module!");
-                return;
+                var type = (CourseType)Enum.Parse(typeof(CourseType), NavigationContext.QueryString["courseType"], true);
+                if (ModuleSelector.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show("Please select at least one module!");
+                    return;
+                }
+                var selectedModuleIdList = (from object module in ModuleSelector.SelectedItems
+                                            select module as Module
+                                                into m
+                                                select m.ID).ToList();
+                await SelectExercise(type, selectedModuleIdList);
+                ModuleSelector.SelectedItems.Clear();
             }
-            var selectedModuleIdList = (from object module in ModuleSelector.SelectedItems 
-                                        select module as Module 
-                                        into m 
-                                        select m.ID).ToList();
-            await SelectExercise(type, selectedModuleIdList);
-            ModuleSelector.SelectedItems.Clear();
             string navTo = "";
             if (App.ViewModel.Solutions.Count == 0) return;
             switch (App.ViewModel.Solutions[0].Answer.Type)

@@ -220,6 +220,7 @@ namespace wazniak_forever.ViewModel
         private List<Exercise> randomExercises(List<Exercise> moduleExercises, int Count)
         {
             List<Exercise> result = new List<Exercise>();
+            if (moduleExercises.Count == 0) return result;
             Random r = new Random();
             for (int i = 0; i < Count; i++)
             {
@@ -253,17 +254,28 @@ namespace wazniak_forever.ViewModel
 
         public void pickExercises()
         {
+            if (Modules == null)
+            {
+                MessageBox.Show("Unfortunately, there are no exercises for this course yet!");
+                return;
+            }
             List<UserModule> UserModules = _userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID);
             int CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
             int RepetitionBase = 2 * CurrentModuleIndex + 1 - Convert.ToInt32(CurrentModuleIndex == 0);
             int[] ModuleWeights = countWeights(CurrentModuleIndex, RepetitionBase, UserModules);
             int RandomExerciseCount = RepetitionBase - ModuleWeights.Sum();
+            CurrentModule = Modules[CurrentModuleIndex];
 
-            List<Exercise> ExercisesBackup = randomExercises(Exercises.FindAll(ex => ex.ModuleID == CurrentModule.ID), UserModule.ATTEMPTS);
+            List<Exercise> ExercisesBackup = randomExercises(Exercises.FindAll(ex => ex.ModuleID == 0), UserModule.ATTEMPTS);
             ExercisesBackup.Concat(chooseRepetitionExercises(CurrentModuleIndex, ModuleWeights));
             if (RandomExerciseCount > 0) ExercisesBackup.Concat(randomExercises(Exercises.FindAll(ex => ex.ModuleID < CurrentModule.ID), RandomExerciseCount));
 
             Exercises = ExercisesBackup;
+            if (Exercises.Count == 0)
+            {
+                MessageBox.Show("Unfortunately, there are no exercises for this module yet!");
+                return;
+            }
             Solutions = matchSolutions();
             CurrentExercise = Exercises[0];
             CurrentSolution = Solutions[0];
@@ -379,7 +391,7 @@ namespace wazniak_forever.ViewModel
             return null;
         }
 
-        public async void LoadModules()
+        public async System.Threading.Tasks.Task LoadModules()
         {
             Modules = await db.Modules.Where(module => module.SubjectID == CurrentCourseID).ToListAsync();
         }
