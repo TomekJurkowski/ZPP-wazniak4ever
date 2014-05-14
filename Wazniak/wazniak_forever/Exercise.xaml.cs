@@ -95,6 +95,9 @@ namespace wazniak_forever.Controls
             {
                 if (Grid.GetRow(element) == 3) element.Visibility = Visibility.Collapsed;
             }
+            App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(false);
+            App.ViewModel.IncAnswersNumber();
+
             SubmitAnswer.Visibility = Visibility.Collapsed;
             ExplanationPanel.Visibility = Visibility.Visible;
             ExplanationHeader.Text = headerBuilder.ToString();
@@ -120,6 +123,9 @@ namespace wazniak_forever.Controls
             App.ViewModel.CurrentQuestionNumber++;
             App.ViewModel.CurrentExercise = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber];
             App.ViewModel.CurrentSolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber];
+
+            App.ViewModel.CurrentModuleIndex = App.ViewModel.Modules.Find(module => module.ID == App.ViewModel.CurrentExercise.ModuleID).SequenceNo;
+
             SolutionType NextType = App.ViewModel.CurrentSolution.Answer.Type;
             if (NextType == SolutionType.Multiple || NextType == SolutionType.Single)
                 App.ViewModel.UserChoices = (App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber]).Solution.Choices;
@@ -179,8 +185,8 @@ namespace wazniak_forever.Controls
 
             StatisticContent.Text = builder.ToString();
 
-            if (App.ViewModel.db.User != null 
-                && App.ViewModel.MyCourses.Any(course => course.ID == App.ViewModel.CurrentCourseID))
+            if (App.ViewModel.db.User != null
+                && App.ViewModel.CourseType == CourseType.StudyWithClarifier)
             {
                 await App.ViewModel.PerformTimeConsumingProcess(this, "Sending your results...", async () =>
                 {

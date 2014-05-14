@@ -91,11 +91,12 @@ namespace wazniak_forever
             }
 
             var currentExerciseId = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber].ID;
-            
+
             if (correctAnswer)
             {
                 App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(true);
                 headerBuilder.Append("Correct!");
                 builder.Append("");
                 ExControl.CorrectAnswerMediaElement.Play();

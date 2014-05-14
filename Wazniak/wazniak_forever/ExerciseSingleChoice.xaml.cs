@@ -90,6 +90,7 @@ namespace wazniak_forever
             {
                 App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(true);
                 headerBuilder.Append("Correct!\n");
                 ExControl.CorrectAnswerMediaElement.Play();
             }

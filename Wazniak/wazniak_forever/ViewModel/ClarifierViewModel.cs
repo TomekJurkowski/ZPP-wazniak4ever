@@ -200,19 +200,19 @@ namespace wazniak_forever.ViewModel
             
         }
 
-        private double countWrongAnswerRatio(int correctAnswers, int wrongAnswers)
+        private double countWrongAnswerRatio(int correctAnswers, int wrongAnswerSum)
         {
-            return ((double)UserModule.ATTEMPTS - (double)correctAnswers) / (double)wrongAnswers;
+            return ((double)UserModule.ATTEMPTS - (double)correctAnswers) / (double)wrongAnswerSum;
         }
 
         private int[] countWeights(int CurrentModuleIndex, int RepetitionBase, List<UserModule> UserModules)
         {
             int[] weights = new int[CurrentModuleIndex];
-            int wrongAnswers = 0;
-            for (int i = 0; i < CurrentModuleIndex; i++) wrongAnswers += UserModule.ATTEMPTS - UserModules[i].CorrectAnswers;
+            int wrongAnswerSum = 0;
+            for (int i = 0; i < CurrentModuleIndex; i++) wrongAnswerSum += UserModule.ATTEMPTS - UserModules[i].AnswersNumber;
             for (int i = 0; i < CurrentModuleIndex; i++)
             {
-                weights[i] = (int)Math.Round(RepetitionBase * countWrongAnswerRatio(UserModules[i].CorrectAnswers, wrongAnswers));
+                weights[i] = (int)Math.Round(RepetitionBase * countWrongAnswerRatio(UserModules[i].AnswersNumber, wrongAnswerSum));
             }
             return weights;
         }
@@ -259,8 +259,8 @@ namespace wazniak_forever.ViewModel
                 MessageBox.Show("Unfortunately, there are no exercises for this course yet!");
                 return;
             }
+            CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
             List<UserModule> UserModules = _userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID);
-            int CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
             int RepetitionBase = 2 * CurrentModuleIndex + 1 - Convert.ToInt32(CurrentModuleIndex == 0);
             int[] ModuleWeights = countWeights(CurrentModuleIndex, RepetitionBase, UserModules);
             int RandomExerciseCount = RepetitionBase - ModuleWeights.Sum();
@@ -306,6 +306,17 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        private int _currentModuleIndex;
+        public int CurrentModuleIndex
+        {
+            get { return _currentModuleIndex; }
+            set
+            {
+                _currentModuleIndex = value;
+                NotifyPropertyChanged("CurrentModuleIndex");
+            }
+        }
+
         private Module _currentModule;
         public Module CurrentModule
         {
@@ -314,6 +325,17 @@ namespace wazniak_forever.ViewModel
             {
                 _currentModule = value;
                 NotifyPropertyChanged("CurrentModule");
+            }
+        }
+
+        private List<List<bool>> _modulesAnswers;
+        public List<List<bool>> ModulesAnswers
+        {
+            get { return _modulesAnswers; }
+            set
+            {
+                _modulesAnswers = value;
+                NotifyPropertyChanged("ModulesCorrect");
             }
         }
 
@@ -394,6 +416,11 @@ namespace wazniak_forever.ViewModel
         public async System.Threading.Tasks.Task LoadModules()
         {
             Modules = await db.Modules.Where(module => module.SubjectID == CurrentCourseID).ToListAsync();
+            ModulesAnswers = new List<List<bool>>();
+            foreach (Module m in Modules)
+            {
+                ModulesAnswers.Add(new List<bool>());
+            }
         }
 
         public async System.Threading.Tasks.Task LoadExercises(IEnumerable<int> moduleIdList)
@@ -778,7 +805,7 @@ namespace wazniak_forever.ViewModel
             _userModuleMappings = new List<UserModule>();
             myModules.ForEach(module => 
             {
-                _userModuleMappings.Add(new UserModule(module.UserID, module.ModuleID, module.SubjectID, module.CorrectAnswers, module.Answers));
+                _userModuleMappings.Add(new UserModule(module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.Answers));
             });
 
             _userExerciseMappings = new List<UserExercise>();
@@ -802,18 +829,37 @@ namespace wazniak_forever.ViewModel
             _givenAnswers.Add(new KeyValuePair<int, bool>(exerciseId, correctAnswer));
         }
 
-
-        public async System.Threading.Tasks.Task SendMyResults(int correctAnswers, int attempts)
+        public void IncAnswersNumber()
         {
+            _userModuleMappings[CurrentModuleIndex].AnswersNumber++;
+        }
+
+        public async System.Threading.Tasks.Task SendMyResults(int subjectCorrectAnswers, int subjectAttempts)
+        {
+            // SUBJECTS
             var currentUserSubjectMapping = _userSubjectMappings.Find(mapping =>
                 mapping.SubjectID == CurrentCourseID
                 && mapping.UserID == db.User.UserId);
 
-            currentUserSubjectMapping.CorrectAnswers += correctAnswers;
-            currentUserSubjectMapping.Attempts += attempts;
+            currentUserSubjectMapping.CorrectAnswers += subjectCorrectAnswers;
+            currentUserSubjectMapping.Attempts += subjectAttempts;
             currentUserSubjectMapping.LastAttempt = System.DateTime.Now;
-
             await db.UsersAndSubjects.UpdateAsync(currentUserSubjectMapping);
+
+            // MODULES
+            foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.AnswersNumber > 0))
+            {
+                if (currentUserModuleMapping.Answers == null) currentUserModuleMapping.Answers = new bool[UserModule.ATTEMPTS];
+                else
+                {
+                    currentUserModuleMapping.Answers.Concat(ModulesAnswers[currentUserModuleMapping.SequenceNo]);
+                    int diff = currentUserModuleMapping.Answers.Count() - UserModule.ATTEMPTS;
+                    if (diff > 0) currentUserModuleMapping.Answers.ToList().RemoveRange(0, diff);
+                }
+                await db.UserModules.UpdateAsync(currentUserModuleMapping);
+            }
+
+            // EXERCISES
             foreach (KeyValuePair<int, bool> t in _givenAnswers)
             {
                 var userExerciseMap = (await db.UsersAndExercises
