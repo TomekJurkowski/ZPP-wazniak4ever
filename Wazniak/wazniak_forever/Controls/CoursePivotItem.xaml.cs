@@ -63,7 +63,7 @@ namespace wazniak_forever.Controls
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            if (this.Name == ALL_COURSES_NAME)
+            if (this.Name == MY_COURSES_NAME)
             {
                 GradientStopCollection gSC = new GradientStopCollection();
                 for (int i = 0; i < 4; i++) gSC.Add(new GradientStop());

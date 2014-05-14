@@ -19,7 +19,6 @@ namespace wazniak_forever
             InitializeComponent();
             DataContext = App.ViewModel;
             App.ViewModel.LoadMenu();
-            //App.ViewModel.db.Drop();
             App.ViewModel.db.Initialize();
         }
 

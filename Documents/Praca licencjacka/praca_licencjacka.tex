@@ -24,6 +24,7 @@
 %odkomentowana
 %\usepackage[cp1250]{inputenc}
 
+\usepackage{hyperref}
 % Dane magistranta:
 
 \author{Tomasz Jurkowski\\ 
@@ -112,7 +113,7 @@ wiedzy z danego przedmiotu po zdaniu egzaminu. Również samo zaliczenie przedmi
 W praktyce trwała i dogłębna znajomość pewnych zagadnień i umiejętność rozwiązywania określonych typów zadań jest niezbędna w takich sytuacjach jak rozmowy kwalifikacyjne czy egzaminy licencjackie i magisterskie, które w dzisiejszych czasach dotyczą większości studentów i absolwentów uczelni wyższych. Stąd istnieje potrzeba utrwalania i pogłębiania wiedzy zdobywanej w
 trakcie studiów. Istotnym problemem, z jakim boryka się wielu studentów, którzy korzystają z systemów i aplikacji wspomagających naukę, jest brak informacji zwrotnej o aktualnym stopniu opanowania danego przedmiotu lub zagadnienia. Także wykładowcy nie mają zwykle dostępu do informacji o postępach swoich studentów i w efekcie nie są w stanie dostosować treści przekazywanych na zajęciach do wiedzy i umiejętności uczestników.  
 
-Celem naszego projektu jest stworzenie systemu wspomagającego utrwalanie wiedzy zdobywanej na studiach, który jednocześnie dostarcza studentom i wykładowcom informacje o osiąganych wynikach. Clarifier składa się z aplikacji mobilnej dla systemu Windows Phone dedykowanej dla studentów oraz aplikacji webowej przeznaczonej dla wykładowców i prowadzących zajęcia. Aplikacja webowa pozwala na udostępnianie i edycję zadań podzielonych tematycznie na przedmioty i moduły oraz dostarcza informacji o wynikach osiąganych przez studentów. Aplikacja mobilna umożliwia systematyczne utrwalanie wiedzy poprzez rozwiązywanie wcześniej przygotowanych zadań i śledzenie własnych postępów dzięki dostarczanym przez aplikację statystykom. Clarifier wspomaga studentów w ciągłym podnoszeniu swoich kwalifikacji i ułatwia wykładowcom doskonalenie materiałów i treści przekazywanych na zajęciach.  
+Celem naszego projektu jest stworzenie systemu wspomagającego utrwalanie wiedzy zdobywanej na studiach, który jednocześnie dostarcza studentom i wykładowcom informacje o osiąganych wynikach. Clarifier składa się z aplikacji mobilnej dla systemu Windows Phone dedykowanej dla studentów oraz aplikacji webowej przeznaczonej dla wykładowców i prowadzących zajęcia. Aplikacja webowa pozwala na udostępnianie i edycję zadań podzielonych tematycznie na przedmioty i moduły oraz dostarcza informacje o wynikach osiąganych przez studentów. Aplikacja mobilna umożliwia systematyczne utrwalanie wiedzy poprzez rozwiązywanie wcześniej przygotowanych zadań i śledzenie własnych postępów dzięki dostarczanym przez aplikację statystykom. Clarifier wspomaga studentów w ciągłym podnoszeniu swoich kwalifikacji i ułatwia wykładowcom doskonalenie materiałów i treści przekazywanych na zajęciach.  
 Niniejszy tekst jest dokumentacją naszej pracy włożonej w realizację tego systemu.
 
 \section{Definicje}
@@ -123,7 +124,7 @@ Podstawowe pojęcia używane w niniejszej pracy:
 
 \section{Podstawy teoretyczne}
 
-Zgodnie z modelem zaproponowanym przez R. Atkinsona i R. Shiffrina\footnote{Zob. R. C. Atkinson, R.M. Shiffrin, \textit{Chapter: Human memory: A proposed system and its control processes}, 1968, K.W. Spence, J.T. Spence, \textit{The psychology of learning and motivation (Volume 2)}, New York: Academic Press, s. 89–195.}, ludzką pamięć dzielimy na:
+Zgodnie z modelem zaproponowanym przez R. Atkinsona i R. Shiffrina\footnote{Zob. R. C. Atkinson, R.M. Shiffrin, \textit{Chapter: Human memory: A proposed system and its control processes}, 1968, K.W. Spence, J.T. Spence, \textit{The psychology of learning and motivation (Volume 2)}, New York: Academic Press, s. 89–195.}, pamięć człowieka dzielimy na:
 \begin{itemize}
 \item pamięć sensoryczną (pamięć utrakrótkotrwałą), która służy do wydobywania informacji potrzebnych organizmowi z nadchodzących bodźców,
 \item pamięć krótkotrwałą (pamięć operacyjną), która czerpie informacje zarówno z pamięci sensorycznej, jak i z pamięci długotrwałej,
@@ -131,7 +132,7 @@ Zgodnie z modelem zaproponowanym przez R. Atkinsona i R. Shiffrina\footnote{Zob.
 \end{itemize}  
 Pamięć krótkotrwała przechowuje niewielkie ilości informacji przez krótki okres liczący od kilku do kilkunastu sekund. Wykorzystywana jest do czasowego zapamiętywania danych pochodzących ze zmysłów, informacji pobranych z pamięci długotrwałej oraz wyników przeprowadzonych obliczeń lub rozumowań. Pamięć długotrwałą cechuje bardzo duża pojemność oraz zdolność do przechowywania informacji przez nieograniczony czas. Transfer danych z pamięci krótkotrwałej do pamięci długotrwałej odbywa się w wyniku procesu zwanego konsolidacją, polegającego na utrwalaniu nabytych informacji i umiejętności w mózgu. Badania\footnote{Zob. Dudai, Yadin, \textit{Memory from A to Z: Keywords, concepts, and beyond}, Oxford, UK: Oxford University Press, 2002.} wskazują na to, że im częściej i dłużej powtarzane są informacje zawarte w pamięci krótkotrwałej, tym większy ślad po nich pozostanie w pamięci długotrwałej.
 
-Transfer danych zapisanych w pamięci operacyjnej do pamięci długotrwałej wymaga czasu i, w zależności od ilości informacji, odpowiednio częstego ich powtarzania. Wynika to z faktu, iż prędkość, z jaką następuje transfer danych jest determinowana przez ilość informacji, jakie naraz może przetworzyć pamięć operacyjna człowieka. Można zatem wnioskować, że kluczowymi czynnikami wpływającymi na utrwalanie wiedzy są systematyczność oraz odpowiedni dobór ilości informacji przetwarzanych w trakcie każdej powtórki.
+Transfer danych zapisanych w pamięci operacyjnej do pamięci długotrwałej wymaga czasu i, w zależności od ilości informacji, odpowiednio częstego ich powtarzania. Wynika to z faktu, iż prędkość, z jaką następuje transfer danych jest determinowana przez ilość informacji, jakie naraz może przetworzyć pamięć operacyjna człowieka. Można zatem wnioskować, że istotnymi czynnikami wpływającymi na utrwalanie wiedzy są systematyczność oraz odpowiedni dobór ilości informacji przetwarzanych w trakcie każdej powtórki.
 
 Ważnym pojęciem z obszaru badań nad pamięcią człowieka jest krzywa zapominania (krzywa Ebbinghausa), która przedstawia zależność między ilością danych przechowywanych w pamięci a upływem czasu, jaki nastąpił od momentu ich zapamiętania.\footnote{Zob. H. Ebbinghaus, \textit{Memory: A Contribution to Experimental Psychology}, \textit{Classics in the History of Psychology}, 1885-1913.} Krzywa Ebbinghausa pokazuje, że zdecydowana większość zapamiętanych informacji jest zapominana w ciągu pierwszych kilku dni od momentu zapamiętania, osiągając poziom ok. 25\% w piątym dniu. Dalszy spadek ilości zapamiętanych informacji nie jest już tak gwałtowny - w 30 dniu od momentu zapamiętania osiąga wartość nieco ponad 20\%. Badania Ebbinghausa pokazały, że kolejne przypomnienia w procesie nauki powodują zmianę kształtu krzywej zapominania. Spadek ilości zapamiętanych informacji po kolejnych powtórzeniach materiału jest coraz mniejszy. Dowodzi to, że w procesie nauki niezwykle ważna jest systematyczność. Jedynie wielokrotne powtarzanie materiału w odpowiednich odstępach czasu może zagwarantować jego trwałe opanowanie. 
 
@@ -147,7 +148,7 @@ Aby zachęcić użytkownika do systematycznej nauki, aplikacja wyświetla powiad
 Aplikacja Clarifier umożliwia naukę w sytuacjach, kiedy użytkownik dysponuje ograniczonymi zasobami czasu, np. w trakcie jazdy autobusem czy przerwy między zajęciami. Uruchomiona w aplikacji powtórka może zostać w dowolnym momencie wyłączona, a nie przerobione zadania nie będą miały wpływu na statystyki postępów. Ponadto, aplikacja może być używana bez dostępu do internetu. Aby umożliwić naukę w trybie offline, użytkownik ma możliwość zapisania wybranych materiałów w pamięci telefonu, a wyniki uzyskane w trakcie powtórki offline zostaną przesłane do bazy danych natychmiast po ponownym włączeniu internetu w urządzeniu.
 
 \subsection{Wymagania wobec aplikacji webowej}
-Aplikacja webowa stanowi naturalne uzupełnienie aplikacji mobilnej Clarifier. Jej celem jest umożliwienie wykładowcom udostępniania zadań w aplikacji mobilnej, z której studenci mogą korzystać w czasie wolnym oraz ułatwienie prowadzącym organizacji treści przekazywanych studentom w trakcie zajęć uczelnianych. 
+Aplikacja webowa stanowi naturalne uzupełnienie aplikacji mobilnej Clarifier. Jej celem jest umożliwienie wykładowcom udostępniania zadań w aplikacji mobilnej, z której studenci mogą korzystać w czasie wolnym oraz ułatwienie prowadzącym udoskonalania treści przekazywanych studentom w trakcie zajęć uczelnianych. 
 
 Wykładowcy i prowadzący zajęcia mają możliwość wprowadzania i udostępniania studentom zadań ze swoich przedmiotów. W ramach każdego przedmiotu dodatkowo można wyodrębnić moduły tematyczne. System Clarifier umożliwia dodawanie zadań z odpowiedziami typu otwartego oraz odpowiedziami ABCD. System umożliwia także wprowadzanie zadań zawierających wzory i symbole matematyczne. Ponadto, wykładowcy mogą na bieżąco kontrolować wyniki osiągane przez studentów korzystających z aplikacji Clarifier dzięki statystykom dostarczanym przez witrynę. Dzięki temu mają możliwość dostosowania tematów omawianych na zajęciach do poziomu i umiejętności uczestników.
 
@@ -168,6 +169,18 @@ Coursera to platforma edukacyjna, która udostępnia otwarte masowe kursy przygo
 \chapter{Opis architektury}\label{r:architecture}
 
 \chapter{Organizacja pracy}\label{r:org}
+
+\section{Zakres}
+Główną część pracy nad projektem Clarifier stanowiło zaprojektowanie i stworzenie opisanego w niniejszej pracy oprogramowania. Poza implementacją, prace nad projektem obejmowały tworzenie dokumentacji oraz przygotowywanie okresowych prezentacji. 
+
+\section{Zasoby}
+Komunikacja pomiędzy członkami zespołu odbywała się za pośrednictwem mailowej grupy dyskusyjnej. Kod źródłowy oraz dokumentacja projektu były współdzielone za pomocą repozytorium systemu git.
+
+\subsection{Dokumentacja projektu}
+Dokumenty dotyczące projektu były tworzone i współdzielone między członkami zespołu za pomocą Google Docs. Prezentacje na zajęcia z Zespołowego Projektu Programistycznego były przygotowywane z wykorzystaniem serwisu \url{https://slides.com/}.
+
+\subsection{Oprogramowanie}
+Przy implementacji oprogramowania korzystaliśmy ze środowiska Microsoft Visual Studio oraz platformy Windows Azure. Do testowania aplikacji mobilnej wykorzystaliśmy telefony Nokia z systemem operacyjnym Windows 8.
 
 \chapter{Dokumentacja użytkowa}\label{r:documentation}
 

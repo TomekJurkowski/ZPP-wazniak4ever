@@ -194,6 +194,53 @@ namespace wazniak_forever.ViewModel
             return -compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE1.LastAttempt, uE2.CorrectAnswers, uE2.Attempts, uE2.LastAttempt, 2);
         }
 
+
+        public void sortExercisesByProgress()
+        {
+            
+        }
+
+        private double countWrongAnswerRatio(int correctAnswers, int wrongAnswers)
+        {
+            return ((double)UserModule.ATTEMPTS - (double)correctAnswers) / (double)wrongAnswers;
+        }
+
+        private int[] countWeights(int CurrentModuleIndex, int RepetitionBase, List<UserModule> UserModules)
+        {
+            int[] weights = new int[CurrentModuleIndex];
+            int wrongAnswers = 0;
+            for (int i = 0; i < CurrentModuleIndex; i++) wrongAnswers += UserModule.ATTEMPTS - UserModules[i].CorrectAnswers;
+            for (int i = 0; i < CurrentModuleIndex; i++)
+            {
+                weights[i] = (int)Math.Round(RepetitionBase * countWrongAnswerRatio(UserModules[i].CorrectAnswers, wrongAnswers));
+            }
+            return weights;
+        }
+
+        private List<Exercise> randomExercises(List<Exercise> moduleExercises, int Count)
+        {
+            List<Exercise> result = new List<Exercise>();
+            Random r = new Random();
+            for (int i = 0; i < Count; i++)
+            {
+                Exercise ex = moduleExercises[r.Next(moduleExercises.Count)];
+                result.Add(ex);
+                moduleExercises.Remove(ex);
+            }
+            return result;
+        }
+
+        private List<Exercise> chooseRepetitionExercises(int CurrentModuleIndex, int[] weights)
+        {
+            List<Exercise> result = new List<Exercise>();
+            for (int i = 0; i < CurrentModuleIndex; i++)
+            {
+                List<Exercise> moduleExercises = Exercises.FindAll(ex => ex.ModuleID == Modules[i].ID);
+                result.Concat(randomExercises(moduleExercises, weights[i]));
+            }
+            return result;
+        }
+
         private List<Solution> matchSolutions()
         {
             List<Solution> result = new List<Solution>();
@@ -204,35 +251,19 @@ namespace wazniak_forever.ViewModel
             return result;
         }
 
-        public void sortExercisesByProgress()
-        {
-            Exercises.Sort(compareExercises);
-            Solutions = matchSolutions();
-            CurrentExercise = Exercises[0];
-            CurrentSolution = Solutions[0];
-            UserChoices = Exercises[0].Solution.Choices;
-        }
-
-        private int[] countWeights(int CurrentModuleIndex, int ModuleExerciseCount)
-        {
-            int[] weights = new int[CurrentModuleIndex];
-
-            return weights;
-        }
-
-        private int countRepetitionExercises(int ModuleIndex, int[] ModuleWeights)
-        {
-            return 0;
-        }
-
         public void pickExercises()
         {
-            int ModuleExerciseCount = 10;
+            List<UserModule> UserModules = _userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID);
             int CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
-            CurrentModule = Modules[CurrentModuleIndex];
-            int[] moduleWeights = countWeights(CurrentModuleIndex, ModuleExerciseCount);
-            int RepetitionExerciseCount = countRepetitionExercises(CurrentModuleIndex, moduleWeights);
+            int RepetitionBase = 2 * CurrentModuleIndex + 1 - Convert.ToInt32(CurrentModuleIndex == 0);
+            int[] ModuleWeights = countWeights(CurrentModuleIndex, RepetitionBase, UserModules);
+            int RandomExerciseCount = RepetitionBase - ModuleWeights.Sum();
 
+            List<Exercise> ExercisesBackup = randomExercises(Exercises.FindAll(ex => ex.ModuleID == CurrentModule.ID), UserModule.ATTEMPTS);
+            ExercisesBackup.Concat(chooseRepetitionExercises(CurrentModuleIndex, ModuleWeights));
+            if (RandomExerciseCount > 0) ExercisesBackup.Concat(randomExercises(Exercises.FindAll(ex => ex.ModuleID < CurrentModule.ID), RandomExerciseCount));
+
+            Exercises = ExercisesBackup;
             Solutions = matchSolutions();
             CurrentExercise = Exercises[0];
             CurrentSolution = Solutions[0];
@@ -274,8 +305,8 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private RegularExercise _currentExercise;
-        public RegularExercise CurrentExercise
+        private Exercise _currentExercise;
+        public Exercise CurrentExercise
         {
             get { return _currentExercise; }
             set
@@ -309,8 +340,8 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private List<RegularExercise> _exercises;
-        public List<RegularExercise> Exercises
+        private List<Exercise> _exercises;
+        public List<Exercise> Exercises
         {
             get { return _exercises; }
             set
@@ -394,7 +425,7 @@ namespace wazniak_forever.ViewModel
                 await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).IncludeTotalCount().LoadAllAync() :
                 await db.LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(CurrentCourseID);
 
-            Exercises = new List<RegularExercise>();
+            Exercises = new List<Exercise>();
             Solutions = new List<Solution>();
 
 
@@ -466,7 +497,7 @@ namespace wazniak_forever.ViewModel
 
             if (CourseType != CourseType.StudyWithClarifier)
             {
-                var RandomExercises = new List<RegularExercise>();
+                var RandomExercises = new List<Exercise>();
                 var RandomSolutions = new List<Solution>();
                 var r = new Random();
                 
@@ -705,12 +736,18 @@ namespace wazniak_forever.ViewModel
 
         private List<UserSubject> _userSubjectMappings;
 
+        private List<UserModule> _userModuleMappings;
+
         private List<UserExercise> _userExerciseMappings;
 
         public async System.Threading.Tasks.Task LoadMyCourses()
         {
             var mySubjects = await db.MySubjects
                 .Where(user => user.UserID == DatabaseContext.MobileService.CurrentUser.UserId)
+                .ToListAsync();
+
+            var myModules = await db.UserModules.
+                Where(module => module.UserID == DatabaseContext.MobileService.CurrentUser.UserId)
                 .ToListAsync();
 
             MyCourses = new List<Subject>();
@@ -725,6 +762,12 @@ namespace wazniak_forever.ViewModel
             });
 
             MyCourses.Sort(compareSubjects);
+
+            _userModuleMappings = new List<UserModule>();
+            myModules.ForEach(module => 
+            {
+                _userModuleMappings.Add(new UserModule(module.UserID, module.ModuleID, module.SubjectID, module.CorrectAnswers, module.Answers));
+            });
 
             _userExerciseMappings = new List<UserExercise>();
             var testIfNull = (await db.UsersAndExercises.Where(ue => ue.UserID == db.User.UserId).ToListAsync()).FirstOrDefault();
