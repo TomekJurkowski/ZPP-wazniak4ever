@@ -110,6 +110,35 @@ namespace WazniakWebsite.Controllers
             return View(subject);
         }
 
+        [HttpPost, ActionName("Details")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeModulesSequenceNumbers(int subjectId, int[] moduleIds, int[] moduleSequenceNumbers)
+        {
+            if (moduleIds.Length != moduleSequenceNumbers.Length)
+            {
+                throw new RetryLimitExceededException("The number of the modules should be equal to the number of sequenceNumbers.");   
+            }
+
+            for (var i = 0; i < moduleIds.Length; ++i)
+            {
+                var module = db.Modules.Find(moduleIds[i]);
+                if (module.SequenceNo != moduleSequenceNumbers[i])
+                {
+                    module.SequenceNo = moduleSequenceNumbers[i];
+                    db.Entry(module).State = EntityState.Modified;
+                }
+            }
+
+            var subject = db.Subjects.Find(subjectId);
+ 
+            // Update subject time
+            subject.UpdateLastUpdatedTime();
+            db.Entry(subject).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Details", "Subject", new { id = subjectId });
+        }
+
         // GET: /Subject/Create
         public ActionResult Create()
         {
