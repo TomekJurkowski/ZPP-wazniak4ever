@@ -230,7 +230,7 @@ namespace wazniak_forever.ViewModel
             return result;
         }
 
-        private List<Exercise> chooseExercises(int CurrentModuleIndex, int[] weights)
+        private List<Exercise> chooseRepetitionExercises(int CurrentModuleIndex, int[] weights)
         {
             List<Exercise> result = new List<Exercise>();
             for (int i = 0; i < CurrentModuleIndex; i++)
@@ -259,10 +259,11 @@ namespace wazniak_forever.ViewModel
             int[] ModuleWeights = countWeights(CurrentModuleIndex, RepetitionBase, UserModules);
             int RandomExerciseCount = RepetitionBase - ModuleWeights.Sum();
 
-            Exercises = randomExercises(Exercises.FindAll(ex => ex.ModuleID == CurrentModule.ID), UserModule.ATTEMPTS);
-            Exercises.Concat(chooseExercises(CurrentModuleIndex, ModuleWeights));
-            if (RandomExerciseCount > 0) ;
+            List<Exercise> ExercisesBackup = randomExercises(Exercises.FindAll(ex => ex.ModuleID == CurrentModule.ID), UserModule.ATTEMPTS);
+            ExercisesBackup.Concat(chooseRepetitionExercises(CurrentModuleIndex, ModuleWeights));
+            if (RandomExerciseCount > 0) ExercisesBackup.Concat(randomExercises(Exercises.FindAll(ex => ex.ModuleID < CurrentModule.ID), RandomExerciseCount));
 
+            Exercises = ExercisesBackup;
             Solutions = matchSolutions();
             CurrentExercise = Exercises[0];
             CurrentSolution = Solutions[0];
@@ -765,7 +766,7 @@ namespace wazniak_forever.ViewModel
             _userModuleMappings = new List<UserModule>();
             myModules.ForEach(module => 
             {
-                _userModuleMappings.Add(new UserModule(module.ID, module.UserID, module.ModuleID, module.SubjectID, module.CorrectAnswers, module.Answers));
+                _userModuleMappings.Add(new UserModule(module.UserID, module.ModuleID, module.SubjectID, module.CorrectAnswers, module.Answers));
             });
 
             _userExerciseMappings = new List<UserExercise>();

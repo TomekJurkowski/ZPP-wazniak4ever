@@ -366,9 +366,8 @@ namespace wazniak_forever.Model
         public bool[] Answers { get; set; }
         public const int ATTEMPTS = 10;
 
-        public UserModule(string id, string userID, int moduleID, int subjectID, int correctAnswers, bool[] answers)
+        public UserModule(string userID, int moduleID, int subjectID, int correctAnswers, bool[] answers)
         {
-            ID = id;
             UserID = userID;
             ModuleID = moduleID;
             SubjectID = subjectID;
@@ -482,6 +481,15 @@ namespace wazniak_forever.Model
         public Module(string name)
         {
             this.Title = name;
+        }
+
+        public Module(int id, int subjectID, int sequenceNo, string title, Subject subject)
+        {
+            this.ID = id;
+            this.SubjectID = subjectID;
+            this.SequenceNo = sequenceNo;
+            this.Title = title;
+            this.Subject = subject;
         }
     }
 
