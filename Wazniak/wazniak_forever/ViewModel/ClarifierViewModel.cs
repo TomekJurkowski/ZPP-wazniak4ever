@@ -213,9 +213,25 @@ namespace wazniak_forever.ViewModel
             UserChoices = Exercises[0].Solution.Choices;
         }
 
+        private int[] countWeights(int CurrentModuleIndex, int ModuleExerciseCount)
+        {
+            int[] weights = new int[CurrentModuleIndex];
+
+            return weights;
+        }
+
+        private int countRepetitionExercises(int ModuleIndex, int[] ModuleWeights)
+        {
+            return 0;
+        }
+
         public void pickExercises()
         {
-            
+            int ModuleExerciseCount = 10;
+            int CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
+            CurrentModule = Modules[CurrentModuleIndex];
+            int[] moduleWeights = countWeights(CurrentModuleIndex, ModuleExerciseCount);
+            int RepetitionExerciseCount = countRepetitionExercises(CurrentModuleIndex, moduleWeights);
 
             Solutions = matchSolutions();
             CurrentExercise = Exercises[0];
@@ -705,7 +721,7 @@ namespace wazniak_forever.ViewModel
                 MyCourses.Add(new Subject(subject.ID, subject.Name, 
                     subject.Description, subject.LastUpdated));
                 _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID, 
-                    subject.ID, subject.CorrectAnswers, subject.Attempts, subject.LastAttempt));
+                    subject.ID, subject.CurrentModuleIndex, subject.CorrectAnswers, subject.Attempts, subject.LastAttempt));
             });
 
             MyCourses.Sort(compareSubjects);

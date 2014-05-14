@@ -325,6 +325,7 @@ namespace wazniak_forever.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public System.DateTime LastUpdated { get; set; }
+        public int CurrentModuleIndex { get; set; }
         public int CorrectAnswers { get; set; }
         public int Attempts { get; set; }
         public System.DateTime LastAttempt { get; set; }
@@ -335,15 +336,17 @@ namespace wazniak_forever.Model
         public string ID { get; set; }
         public string UserID { get; set; }
         public int SubjectID { get; set; }
+        public int CurrentModuleIndex { get; set; }
         public int CorrectAnswers { get; set; }
         public int Attempts { get; set; }
         public System.DateTime LastAttempt { get; set; }
 
-        public UserSubject(string id, string userID, int subjectID, int correctAnswers, int attempts, System.DateTime lastAttempt)
+        public UserSubject(string id, string userID, int subjectID, int currentModuleIndex, int correctAnswers, int attempts, System.DateTime lastAttempt)
         {
             ID = id;
             UserID = userID;
             SubjectID = subjectID;
+            CurrentModuleIndex = currentModuleIndex;
             CorrectAnswers = correctAnswers;
             Attempts = attempts;
             LastAttempt = lastAttempt;
