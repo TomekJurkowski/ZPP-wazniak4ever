@@ -83,6 +83,7 @@ namespace wazniak_forever.Model
         public IMobileServiceTable<UserSubject> UsersAndSubjects = MobileService.GetTable<UserSubject>();
         public IMobileServiceTable<UserExercise> UsersAndExercises = MobileService.GetTable<UserExercise>(); 
         public IMobileServiceTable<UserFullSubject> MySubjects = MobileService.GetTable<UserFullSubject>();
+        public IMobileServiceTable<UserModule> UserModules = MobileService.GetTable<UserModule>();
         public IMobileServiceTable<MultipleChoiceExerciseOption> MultipleChoiceOptions = 
             MobileService.GetTable<MultipleChoiceExerciseOption>();
         public IMobileServiceTable<SingleChoiceExerciseOption> SingleChoiceOptions =
@@ -360,15 +361,17 @@ namespace wazniak_forever.Model
         public string ID { get; set; }
         public string UserID { get; set; }
         public int ModuleID { get; set; }
+        public int SubjectID { get; set; }
         public int CorrectAnswers { get; set; }
         public bool[] Answers { get; set; }
-        public static const int ATTEMPTS = 10;
+        public const int ATTEMPTS = 10;
 
-        public UserModule(string id, string userID, int moduleID, int correctAnswers, bool[] answers)
+        public UserModule(string id, string userID, int moduleID, int subjectID, int correctAnswers, bool[] answers)
         {
             ID = id;
             UserID = userID;
             ModuleID = moduleID;
+            SubjectID = subjectID;
             CorrectAnswers = correctAnswers;
             Answers = answers;
         }

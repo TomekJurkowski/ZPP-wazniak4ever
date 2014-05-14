@@ -89,19 +89,15 @@ namespace wazniak_forever
                 {
                     case OptionType.Start:
                         NavigateToModuleSelectionPage(CourseType.Classic);
-                        //SelectExercise(CourseType.Classic);
                         break;
                     case OptionType.StudyWithClarifier:
-                        //NavigateToModuleSelectionPage(CourseType.StudyWithClarifier);
                         SelectExercise(CourseType.StudyWithClarifier);
                         break;
                     case OptionType.FixedNumber:
                         NavigateToModuleSelectionPage(CourseType.FixedNumber);
-                        //SelectExercise(CourseType.FixedNumber);
                         break;
                     case OptionType.Timer:
                         NavigateToModuleSelectionPage(CourseType.Time);
-                        //SelectExercise(CourseType.Time);
                         break;
                     case OptionType.AddToMyCourses:
                         await App.ViewModel.PerformTimeConsumingProcess(this, "Adding to My Courses...", App.ViewModel.AddToMyCourses);                                             
