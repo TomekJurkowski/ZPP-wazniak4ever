@@ -65,7 +65,7 @@ namespace wazniak_forever
                     timer.Start(1, 20);
                 }
             }
-            else if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.sortExercisesByProgress();
+            else if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.pickExercises();
 
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}", CourseName.Text), UriKind.Relative));
         }

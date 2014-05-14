@@ -332,7 +332,7 @@ namespace wazniak_forever.Model
 
     public class UserSubject
     {
-        public string Id { get; set; }
+        public string ID { get; set; }
         public string UserID { get; set; }
         public int SubjectID { get; set; }
         public int CorrectAnswers { get; set; }
@@ -341,7 +341,7 @@ namespace wazniak_forever.Model
 
         public UserSubject(string id, string userID, int subjectID, int correctAnswers, int attempts, System.DateTime lastAttempt)
         {
-            Id = id;
+            ID = id;
             UserID = userID;
             SubjectID = subjectID;
             CorrectAnswers = correctAnswers;
@@ -352,11 +352,29 @@ namespace wazniak_forever.Model
         public UserSubject() { }
     }
 
+    public class UserModule
+    {
+        public string ID { get; set; }
+        public string UserID { get; set; }
+        public int ModuleID { get; set; }
+        public int CorrectAnswers { get; set; }
+        public int Attempts { get; set; }
+
+        public UserModule(string id, string userID, int moduleID, int correctAnswers, int attempts)
+        {
+            ID = id;
+            UserID = userID;
+            ModuleID = moduleID;
+            CorrectAnswers = correctAnswers;
+            Attempts = attempts;
+        }
+    }
+
     public class UserExercise
     {
-        public string Id { get; set; }
-        public string UserId { get; set; }
-        public int ExerciseId { get; set; }
+        public string ID { get; set; }
+        public string UserID { get; set; }
+        public int ExerciseID { get; set; }
         public int Attempts { get; set; }
         public int CorrectAnswers { get; set; }
         public System.DateTime LastAttempt { get; set; }
@@ -365,8 +383,8 @@ namespace wazniak_forever.Model
 
         public UserExercise(string userId, int exerciseId, int attempts, int correctAnswers, System.DateTime lastAttempt)
         {
-            UserId = userId;
-            ExerciseId = exerciseId;
+            UserID = userId;
+            ExerciseID = exerciseId;
             Attempts = attempts;
             CorrectAnswers = correctAnswers;
             LastAttempt = lastAttempt;
@@ -438,18 +456,25 @@ namespace wazniak_forever.Model
             Description = description;
             LastUpdated = lastUpdated;
         }
+
+        public void UpdateLastUpdatedTime()
+        {
+            LastUpdated = DateTime.Now;
+        }
     }
 
     public class Module
     {
         [PrimaryKey]
         public int ID { get; set; }
-        public int CourseID { get; set; }
-        public string Name { get; set; }
+        public int SubjectID { get; set; }
+        public int SequenceNo { get; set; }
+        public string Title { get; set; }
+        public virtual Subject Subject { get; set; }
 
         public Module(string name)
         {
-            this.Name = name;
+            this.Title = name;
         }
     }
 
@@ -458,6 +483,7 @@ namespace wazniak_forever.Model
         [PrimaryKey]
         public int ID { get; set; }
         public int SubjectID { get; set; }
+        public int ModuleID { get; set; }
         public int SolutionID { get; set; }
         public string Title { get; set; }
         public Subject Subject { get; set; }

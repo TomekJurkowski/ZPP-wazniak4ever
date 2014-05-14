@@ -185,9 +185,9 @@ namespace wazniak_forever.ViewModel
         private int compareExercises(Exercise ex1, Exercise ex2)
         {
             UserExercise uE1 = _userExerciseMappings.Find(mapping =>
-                mapping.ExerciseId == ex1.ID && mapping.UserId == db.User.UserId);
+                mapping.ExerciseID == ex1.ID && mapping.UserID == db.User.UserId);
             UserExercise uE2 = _userExerciseMappings.Find(mapping =>
-                mapping.ExerciseId == ex2.ID && mapping.UserId == db.User.UserId);
+                mapping.ExerciseID == ex2.ID && mapping.UserID == db.User.UserId);
             if (uE1 == null && uE2 == null) return 0;
             if (uE1 == null) return -1;
             if (uE2 == null) return 1;
@@ -207,6 +207,16 @@ namespace wazniak_forever.ViewModel
         public void sortExercisesByProgress()
         {
             Exercises.Sort(compareExercises);
+            Solutions = matchSolutions();
+            CurrentExercise = Exercises[0];
+            CurrentSolution = Solutions[0];
+            UserChoices = Exercises[0].Solution.Choices;
+        }
+
+        public void pickExercises()
+        {
+            
+
             Solutions = matchSolutions();
             CurrentExercise = Exercises[0];
             CurrentSolution = Solutions[0];
@@ -237,6 +247,17 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        private Module _currentModule;
+        public Module CurrentModule
+        {
+            get { return _currentModule; }
+            set
+            {
+                _currentModule = value;
+                NotifyPropertyChanged("CurrentModule");
+            }
+        }
+
         private RegularExercise _currentExercise;
         public RegularExercise CurrentExercise
         {
@@ -258,6 +279,7 @@ namespace wazniak_forever.ViewModel
                 NotifyPropertyChanged("CurrentSolution");
             }
         }
+
         public int CurrentCourseID { get; set; }
 
         private List<Module> _modules;
@@ -310,17 +332,9 @@ namespace wazniak_forever.ViewModel
             return null;
         }
 
-        public void LoadModules()
+        public async void LoadModules()
         {
-            //Modules = await db.Modules.Where(module => module.CourseID == CurrentCourseID).ToListAsync();
-
-            Modules = new List<Module>
-            {
-                new Module("Module 1"),
-                new Module("Module 2"),
-                new Module("Module 3"),
-                new Module("Module 4")
-            };
+            Modules = await db.Modules.Where(module => module.SubjectID == CurrentCourseID).ToListAsync();
         }
 
         public async System.Threading.Tasks.Task LoadExercises(IEnumerable<int> moduleIdList)
@@ -697,10 +711,10 @@ namespace wazniak_forever.ViewModel
             MyCourses.Sort(compareSubjects);
 
             _userExerciseMappings = new List<UserExercise>();
-            var testIfNull = (await db.UsersAndExercises.Where(ue => ue.UserId == db.User.UserId).ToListAsync()).FirstOrDefault();
+            var testIfNull = (await db.UsersAndExercises.Where(ue => ue.UserID == db.User.UserId).ToListAsync()).FirstOrDefault();
             if (testIfNull != null)
             {
-                _userExerciseMappings = await db.UsersAndExercises.Where(ue => ue.UserId == db.User.UserId).ToListAsync();
+                _userExerciseMappings = await db.UsersAndExercises.Where(ue => ue.UserID == db.User.UserId).ToListAsync();
             }
         }
 
@@ -732,7 +746,7 @@ namespace wazniak_forever.ViewModel
             foreach (KeyValuePair<int, bool> t in _givenAnswers)
             {
                 var userExerciseMap = (await db.UsersAndExercises
-                    .Where(ue => ue.UserId == db.User.UserId && ue.ExerciseId == t.Key).ToListAsync()).FirstOrDefault();
+                    .Where(ue => ue.UserID == db.User.UserId && ue.ExerciseID == t.Key).ToListAsync()).FirstOrDefault();
                 if (userExerciseMap == null)
                 {
                     UserExercise newUE = new UserExercise(db.User.UserId, t.Key, 1, t.Value ? 1 : 0, System.DateTime.Now);
@@ -774,7 +788,7 @@ namespace wazniak_forever.ViewModel
             MyCourses.Remove(MyCourses.Find(course => course.ID == CurrentCourseID));
 
             // BELOW: DO NOT DELETE YET
-            var lol = _userExerciseMappings.FindAll(mapping => mapping.UserId == db.User.UserId);
+            var lol = _userExerciseMappings.FindAll(mapping => mapping.UserID == db.User.UserId);
             foreach (UserExercise uE in lol) await db.UsersAndExercises.DeleteAsync(uE);
 
             LoadCoursePage();  
