@@ -213,10 +213,13 @@ namespace wazniak_forever.ViewModel
             UserChoices = Exercises[0].Solution.Choices;
         }
 
-        private int[] countWeights(int CurrentModuleIndex, int ModuleExerciseCount)
+        private int[] countWeights(int CurrentModuleIndex, int RepetitionBase)
         {
             int[] weights = new int[CurrentModuleIndex];
-
+            for (int i = 0; i < CurrentModuleIndex; i++)
+            {
+                weights[i] = RepetitionBase * Math.Round((double)Modules[i].);
+            }
             return weights;
         }
 
@@ -230,8 +233,9 @@ namespace wazniak_forever.ViewModel
             int ModuleExerciseCount = 10;
             int CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
             CurrentModule = Modules[CurrentModuleIndex];
-            int[] moduleWeights = countWeights(CurrentModuleIndex, ModuleExerciseCount);
-            int RepetitionExerciseCount = countRepetitionExercises(CurrentModuleIndex, moduleWeights);
+            int RepetitionBase = 2 * CurrentModuleIndex + 1 - Convert.ToInt32(CurrentModuleIndex == 0);
+            int[] ModuleWeights = countWeights(CurrentModuleIndex, RepetitionBase);
+            int RepetitionExerciseCount = countRepetitionExercises(CurrentModuleIndex, ModuleWeights);
 
             Solutions = matchSolutions();
             CurrentExercise = Exercises[0];
@@ -705,6 +709,8 @@ namespace wazniak_forever.ViewModel
 
         private List<UserSubject> _userSubjectMappings;
 
+        private List<UserModule> _userModuleMappings;
+
         private List<UserExercise> _userExerciseMappings;
 
         public async System.Threading.Tasks.Task LoadMyCourses()
@@ -712,6 +718,7 @@ namespace wazniak_forever.ViewModel
             var mySubjects = await db.MySubjects
                 .Where(user => user.UserID == DatabaseContext.MobileService.CurrentUser.UserId)
                 .ToListAsync();
+            
 
             MyCourses = new List<Subject>();
 
@@ -722,9 +729,15 @@ namespace wazniak_forever.ViewModel
                     subject.Description, subject.LastUpdated));
                 _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID, 
                     subject.ID, subject.CurrentModuleIndex, subject.CorrectAnswers, subject.Attempts, subject.LastAttempt));
+                foreach (Module m in Modules.FindAll(module => module.SubjectID == subject.ID))
+                {
+                    _userModuleMappings.Add(new UserModule(m.ID, subject.UserID, m.ID, m.));
+                }
             });
 
             MyCourses.Sort(compareSubjects);
+
+            _userModuleMappings = new List<UserModule>();
 
             _userExerciseMappings = new List<UserExercise>();
             var testIfNull = (await db.UsersAndExercises.Where(ue => ue.UserID == db.User.UserId).ToListAsync()).FirstOrDefault();

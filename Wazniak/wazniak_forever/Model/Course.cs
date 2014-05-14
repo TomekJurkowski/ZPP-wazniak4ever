@@ -361,15 +361,16 @@ namespace wazniak_forever.Model
         public string UserID { get; set; }
         public int ModuleID { get; set; }
         public int CorrectAnswers { get; set; }
-        public int Attempts { get; set; }
+        public bool[] Answers { get; set; }
+        public static const int ATTEMPTS = 10;
 
-        public UserModule(string id, string userID, int moduleID, int correctAnswers, int attempts)
+        public UserModule(string id, string userID, int moduleID, int correctAnswers, bool[] answers)
         {
             ID = id;
             UserID = userID;
             ModuleID = moduleID;
             CorrectAnswers = correctAnswers;
-            Attempts = attempts;
+            Answers = answers;
         }
     }
 
