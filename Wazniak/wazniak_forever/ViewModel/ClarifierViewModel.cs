@@ -217,10 +217,27 @@ namespace wazniak_forever.ViewModel
             return weights;
         }
 
-        private List<Exercise> chooseExercises(int[] Count)
+        private List<Exercise> randomExercises(List<Exercise> moduleExercises, int Count)
         {
             List<Exercise> result = new List<Exercise>();
-            
+            Random r = new Random();
+            for (int i = 0; i < Count; i++)
+            {
+                Exercise ex = moduleExercises[r.Next(moduleExercises.Count)];
+                result.Add(ex);
+                moduleExercises.Remove(ex);
+            }
+            return result;
+        }
+
+        private List<Exercise> chooseExercises(int CurrentModuleIndex, int[] weights)
+        {
+            List<Exercise> result = new List<Exercise>();
+            for (int i = 0; i < CurrentModuleIndex; i++)
+            {
+                List<Exercise> moduleExercises = Exercises.FindAll(ex => ex.ModuleID == Modules[i].ID);
+                result.Concat(randomExercises(moduleExercises, weights[i]));
+            }
             return result;
         }
 
@@ -242,8 +259,8 @@ namespace wazniak_forever.ViewModel
             int[] ModuleWeights = countWeights(CurrentModuleIndex, RepetitionBase, UserModules);
             int RandomExerciseCount = RepetitionBase - ModuleWeights.Sum();
 
-            Random r = new Random();
-            r.Next();
+            Exercises = randomExercises(Exercises.FindAll(ex => ex.ModuleID == CurrentModule.ID), UserModule.ATTEMPTS);
+            Exercises.Concat(chooseExercises(CurrentModuleIndex, ModuleWeights));
             if (RandomExerciseCount > 0) ;
 
             Solutions = matchSolutions();
@@ -287,8 +304,8 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private RegularExercise _currentExercise;
-        public RegularExercise CurrentExercise
+        private Exercise _currentExercise;
+        public Exercise CurrentExercise
         {
             get { return _currentExercise; }
             set
@@ -322,8 +339,8 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private List<RegularExercise> _exercises;
-        public List<RegularExercise> Exercises
+        private List<Exercise> _exercises;
+        public List<Exercise> Exercises
         {
             get { return _exercises; }
             set
@@ -407,7 +424,7 @@ namespace wazniak_forever.ViewModel
                 await db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).IncludeTotalCount().LoadAllAync() :
                 await db.LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(CurrentCourseID);
 
-            Exercises = new List<RegularExercise>();
+            Exercises = new List<Exercise>();
             Solutions = new List<Solution>();
 
 
@@ -479,7 +496,7 @@ namespace wazniak_forever.ViewModel
 
             if (CourseType != CourseType.StudyWithClarifier)
             {
-                var RandomExercises = new List<RegularExercise>();
+                var RandomExercises = new List<Exercise>();
                 var RandomSolutions = new List<Solution>();
                 var r = new Random();
                 
