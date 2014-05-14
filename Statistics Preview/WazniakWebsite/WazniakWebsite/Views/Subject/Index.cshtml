@@ -20,10 +20,12 @@
         .form-group {
             margin-right: 30px;
         }
+
         .hiddenRow {
             padding: 0 !important;
         }
     </style>
+    
     <script src="http://code.highcharts.com/highcharts.js"></script>
     <script src="http://code.highcharts.com/modules/drilldown.js"></script>
 
@@ -49,7 +51,6 @@
                 animated: 'fade',
                 placement: 'top'
             });
-
         });
 
         function getModules(courseId) {
@@ -68,9 +69,8 @@
                 });
         };
 
-        function getExercises(moduleId, point, courseId) {
+        function getExercises(chart, moduleId, point, courseId) {
             var url = "/Subject/GetExerciseStatistics";
-            var chart = $('#demo_' + courseId).highcharts();
             chart.showLoading('Downloading exercise statistics ...');
             $.post(url, { moduleId: moduleId })
                 .done(function (data) {
@@ -81,7 +81,7 @@
                         data: parsedData
                     }
                     chart.addSeriesAsDrilldown(point, series);
-                });
+            });
         }
 
         function initialiseChart(subjectId) {
@@ -91,7 +91,9 @@
                     events: {
                         drilldown: function (e) {
                             if (!e.seriesOptions) {
-                                getExercises(e.point.id, e.point, subjectId);
+                                var chart = this;
+                                getExercises(chart, e.point.id, e.point, subjectId);
+                                
                             }
 
                         }
@@ -141,7 +143,6 @@
             initialiseChart(subjectId);
             getModules(subjectId);
         }
-
     </script>
 }
 
@@ -150,7 +151,6 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<button data-toggle="collapse" data-target="#demo_16">Click</button>
 
 @using (Html.BeginForm())
 {
@@ -182,38 +182,39 @@
         </th>
         <th></th>
         <th></th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model)
-{
-    <tr>
-        <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
-            <span class="shortDisplay">
-                @Html.DisplayFor(modelItem => item.Description)
-            </span>
-        </td>
-        <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
-            @Html.DisplayFor(modelItem => item.LastUpdated)
-        </td>
-        <td>
-            <span id="tooltipEdit" class="glyphicon glyphicon-edit PurpleColor clickable" title="Edit" onclick="editExercise('@item.ID')"></span>
-        </td>
-        <td>
-            <span id="tooltipRemove" class="glyphicon glyphicon-trash PurpleColor clickable" title="Delete" onclick="deleteExercise('@item.ID')"></span>
-        </td>
-        <td>
-            <button data-toggle="collapse" data-target="#demo_@item.ID" onclick="drawChart(@item.ID)">Click</button>
-        </td>
-    </tr>
-    <tr>
-    <td colspan="5" class="hiddenRow">
-        <div class="collapse" id="demo_@item.ID">Demo1</div>
-    </td>
-    </tr>
-}
+    {
+        <tr>
+            <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
+                <span class="shortDisplay">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </span>
+            </td>
+            <td class="clickable" onclick="goToExerciseDetails(@item.ID)">
+                @Html.DisplayFor(modelItem => item.LastUpdated)
+            </td>
+            <td>
+                <span id="tooltipEdit" class="glyphicon glyphicon-edit PurpleColor clickable" title="Edit" onclick="editExercise('@item.ID')"></span>
+            </td>
+            <td>
+                <span id="tooltipRemove" class="glyphicon glyphicon-trash PurpleColor clickable" title="Delete" onclick="deleteExercise('@item.ID')"></span>
+            </td>
+            <td>
+                <span class="glyphicon glyphicon-signal PurpleColor clickable" data-toggle="collapse" data-target="#demo_@item.ID" onclick="drawChart(@item.ID)"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" class="hiddenRow">
+                <div class="collapse" id="demo_@item.ID">Demo1</div>
+            </td>
+        </tr>
+    }
 </table>
 
 <br />

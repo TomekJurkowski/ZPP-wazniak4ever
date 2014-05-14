@@ -31,5 +31,6 @@ namespace WazniakWebsite.DAL
         public DbSet<SingleChoiceAnswer> SingleChoiceAnswers { get; set; }
         public DbSet<MultiChoice> MultiChoices { get; set; }
         public DbSet<SingleChoice> SingleChoices { get; set; }
+        public DbSet<Module> Modules { get; set; }
     }
 }

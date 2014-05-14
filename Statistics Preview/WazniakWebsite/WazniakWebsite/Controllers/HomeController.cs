@@ -23,11 +23,6 @@ namespace WazniakWebsite.Controllers
             return View();
         }
 
-        public ActionResult Statistics()
-        {
-            return View();
-        }
-
         public ActionResult Contact()
         {
             ViewBag.Message = "If you have any doubts, questions or suggestions on how to make Clarifier better, please don't hesitate to contact us!";

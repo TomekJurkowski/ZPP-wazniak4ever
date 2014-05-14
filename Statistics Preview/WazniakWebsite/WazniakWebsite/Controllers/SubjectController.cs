@@ -1,4 +1,5 @@
-﻿using PagedList;
+﻿using System.Security.Cryptography;
+using PagedList;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -45,6 +46,16 @@ namespace WazniakWebsite.Controllers
             var pageNumber = (page ?? 1);
 
             return View(subjects.ToPagedList(pageNumber, pageSize));
+        }
+
+        // Private function creating a list of modules associated with the subject.
+        private void PopulateModulesList(int? subjectId)
+        {
+            var modulesQuery = from m in db.Modules
+                               where m.SubjectID == subjectId
+                               orderby m.SequenceNo
+                               select m;
+            ViewBag.ModuleList = modulesQuery.ToList();
         }
 
         // GET: /Subject/Details/5
@@ -94,6 +105,8 @@ namespace WazniakWebsite.Controllers
             var pageNumber = (page ?? 1);
 
             ViewBag.Tasks = tasks.ToPagedList(pageNumber, pageSize);
+
+                PopulateModulesList(id);
 
             return View(subject);
         }
@@ -252,25 +265,29 @@ namespace WazniakWebsite.Controllers
         [HttpPost]
         public string GetModuleStatistics(int courseId)
         {
-            var arr = new[]
-            {
-                new {name = "Module One", y = 50, drilldown = true, id = 1},
-                new {name = "Module Two", y = 60, drilldown = true, id = 2},
-                new {name = "Module Three", y = 50, drilldown = true, id = 3}   
-            };
-            return Newtonsoft.Json.JsonConvert.SerializeObject(arr);
+            var moduleStats = from module in db.Modules.Where(module => module.SubjectID == courseId)
+                          select new
+                          {
+                              id = module.ID,
+                              name = module.Title,
+                              y = module.ID,
+                              drilldown = true
+                          };
+            return Newtonsoft.Json.JsonConvert.SerializeObject(moduleStats);
         }
 
         [HttpPost]
         public string GetExerciseStatistics(int moduleId)
         {
-            var arr = new[]
-            {
-                new {name = "Exercise One", y = 50, drilldown = true},
-                new {name = "Exercise Two", y = 60, drilldown = true},
-                new {name = "Exercise Three", y = 50, drilldown = true}
-            }; ;
-            return Newtonsoft.Json.JsonConvert.SerializeObject(arr);
+            var iter = 0;
+            var exerciseStats = (from exercise in db.Tasks.Where(task => task.ModuleID == moduleId)
+                                select new
+                                {
+                                    name = exercise.Title,
+                                    y = exercise.ID,
+                                    id = exercise.ID,
+                                }).ToList();
+            return Newtonsoft.Json.JsonConvert.SerializeObject(exerciseStats);
         }
     }
 }
