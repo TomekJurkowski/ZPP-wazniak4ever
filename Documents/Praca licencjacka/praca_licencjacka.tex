@@ -25,6 +25,9 @@
 %\usepackage[cp1250]{inputenc}
 
 \usepackage{hyperref}
+\usepackage{graphicx}
+
+
 % Dane magistranta:
 
 \author{Tomasz Jurkowski\\ 
@@ -168,6 +171,57 @@ Coursera to platforma edukacyjna, która udostępnia otwarte masowe kursy przygo
 
 \chapter{Opis architektury}\label{r:architecture}
 
+\chapter{Dokumentacja użytkowa}\label{r:documentation}
+
+\section{Aplikacja mobilna}
+
+\subsection{Menu główne}
+W menu głównym aplikacji mobilnej dostępne są następujące opcje:
+\begin{itemize}
+\item Courses - wybranie tej opcji powoduje przejście do ekranu z listą dostępnych przedmiotów,
+\item Downloads - przejście do strony z listą przedmiotów zapisanych w pamięci telefonu,
+\item Sign in - logowanie przy pomocy konta Microsoft
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Main_menu.png}
+    \caption{Menu główne aplikacji}
+    \label{fig:main_menu}
+\end{figure}
+
+Opcja Courses dostępna jest tylko w trybie online. W przypadku korzystania z aplikacji bez dostępu do internetu możliwe jest wyświetlenie jedynie przedmiotów zapisanych wcześniej w pamięci telefonu poprzez wybranie opcji Downloads. W trybie offline u góry ekranu wyświetlany jest pasek informujący o braku dostępu do internetu.
+
+\subsection{Lista przedmiotów}
+Lista dostępnych przedmiotów wyświetlana jest na kilku zakładkach: 
+\begin{itemize}
+\item My Courses - przedmioty dodane przez zalogowanego użytkownika do "moich kursów",
+\item New - dziesięć najnowszych przedmiotów,
+\item All - lista wszystkich dostępnych przedmiotów,
+\item Downloads - przedmioty zapisane w pamięci telefonu
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Courses.png}
+    \caption{Lista dostępnych przedmiotów}
+    \label{fig:courses}
+\end{figure}
+
+Aby przejść do strony wybranego przedmiotu wystarczy nacisnąć kafelek z jego nazwą. W każdej zakładce możliwe jest również wyszukiwanie kursów po nazwie. W trybie offline po wybraniu w menu głównym opcji Downloads automatycznie otwiera się zakładka z listą pobranych przedmiotów i nie ma możliwości przejścia do innej zakładki. 
+
+Po zalogowaniu na liście przedmiotów dostępna jest zakładka My Courses, która zawiera kursy dodane przez użytkownika do "moich kursów". W zakładce My Courses każdy kafelek z nazwą przedmiotu jest jednocześnie paskiem postępu informującym użytkownika, w jakim stopniu opanował materiał danego przedmiotu. 
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Progress.png}
+    \caption{Lista przedmiotów w zakładce My Courses}
+    \label{fig:progress}
+\end{figure}
+
+\subsection{Strona przedmiotu}
+
+
 \chapter{Organizacja pracy}\label{r:org}
 
 \section{Zakres}
@@ -181,8 +235,6 @@ Dokumenty dotyczące projektu były tworzone i współdzielone między członkam
 
 \subsection{Oprogramowanie}
 Przy implementacji oprogramowania korzystaliśmy ze środowiska Microsoft Visual Studio oraz platformy Windows Azure. Do testowania aplikacji mobilnej wykorzystaliśmy telefony Nokia z systemem operacyjnym Windows 8.
-
-\chapter{Dokumentacja użytkowa}\label{r:documentation}
 
 \chapter{Podsumowanie}
 
