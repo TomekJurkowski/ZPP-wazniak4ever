@@ -283,6 +283,10 @@
     <Compile Include="Migrations\201405131322177_ModuleConnectedWithTask.Designer.cs">
       <DependentUpon>201405131322177_ModuleConnectedWithTask.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201405142247295_someChanges.cs" />
+    <Compile Include="Migrations\201405142247295_someChanges.Designer.cs">
+      <DependentUpon>201405142247295_someChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Authentication\IdentityModels.cs" />
     <Compile Include="Models\ClarifierUser.cs" />
@@ -422,6 +426,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405131322177_ModuleConnectedWithTask.resx">
       <DependentUpon>201405131322177_ModuleConnectedWithTask.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405142247295_someChanges.resx">
+      <DependentUpon>201405142247295_someChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

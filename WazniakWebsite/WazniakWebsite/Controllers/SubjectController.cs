@@ -105,26 +105,21 @@ namespace WazniakWebsite.Controllers
 
             ViewBag.Tasks = tasks.ToPagedList(pageNumber, pageSize);
 
-                PopulateModulesList(id);
+            PopulateModulesList(id);
 
             return View(subject);
         }
 
-        [HttpPost, ActionName("Details")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChangeModulesSequenceNumbers(int subjectId, int[] moduleIds, int[] moduleSequenceNumbers)
+        public ActionResult ChangeModulesSequenceNumbers(int subjectId, int[] moduleIds)
         {
-            if (moduleIds.Length != moduleSequenceNumbers.Length)
-            {
-                throw new RetryLimitExceededException("The number of the modules should be equal to the number of sequenceNumbers.");   
-            }
-
             for (var i = 0; i < moduleIds.Length; ++i)
             {
                 var module = db.Modules.Find(moduleIds[i]);
-                if (module.SequenceNo != moduleSequenceNumbers[i])
+                if (module.SequenceNo != i)
                 {
-                    module.SequenceNo = moduleSequenceNumbers[i];
+                    module.SequenceNo = i;
                     db.Entry(module).State = EntityState.Modified;
                 }
             }
