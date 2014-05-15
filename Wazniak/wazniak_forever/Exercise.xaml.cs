@@ -95,8 +95,11 @@ namespace wazniak_forever.Controls
             {
                 if (Grid.GetRow(element) == 3) element.Visibility = Visibility.Collapsed;
             }
-            App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(false);
-            App.ViewModel.IncAnswersNumber();
+            if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) 
+            {
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(false);
+                App.ViewModel.IncAnswersNumber();
+            }
 
             SubmitAnswer.Visibility = Visibility.Collapsed;
             ExplanationPanel.Visibility = Visibility.Visible;
@@ -124,7 +127,10 @@ namespace wazniak_forever.Controls
             App.ViewModel.CurrentExercise = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber];
             App.ViewModel.CurrentSolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber];
 
-            App.ViewModel.CurrentModuleIndex = App.ViewModel.Modules.Find(module => module.ID == App.ViewModel.CurrentExercise.ModuleID).SequenceNo;
+            if (App.ViewModel.CourseType == CourseType.StudyWithClarifier)
+            {
+                App.ViewModel.CurrentModuleIndex = App.ViewModel.Modules.Find(module => module.ID == App.ViewModel.CurrentExercise.ModuleID).SequenceNo;
+            }
 
             SolutionType NextType = App.ViewModel.CurrentSolution.Answer.Type;
             if (NextType == SolutionType.Multiple || NextType == SolutionType.Single)
