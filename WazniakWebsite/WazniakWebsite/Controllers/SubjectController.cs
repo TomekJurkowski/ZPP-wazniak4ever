@@ -8,6 +8,19 @@ using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
 
+// The helper class below is used in this file in order to create a wrapped message
+// that can be send as a result of a POST request, by ChangeModulesSequenceNumbers method.
+// I consciously leave this class in this file.
+namespace WazniakWebsite.Models
+{
+    [Serializable]
+    public class Message
+    {
+        public string msg { get; set; }
+    }
+}
+
+
 namespace WazniakWebsite.Controllers
 {
     public class SubjectController : Controller
@@ -111,7 +124,6 @@ namespace WazniakWebsite.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult ChangeModulesSequenceNumbers(int subjectId, int[] moduleIds)
         {
             for (var i = 0; i < moduleIds.Length; ++i)
@@ -125,13 +137,14 @@ namespace WazniakWebsite.Controllers
             }
 
             var subject = db.Subjects.Find(subjectId);
- 
+
             // Update subject time
             subject.UpdateLastUpdatedTime();
             db.Entry(subject).State = EntityState.Modified;
             db.SaveChanges();
 
-            return RedirectToAction("Details", "Subject", new { id = subjectId });
+            return Json(new Message { msg = "The sequence of modules has been successfully changed!" },
+                JsonRequestBehavior.DenyGet);
         }
 
         // GET: /Subject/Create

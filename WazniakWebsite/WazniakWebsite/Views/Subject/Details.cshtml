@@ -226,6 +226,10 @@
         function showSaveBtn() {
             if (isModuleSaveBtnVisible == 0) {
                 isModuleSaveBtnVisible = 1;
+                
+                $("#saveMsgSpan").text("");
+                $("#saveMsgErrorSpan").text("");
+
                 $("#moduleSaveBtn").show(500);
                 $("#moduleSaveBtn").removeAttr('disabled');
             }
@@ -240,9 +244,13 @@
         }
 
         function showSaveCompletedCommunicate(msg) {
-            alert(msg);
+            $("#saveMsgSpan").text(msg);
         }
 
+        function showSaveErrorCommunicate(msg) {
+            $("#saveMsgErrorSpan").text(msg);
+        }
+        
         function saveModuleSequenceChange() {
             var subject = parseInt("@Model.ID");
             var modules = [];
@@ -250,20 +258,30 @@
                 modules.push($(this).val());
             });
 
-            hideSaveBtn();
-            showSaveCompletedCommunicate(modules);
-
-            @*$.ajax({
+            $.ajax({
                 url: '@Url.Action("ChangeModulesSequenceNumbers", "Subject")',
                 type: 'POST',
                 dataType: 'json',
                 cache: false,
-                data: { subjectId : subject, moduleIds : modules},
-                success: function (msg) {
+                data: { subjectId: subject, moduleIds: modules },
+                traditional: true,
+                statusCode: {
+                    404: function () {
+                        showSaveErrorCommunicate('Could not contact server - please try again later.');
+                    },
+                    500: function () {
+                        showSaveErrorCommunicate('A server-side error has occurred - please try again later.');
+                    }
+                },
+                success: function (data) {
                     hideSaveBtn();
-                    showSaveCompletedCommunicate(msg);
+                    $("#saveMsgErrorSpan").text("");
+                    showSaveCompletedCommunicate(data.msg);
+                },
+                error: function () {
+                    showSaveErrorCommunicate('An error have occurred - please try again and in case of another failure contact administrators.');
                 }
-            });*@
+            });
         }
 
     </script>
@@ -348,6 +366,10 @@
             </div>
             
             <input id="moduleSaveBtn" type="button" value="Save Changes" class="btn PurpleBtn" onclick="saveModuleSequenceChange()" />
+            <div>
+                <span class="field-validation-error" id="saveMsgErrorSpan"></span>
+                <span class="text-success" id="saveMsgSpan"></span>
+            </div>
         </dd>
 
         <dd><br /><br /></dd>
