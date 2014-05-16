@@ -11,11 +11,9 @@ namespace wazniak_forever
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            //LoadFromLocalDatabase();
             if (App.ViewModel.AreDownloads) MainPivot.Items.Add(CreatePivotItem("Downloads", "DownloadedCourses"));
             else
             {
-                //LoadFromAzure();
                 LoadPivot();
             }
         }
