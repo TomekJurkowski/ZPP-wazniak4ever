@@ -376,6 +376,8 @@ namespace wazniak_forever.Model
         public bool ans8 { get; set; }
         public bool ans9 { get; set; }
         public bool ans10 { get; set; }
+
+        public UserModule() { }
         
         public UserModule(string id, string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, List<bool> answers)
         {
@@ -393,7 +395,7 @@ namespace wazniak_forever.Model
             parseAnswers(answers);
         }
 
-        private void parseAnswers(List<bool> answers) 
+        public void parseAnswers(List<bool> answers) 
         {
             if (answers.Count > 0) ans1 = answers[0];
             if (answers.Count > 1) ans2 = answers[1];
@@ -407,32 +409,20 @@ namespace wazniak_forever.Model
             if (answers.Count > 9) ans10 = answers[9];
         }
 
-        private List<bool> parseAnswersToList(int n)
+        public List<bool> parseAnswersToList(int space)
         {
             List<bool> result = new List<bool>();
-            switch (n - AnswersNumber)
-            {
-                case 0: result.Add(ans1);
-                    break;
-                case 1: result.Add(ans2);
-                    break;
-                case 2: result.Add(ans3);
-                    break;
-                case 3: result.Add(ans4);
-                    break;
-                case 4: result.Add(ans5);
-                    break;
-                case 5: result.Add(ans6);
-                    break;
-                case 6: result.Add(ans7);
-                    break;
-                case 7: result.Add(ans8);
-                    break;
-                case 8: result.Add(ans9);
-                    break;
-                case 9: result.Add(ans10);
-                    break;
-            }
+            if (AnswersNumber > 0) result.Add(ans1);
+            if (AnswersNumber > 1) result.Add(ans2);
+            if (AnswersNumber > 2) result.Add(ans3);
+            if (AnswersNumber > 3) result.Add(ans4);
+            if (AnswersNumber > 4) result.Add(ans5);
+            if (AnswersNumber > 5) result.Add(ans6);
+            if (AnswersNumber > 6) result.Add(ans7);
+            if (AnswersNumber > 7) result.Add(ans8);
+            if (AnswersNumber > 8) result.Add(ans9);
+            if (AnswersNumber > 9) result.Add(ans10);
+            if (space < AnswersNumber) result.RemoveRange(0, AnswersNumber - space);
             return result;
         }
 
@@ -442,8 +432,10 @@ namespace wazniak_forever.Model
             if (answers.Count < UserModule.ATTEMPTS)
             {
                 resultList = parseAnswersToList(UserModule.ATTEMPTS - answers.Count);
+                resultList.AddRange(answers);
             }
             else resultList = answers;
+            AnswersNumber = resultList.Count;
             parseAnswers(resultList);
         }
     }

@@ -805,7 +805,7 @@ namespace wazniak_forever.ViewModel
             _userModuleMappings = new List<UserModule>();
             myModules.ForEach(module =>
             {
-                _userModuleMappings.Add(new UserModule(module.ID, module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.Answers));
+                _userModuleMappings.Add(new UserModule(module.ID, module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.parseAnswersToList(UserModule.ATTEMPTS)));
             });
 
             _userExerciseMappings = new List<UserExercise>();
