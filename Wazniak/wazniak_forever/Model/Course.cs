@@ -358,7 +358,6 @@ namespace wazniak_forever.Model
 
     public class UserModule
     {
-        public string ID { get; set; }
         public string UserID { get; set; }
         public int ModuleID { get; set; }
         public int SubjectID { get; set; }

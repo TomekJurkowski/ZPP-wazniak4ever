@@ -794,9 +794,9 @@ namespace wazniak_forever.ViewModel
             _userSubjectMappings = new List<UserSubject>();
             mySubjects.ForEach(subject =>
             {
-                MyCourses.Add(new Subject(subject.ID, subject.Name, 
+                MyCourses.Add(new Subject(subject.ID, subject.Name,
                     subject.Description, subject.LastUpdated));
-                _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID, 
+                _userSubjectMappings.Add(new UserSubject(subject.MappingID, subject.UserID,
                     subject.ID, subject.CurrentModuleIndex, subject.CorrectAnswers, subject.Attempts, subject.LastAttempt));
             });
 
@@ -851,6 +851,7 @@ namespace wazniak_forever.ViewModel
             currentUserSubjectMapping.Attempts += subjectAttempts;
             currentUserSubjectMapping.LastAttempt = System.DateTime.Now;
             await db.UsersAndSubjects.UpdateAsync(currentUserSubjectMapping);
+
 
             // MODULES
             foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.AnswersNumber > 0))
