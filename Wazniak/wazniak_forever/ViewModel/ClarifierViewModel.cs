@@ -803,7 +803,7 @@ namespace wazniak_forever.ViewModel
             MyCourses.Sort(compareSubjects);
 
             _userModuleMappings = new List<UserModule>();
-            myModules.ForEach(module => 
+            myModules.ForEach(module =>
             {
                 _userModuleMappings.Add(new UserModule(module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.Answers));
             });
@@ -831,6 +831,12 @@ namespace wazniak_forever.ViewModel
 
         public void IncAnswersNumber()
         {
+            if (_userModuleMappings.Count <= CurrentModuleIndex) 
+            {
+                UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new bool[0]);
+                db.UserModules.InsertAsync(uM);
+                _userModuleMappings.Add(uM);
+            }
             _userModuleMappings[CurrentModuleIndex].AnswersNumber++;
         }
 
