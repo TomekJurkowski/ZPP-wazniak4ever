@@ -364,24 +364,87 @@ namespace wazniak_forever.Model
         public int SubjectID { get; set; }
         public int SequenceNo { get; set; }
         public int AnswersNumber { get; set; }
-        public List<bool> Answers { get; set; }
         public const int ATTEMPTS = 10;
+
+        public bool ans1 { get; set; }
+        public bool ans2 { get; set; }
+        public bool ans3 { get; set; }
+        public bool ans4 { get; set; }
+        public bool ans5 { get; set; }
+        public bool ans6 { get; set; }
+        public bool ans7 { get; set; }
+        public bool ans8 { get; set; }
+        public bool ans9 { get; set; }
+        public bool ans10 { get; set; }
         
         public UserModule(string id, string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, List<bool> answers)
         {
             ID = id;
-            Answers = answers;
-            new UserModule(userID, moduleID, subjectID, sequenceNo, answersNumber);
+            new UserModule(userID, moduleID, subjectID, sequenceNo, answersNumber, answers);
         }
 
-        public UserModule(string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber)
+        public UserModule(string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, List<bool> answers)
         {
             UserID = userID;
             ModuleID = moduleID;
             SubjectID = subjectID;
             SequenceNo = sequenceNo;
             AnswersNumber = answersNumber;
-            Answers = new List<bool>(UserModule.ATTEMPTS);
+            parseAnswers(answers);
+        }
+
+        private void parseAnswers(List<bool> answers) 
+        {
+            if (answers.Count > 0) ans1 = answers[0];
+            if (answers.Count > 1) ans2 = answers[1];
+            if (answers.Count > 2) ans3 = answers[2];
+            if (answers.Count > 3) ans4 = answers[3];
+            if (answers.Count > 4) ans5 = answers[4];
+            if (answers.Count > 5) ans6 = answers[5];
+            if (answers.Count > 6) ans7 = answers[6];
+            if (answers.Count > 7) ans8 = answers[7];
+            if (answers.Count > 8) ans9 = answers[8];
+            if (answers.Count > 9) ans10 = answers[9];
+        }
+
+        private List<bool> parseAnswersToList(int n)
+        {
+            List<bool> result = new List<bool>();
+            switch (n - AnswersNumber)
+            {
+                case 0: result.Add(ans1);
+                    break;
+                case 1: result.Add(ans2);
+                    break;
+                case 2: result.Add(ans3);
+                    break;
+                case 3: result.Add(ans4);
+                    break;
+                case 4: result.Add(ans5);
+                    break;
+                case 5: result.Add(ans6);
+                    break;
+                case 6: result.Add(ans7);
+                    break;
+                case 7: result.Add(ans8);
+                    break;
+                case 8: result.Add(ans9);
+                    break;
+                case 9: result.Add(ans10);
+                    break;
+            }
+            return result;
+        }
+
+        public void AddAnswers(List<bool> answers)
+        {
+            List<bool> resultList = new List<bool>();
+            if (answers.Count < UserModule.ATTEMPTS)
+            {
+                resultList = parseAnswersToList(UserModule.ATTEMPTS - answers.Count);
+            }
+            else resultList = answers;
+            parseAnswers(resultList);
         }
     }
 
