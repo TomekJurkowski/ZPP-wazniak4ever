@@ -26,8 +26,6 @@ namespace wazniak_forever
             ExControl.AddElement(MultipleChoiceAnswerInput);
         }
 
-        
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);

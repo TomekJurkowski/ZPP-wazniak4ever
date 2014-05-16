@@ -119,19 +119,31 @@ namespace wazniak_forever.Controls
             }
         }
 
-        private void NextQuestion_Click(object sender, RoutedEventArgs e)
+        private void ChangeQuestion(int next)
         {
-            NextExerciseVisible();
-            // Extract next question
-            App.ViewModel.CurrentQuestionNumber++;
+            App.ViewModel.CurrentQuestionNumber += next;
             App.ViewModel.CurrentExercise = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber];
             App.ViewModel.CurrentSolution = App.ViewModel.Solutions[App.ViewModel.CurrentQuestionNumber];
+        }
+
+        private void NextQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            // Extract next question
+            ChangeQuestion(1);
 
             if (App.ViewModel.CourseType == CourseType.StudyWithClarifier)
             {
-                App.ViewModel.CurrentModuleIndex = App.ViewModel.Modules.Find(module => module.ID == App.ViewModel.CurrentExercise.ModuleID).SequenceNo;
+                App.ViewModel.CurrentModule = App.ViewModel.Modules.Find(module => module.ID == App.ViewModel.CurrentExercise.ModuleID);
+                if (App.ViewModel.CurrentModule != null) App.ViewModel.CurrentModuleIndex = App.ViewModel.CurrentModule.SequenceNo;
+                else
+                {
+                    MessageBox.Show("No modules defined for next exercises");
+                    ChangeQuestion(-1);
+                    return;
+                }
             }
 
+            NextExerciseVisible();
             SolutionType NextType = App.ViewModel.CurrentSolution.Answer.Type;
             if (NextType == SolutionType.Multiple || NextType == SolutionType.Single)
                 App.ViewModel.UserChoices = (App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber]).Solution.Choices;
