@@ -833,7 +833,7 @@ namespace wazniak_forever.ViewModel
         {
             if (_userModuleMappings.Count <= CurrentModuleIndex) 
             {
-                UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new bool[0]);
+                UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0);
                 await db.UserModules.InsertAsync(uM);
                 _userModuleMappings.Add(uM);
             }
@@ -856,7 +856,7 @@ namespace wazniak_forever.ViewModel
             // MODULES
             foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.AnswersNumber > 0))
             {
-                if (currentUserModuleMapping.Answers == null) currentUserModuleMapping.Answers = new bool[UserModule.ATTEMPTS];
+                if (currentUserModuleMapping.Answers == null) currentUserModuleMapping.Answers = new List<bool>(UserModule.ATTEMPTS);
                 else
                 {
                     currentUserModuleMapping.Answers.Concat(ModulesAnswers[currentUserModuleMapping.SequenceNo]);

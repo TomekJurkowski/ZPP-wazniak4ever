@@ -364,23 +364,24 @@ namespace wazniak_forever.Model
         public int SubjectID { get; set; }
         public int SequenceNo { get; set; }
         public int AnswersNumber { get; set; }
-        public bool[] Answers { get; set; }
+        public List<bool> Answers { get; set; }
         public const int ATTEMPTS = 10;
         
-        public UserModule(string id, string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, bool[] answers)
+        public UserModule(string id, string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, List<bool> answers)
         {
             ID = id;
-            new UserModule(userID, moduleID, subjectID, sequenceNo, answersNumber, answers);
+            Answers = answers;
+            new UserModule(userID, moduleID, subjectID, sequenceNo, answersNumber);
         }
 
-        public UserModule(string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, bool[] answers)
+        public UserModule(string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber)
         {
             UserID = userID;
             ModuleID = moduleID;
             SubjectID = subjectID;
             SequenceNo = sequenceNo;
             AnswersNumber = answersNumber;
-            Answers = answers;
+            Answers = new List<bool>(UserModule.ATTEMPTS);
         }
     }
 
