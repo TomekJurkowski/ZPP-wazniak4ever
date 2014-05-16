@@ -153,7 +153,7 @@ Aplikacja Clarifier umożliwia naukę w sytuacjach, kiedy użytkownik dysponuje 
 \subsection{Wymagania wobec aplikacji webowej}
 Aplikacja webowa stanowi naturalne uzupełnienie aplikacji mobilnej Clarifier. Jej celem jest umożliwienie wykładowcom udostępniania zadań w aplikacji mobilnej, z której studenci mogą korzystać w czasie wolnym oraz ułatwienie prowadzącym udoskonalania treści przekazywanych studentom w trakcie zajęć uczelnianych. 
 
-Wykładowcy i prowadzący zajęcia mają możliwość wprowadzania i udostępniania studentom zadań ze swoich przedmiotów. W ramach każdego przedmiotu dodatkowo można wyodrębnić moduły tematyczne. System Clarifier umożliwia dodawanie zadań z odpowiedziami typu otwartego oraz odpowiedziami ABCD. System umożliwia także wprowadzanie zadań zawierających wzory i symbole matematyczne. Ponadto, wykładowcy mogą na bieżąco kontrolować wyniki osiągane przez studentów korzystających z aplikacji Clarifier dzięki statystykom dostarczanym przez witrynę. Dzięki temu mają możliwość dostosowania tematów omawianych na zajęciach do poziomu i umiejętności uczestników.
+Wykładowcy i prowadzący zajęcia mają możliwość wprowadzania i udostępniania studentom zadań ze swoich przedmiotów. W ramach każdego przedmiotu dodatkowo można wyodrębnić moduły tematyczne. System Clarifier umożliwia dodawanie zadań z odpowiedziami typu otwartego oraz odpowiedziami ABCD jedno- i wielokrotnego wyboru. System umożliwia także wprowadzanie zadań zawierających wzory i symbole matematyczne. Ponadto, wykładowcy mogą na bieżąco kontrolować wyniki osiągane przez studentów korzystających z aplikacji Clarifier dzięki statystykom dostarczanym przez witrynę. Dzięki temu mają możliwość dostosowania tematów omawianych na zajęciach do poziomu i umiejętności uczestników.
 
 Aplikacja webowa umożliwia także dodawanie propozycji zadań przez studentów. Aby zagwarantować poprawność zgłaszanych zadań, każda propozycja zostaje oceniona przez wykładowcę prowadzącego dany przedmiot, a następnie dodana do puli zadań z danego przedmiotu lub odrzucona.
 
@@ -220,21 +220,97 @@ Po zalogowaniu na liście przedmiotów dostępna jest zakładka My Courses, któ
 \end{figure}
 
 \subsection{Strona przedmiotu}
+Na stronie każdego przedmiotu znajduje się tytuł, krótki opis oraz lista dostępnych opcji. Menu kursu umożliwia rozpoczęcie powtórki w jednym z dostępnych trybów, zapisanie przedmiotu w pamięci telefonu, aktualizację pobranego wcześniej kursu oraz dodanie przedmiotu do "moich kursów".
 
+Aplikacja oferuje następujące tryby powtarzania:
+\begin{itemize}
+\item Practice - tryb klasyczny; w tym trybie użytkownik otrzymuje kolejno wszystkie zadania z danego przedmiotu,
+\item Study with Clarifier - tryb nauki kontrolowanej, dostępny tylko dla zalogowanych użytkowników,
+\item 10Q Challenge - użytkownik otrzymuje dziesięć losowych pytań z danego przedmiotu,
+\item Time Challenge - powtarzanie na czas; w tym trybie użytkownik ma za zadanie odpowiedzieć na jak najwięcej pytań w ustalonym czasie
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Course.png}
+    \caption{Strona przedmiotu}
+    \label{fig:course}
+\end{figure}
+
+\newpage Tryb Study with Clarifier ułatwia użytkownikowi systematyczną naukę wybranego przedmiotu oraz kontrolę własnych postępów. W tym trybie zadania dobierane są według algorytmu, który uwzględnia poprzednio uzyskiwane wyniki oraz kolejność, w jakiej powinny być utrwalane moduły danego przedmiotu. W trakcie każdej powtórki użytkownik otrzymuje maksymalnie 18 pytań, w tym 10 losowych pytań z aktualnie przerabianego modułu oraz do 8 pytań z poprzednich modułów. Algorytm doboru zadań z poprzednich modułów wygląda następująco:
+\newline
+\newline
+Niech $m$ - numer aktualnie przerabianego modułu (moduły indeksowane są od zera).
+\newline Wówczas bazowa liczba pytań powtórkowych (tzn. pytań z już przerobionych modułów), jakie użytkownik otrzyma podczas najbliższej sesji powtórkowej wynosi:
+\begin{center}
+$p = 2m + 1 - [m=0]$, gdy $m < 4$
+\end{center}
+\begin{center}
+$p = 8$, gdy $m >= 4$
+\end{center}
+Następnie dla każdego przerobionego modułu wyznaczamy dokładną liczbę pytań, jaka zostanie z niego wylosowana ($w_{i}$). Liczba pytań z danego modułu zależy od bazowej liczby pytań powtórkowych $p$ oraz liczby błędnie rozwiązanych zadań spośród ostatnich dziesięciu wykonanych zadań w danym module ($z_{i}$). Dla $i$-tego modułu liczbę zadań obliczamy ze wzoru
+\begin{center}
+$w_{i} = p * \frac{z_{i}}{\sum_{j=0}^m z_{j}}$
+\end{center}
+Wtedy łączna liczba pytań powtórkowych wynosi
+\begin{center}
+$u = \sum_{i=0}^m w_{i}$
+\end{center}
+Na wypadek gdyby uzyskana w ten sposób liczba pytań była mniejsza niż bazowa liczba pytań powtórkowych $p$, korygujemy uzyskany wynik zgodnie ze wzorem
+\begin{center}
+$P = u + [u<p]*(p-u)$,
+\end{center}
+gdzie $P$ - ostateczna liczba pytań powtórkowych, jakie użytkownik otrzyma podczas najbliższej sesji. Łączna liczba pytań, jaka zostanie przygotowana na najbliższą powtórkę wynosi
+\begin{center}
+$n = 10 + P$
+\end{center}
+
+\subsection{Moduły}
+W przypadku trybów Practice, 10Q Challenge oraz Time Challenge, użytkownik zostanie poproszony o wybór modułów, które mają zostać objęte powtórką. Służy do tego lista modułów, która zostanie wyświetlona po wybraniu preferowanego trybu nauki na stronie przedmiotu. Możliwe jest zaznaczenie jednego, kilku lub wszystkich modułów przedmiotu.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Modules.png}
+    \caption{Strona z listą modułów}
+    \label{fig:modules}
+\end{figure}
+
+\subsection{Zadania utrwalające}
+Po wybraniu jednego z trybów nauki na stronie przedmiotu oraz ew. modułów, które mają zosać objęte powtórką, na ekranie pojawi się pierwsze z przygotowanych zadań. Aplikacja Clarifier umożliwia rozwiązywanie zadań typu ABCD jedno- i wielokrotnego wyboru, zadań otwartych, gdzie poprawną odpowiedź należy wpisać w specjalnym polu tekstowym oraz zadań, w których użytkownik nie jest proszony o udzielenie odpowiedzi, a jedynie o zapoznanie się z treścią poprawnego rozwiązania. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\textwidth]{Single_choice.png}
+    \hspace{10.00mm}
+    \includegraphics[width=0.3\textwidth]{Multiple_choice.png}
+    \caption{Przykład zadania jedno- i wielokrotnego wyboru}
+    \label{fig:exercise}
+\end{figure}
+
+Po wybraniu lub wpisaniu odpowiedzi, należy wcisnąć przycisk Submit. Na ekranie pojawi się wówczas komunikat informujący o tym, czy wprowadzona odpowiedź jest poprawna lub treść proponowanego rozwiązania w przypadku zadania, gdzie użytkownik nie był proszony o udzielenie własnej odpowiedzi. Aby przejść do następnego pytania wystarczy wcisnąć przycisk Next. Po rozwiązaniu ostatniego zadania na ekranie pojawi się podsumowanie wyników zakończonej sesji powtórkowej.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\textwidth]{Results.png}
+    \caption{Podsumowanie wyników sesji powtórkowej}
+    \label{fig:results}
+\end{figure}
+
+\section{Aplikacja webowa}
 
 \chapter{Organizacja pracy}\label{r:org}
 
 \section{Zakres}
-Główną część pracy nad projektem Clarifier stanowiło zaprojektowanie i stworzenie opisanego w niniejszej pracy oprogramowania. Poza implementacją, prace nad projektem obejmowały tworzenie dokumentacji oraz przygotowywanie okresowych prezentacji. 
+Główną część pracy nad projektem Clarifier stanowiło zaprojektowanie i stworzenie opisanego w niniejszej pracy oprogramowania. Poza implementacją, prace nad projektem obejmowały tworzenie dokumentacji oraz przygotowywanie okresowych prezentacji na zajęcia z Zespołowego Projektu Programistycznego. 
 
 \section{Zasoby}
 Komunikacja pomiędzy członkami zespołu odbywała się za pośrednictwem mailowej grupy dyskusyjnej. Kod źródłowy oraz dokumentacja projektu były współdzielone za pomocą repozytorium systemu git.
 
 \subsection{Dokumentacja projektu}
-Dokumenty dotyczące projektu były tworzone i współdzielone między członkami zespołu za pomocą Google Docs. Prezentacje na zajęcia z Zespołowego Projektu Programistycznego były przygotowywane z wykorzystaniem serwisu \url{https://slides.com/}.
+Dokumenty dotyczące projektu były tworzone za pomocą Google Docs. Prezentacje na zajęcia z Zespołowego Projektu Programistycznego były przygotowywane z wykorzystaniem Google Docs oraz serwisu \url{https://slides.com/}.
 
 \subsection{Oprogramowanie}
-Przy implementacji oprogramowania korzystaliśmy ze środowiska Microsoft Visual Studio oraz platformy Windows Azure. Do testowania aplikacji mobilnej wykorzystaliśmy telefony Nokia z systemem operacyjnym Windows 8.
+Przy implementacji oprogramowania korzystaliśmy ze środowiska Microsoft Visual Studio 2013 oraz platformy Windows Azure. Do testowania aplikacji mobilnej wykorzystaliśmy telefony Nokia z systemem operacyjnym Windows 8.
 
 \chapter{Podsumowanie}
 
