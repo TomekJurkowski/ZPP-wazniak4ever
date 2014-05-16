@@ -358,6 +358,7 @@ namespace wazniak_forever.Model
 
     public class UserModule
     {
+        public string ID { get; set; }
         public string UserID { get; set; }
         public int ModuleID { get; set; }
         public int SubjectID { get; set; }
@@ -365,6 +366,12 @@ namespace wazniak_forever.Model
         public int AnswersNumber { get; set; }
         public bool[] Answers { get; set; }
         public const int ATTEMPTS = 10;
+        
+        public UserModule(string id, string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, bool[] answers)
+        {
+            ID = id;
+            new UserModule(userID, moduleID, subjectID, sequenceNo, answersNumber, answers);
+        }
 
         public UserModule(string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, bool[] answers)
         {

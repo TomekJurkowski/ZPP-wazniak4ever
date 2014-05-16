@@ -805,7 +805,7 @@ namespace wazniak_forever.ViewModel
             _userModuleMappings = new List<UserModule>();
             myModules.ForEach(module =>
             {
-                _userModuleMappings.Add(new UserModule(module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.Answers));
+                _userModuleMappings.Add(new UserModule(module.ID, module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.Answers));
             });
 
             _userExerciseMappings = new List<UserExercise>();
@@ -829,12 +829,12 @@ namespace wazniak_forever.ViewModel
             _givenAnswers.Add(new KeyValuePair<int, bool>(exerciseId, correctAnswer));
         }
 
-        public void IncAnswersNumber()
+        public async void IncAnswersNumber()
         {
             if (_userModuleMappings.Count <= CurrentModuleIndex) 
             {
                 UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new bool[0]);
-                db.UserModules.InsertAsync(uM);
+                await db.UserModules.InsertAsync(uM);
                 _userModuleMappings.Add(uM);
             }
             _userModuleMappings[CurrentModuleIndex].AnswersNumber++;
