@@ -86,11 +86,14 @@ namespace wazniak_forever
 
             var currentExerciseId = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber].ID;
 
+            MessageBox.Show("SUBMIT");
+
             if (ans.Equals(App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>))
             {
                 App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
                 App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(true);
+                App.ViewModel.DEBUG_WYPISZ(App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex]);
                 headerBuilder.Append("Correct!\n");
                 ExControl.CorrectAnswerMediaElement.Play();
             }

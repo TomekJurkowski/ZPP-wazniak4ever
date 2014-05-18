@@ -200,6 +200,12 @@ namespace wazniak_forever.ViewModel
             
         }
 
+        public void DEBUG_WYPISZ(List<bool> list) {
+            string s = "";
+            foreach (bool ans in list) s += ans.ToString() + ", ";
+            MessageBox.Show(s);
+        }
+
         private void calculateModuleIndex()
         {
             UserSubject currentSubject = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID);
@@ -210,10 +216,7 @@ namespace wazniak_forever.ViewModel
                 CurrentModuleIndex++;
                 CurrentModule = Modules[CurrentModuleIndex];
             }
-
-            string s = "";
-            foreach (bool ans in currentModule.parseAnswersToList(currentModule.AnswersNumber)) s += ans.ToString() + ", ";
-            MessageBox.Show(s);
+            DEBUG_WYPISZ(currentModule.parseAnswersToList(currentModule.AnswersNumber));
         }
 
         private double countWrongAnswerRatio(int correctAnswers, int wrongAnswerSum)
@@ -872,6 +875,8 @@ namespace wazniak_forever.ViewModel
             foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.AnswersNumber > 0))
             {
                 currentUserModuleMapping.AddAnswers(ModulesAnswers[currentUserModuleMapping.SequenceNo]);
+                MessageBox.Show("Send my results");
+                DEBUG_WYPISZ(ModulesAnswers[currentUserModuleMapping.SequenceNo]);
                 await db.UserModules.UpdateAsync(currentUserModuleMapping);
             }
 
