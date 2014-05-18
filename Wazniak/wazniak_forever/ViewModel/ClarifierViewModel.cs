@@ -208,6 +208,7 @@ namespace wazniak_forever.ViewModel
             {
                 currentSubject.CurrentModuleIndex++;
                 CurrentModuleIndex++;
+                CurrentModule = Modules[CurrentModuleIndex];
             }
 
             string s = "";
@@ -276,13 +277,13 @@ namespace wazniak_forever.ViewModel
 
             CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
             CurrentModule = Modules[CurrentModuleIndex];
-            MessageBox.Show(CurrentModuleIndex.ToString());
-            if (_userModuleMappings.Count <= CurrentModuleIndex) 
+            if (_userModuleMappings.Count <= CurrentModuleIndex)
             {
                 UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new List<bool>());
-                db.UserModules.InsertAsync(uM);
                 _userModuleMappings.Add(uM);
+                db.UserModules.InsertAsync(uM);
             }
+            calculateModuleIndex();
 
             List<UserModule> UserModules = _userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID);
             int RepetitionBase = 2 * CurrentModuleIndex + 1 - Convert.ToInt32(CurrentModuleIndex == 0);
@@ -825,7 +826,9 @@ namespace wazniak_forever.ViewModel
             _userModuleMappings = new List<UserModule>();
             myModules.ForEach(module =>
             {
-                _userModuleMappings.Add(new UserModule(module.ID, module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.parseAnswersToList(UserModule.ATTEMPTS)));
+                UserModule uM = new UserModule(module.ID, module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.parseAnswersToList(UserModule.ATTEMPTS));
+                _userModuleMappings.Add(uM);
+                MessageBox.Show(module.ModuleID.ToString() + " on the list is: " + _userModuleMappings.Last().ModuleID.ToString());
             });
 
             _userExerciseMappings = new List<UserExercise>();
