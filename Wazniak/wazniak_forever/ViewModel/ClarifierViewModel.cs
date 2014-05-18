@@ -252,6 +252,12 @@ namespace wazniak_forever.ViewModel
             return result;
         }
 
+        private void wypisz()
+        {
+            MessageBox.Show("Current module ID: " + CurrentModule.ID);
+            foreach (Exercise e in Exercises) MessageBox.Show(e.ModuleID.ToString());
+        }
+
         public void pickExercises()
         {
             if (Modules == null)
@@ -265,6 +271,8 @@ namespace wazniak_forever.ViewModel
             int[] ModuleWeights = countWeights(CurrentModuleIndex, RepetitionBase, UserModules);
             int RandomExerciseCount = RepetitionBase - ModuleWeights.Sum();
             CurrentModule = Modules[CurrentModuleIndex];
+
+            wypisz();
 
             List<Exercise> ExercisesBackup = randomExercises(Exercises.FindAll(ex => ex.ModuleID == 0), UserModule.ATTEMPTS);
             ExercisesBackup.Concat(chooseRepetitionExercises(CurrentModuleIndex, ModuleWeights));
@@ -516,11 +524,8 @@ namespace wazniak_forever.ViewModel
                     {
                        
                         default:
-                            var regExer = new RegularExercise(task.ID, CurrentCourseID, task.TaskID,
-                                task.Title, task.Text1,
-                                subject,
-                                solution,
-                                task.ModifiedText);
+                            var regExer = new RegularExercise(task.ID, CurrentCourseID, task.ModuleID, task.TaskID,
+                                task.Title, task.Text1, subject, solution, task.ModifiedText);
                             solution.Exercise = regExer;
                             Exercises.Add(regExer);
                             break;
