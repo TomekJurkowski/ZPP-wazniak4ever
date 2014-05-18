@@ -35,6 +35,13 @@ namespace WazniakWebsite.Controllers
             {
                 return HttpNotFound();
             }
+
+            var m = (db.Modules.Find(regulartask.ModuleID));
+            if (m != null)
+            {
+                ViewBag.ModuleTitle = m.Title;                
+            }
+
             return View(regulartask);
         }
 
@@ -60,7 +67,7 @@ namespace WazniakWebsite.Controllers
                                where m.SubjectID == subjectId
                                orderby m.Title
                                select m;
-            ViewBag.ModuleList = new SelectList(modulesQuery, "ModuleID", "Title", selectedModule);
+            ViewBag.ModuleID = new SelectList(modulesQuery, "ID", "Title", selectedModule);
         }
 
         // GET: /RegularTask/Create/SubjectName/5
@@ -75,7 +82,7 @@ namespace WazniakWebsite.Controllers
         // POST: /RegularTask/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID")] RegularTask regulartask,
+        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
             string subjectName, int subjectId, string answerType, string valueAns, string textAns,
             string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
@@ -95,6 +102,8 @@ namespace WazniakWebsite.Controllers
             }
 
             FillTheViewBag(subjectName, subjectId);
+            PopulateModulesDropDownList(subjectId, regulartask.ModuleID);
+            
             return View(regulartask);
         }
 
@@ -222,6 +231,7 @@ namespace WazniakWebsite.Controllers
             // because it does not damage that page
             ViewBag.ReloadPage = 1;
             FillTheViewBag(subjectName, subjectId, answerType);
+            PopulateModulesDropDownList(subjectId, regulartask.ModuleID);
 
             return View(regulartask);
         }
@@ -245,6 +255,7 @@ namespace WazniakWebsite.Controllers
             // Edit view does not really require the first two arguments to be passed into ViewBag,
             // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
             FillTheViewBag(sub.Name, sub.ID, regulartask.Answer.className());
+            PopulateModulesDropDownList(sub.ID, regulartask.ModuleID);
 
             return View(regulartask);
         }
@@ -252,7 +263,7 @@ namespace WazniakWebsite.Controllers
         // POST: /RegularTask/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID")] RegularTask regulartask,
+        public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
             int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
             string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
@@ -275,6 +286,7 @@ namespace WazniakWebsite.Controllers
             // Edit view does not really require the first two arguments to be passed into ViewBag,
             // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
             FillTheViewBag(sub.Name, sub.ID, db.Answers.Find(regulartask.ID).className());
+            PopulateModulesDropDownList(sub.ID, regulartask.ModuleID);
 
             // In this case we want to reload the Edit page with the original RegularTask
             return View(db.RegularTasks.Find(regulartask.ID));
@@ -506,6 +518,13 @@ namespace WazniakWebsite.Controllers
             {
                 return HttpNotFound();
             }
+
+            var m = (db.Modules.Find(regulartask.ModuleID));
+            if (m != null)
+            {
+                ViewBag.ModuleTitle = m.Title;
+            }
+
             return View(regulartask);
         }
 

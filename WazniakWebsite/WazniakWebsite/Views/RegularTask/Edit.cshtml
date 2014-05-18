@@ -199,6 +199,14 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-md-2 PurpleText" for="ModuleID">Module</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(x => x.ModuleID, (IEnumerable<SelectListItem>)ViewBag.ModuleID, new { @class = "form-control PurpleText" })
+                @Html.ValidationMessageFor(model => model.ModuleID)
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
             <div class="col-md-10">
                 @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
@@ -392,7 +400,3 @@
 <div>
     @Html.ActionLink("Back to Subject Page", "Details", "Subject", new { id = Model.SubjectID }, new { })
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

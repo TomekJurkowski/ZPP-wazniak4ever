@@ -314,6 +314,14 @@
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.SubjectID)
+        
+        <div class="form-group">
+            <label class="control-label col-md-2 PurpleText" for="ModuleID">Module</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(x => x.ModuleID, (IEnumerable<SelectListItem>)ViewBag.ModuleID, new { @class = "form-control PurpleText" })
+                @Html.ValidationMessageFor(model => model.ModuleID)
+            </div>
+        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })

@@ -41,6 +41,13 @@ namespace WazniakWebsite.Controllers
             {
                 return HttpNotFound();
             }
+
+            var m = (db.Modules.Find(mathematicaltask.ModuleID));
+            if (m != null)
+            {
+                ViewBag.ModuleTitle = m.Title;
+            }
+
             return View(mathematicaltask);
         }
 
@@ -59,10 +66,21 @@ namespace WazniakWebsite.Controllers
             ViewBag.PreviouslySelectedAnswer = previousAns;
         }
 
+        // Private function creating a list of modules associated with the subject.
+        private void PopulateModulesDropDownList(int subjectId, object selectedModule = null)
+        {
+            var modulesQuery = from m in db.Modules
+                               where m.SubjectID == subjectId
+                               orderby m.Title
+                               select m;
+            ViewBag.ModuleID = new SelectList(modulesQuery, "ID", "Title", selectedModule);
+        }
+
         // GET: /MathematicalTask/Create//SubjectName/5
         public ActionResult Create(string subjectName, int subjectId)
         {
             FillTheViewBag(subjectName, subjectId);
+            PopulateModulesDropDownList(subjectId);
 
             return View();
         }
@@ -70,7 +88,7 @@ namespace WazniakWebsite.Controllers
         // POST: /MathematicalTask/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
+        public async Task<ActionResult> Create([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] MathematicalTask mathematicaltask,
             string subjectName, int subjectId, string answerType, string valueAns, string textAns,
             string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
@@ -90,6 +108,8 @@ namespace WazniakWebsite.Controllers
             }
 
             FillTheViewBag(subjectName, subjectId);
+            PopulateModulesDropDownList(subjectId, mathematicaltask.ModuleID);
+
             return View(mathematicaltask);
         }
 
@@ -223,6 +243,7 @@ namespace WazniakWebsite.Controllers
             // because it does not damage that page
             ViewBag.ReloadPage = 1;
             FillTheViewBag(subjectName, subjectId, answerType);
+            PopulateModulesDropDownList(subjectId, mathematicaltask.ModuleID);
 
             return View(mathematicaltask);
         }
@@ -246,6 +267,7 @@ namespace WazniakWebsite.Controllers
             // Edit view does not really require the first two arguments to be passed into ViewBag,
             // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
             FillTheViewBag(sub.Name, sub.ID, mathematicaltask.Answer.className());
+            PopulateModulesDropDownList(sub.ID, mathematicaltask.ModuleID);
 
             return View(mathematicaltask);
         }
@@ -253,7 +275,7 @@ namespace WazniakWebsite.Controllers
         // POST: /MathematicalTask/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Title,Text,SubjectID")] MathematicalTask mathematicaltask,
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] MathematicalTask mathematicaltask,
             int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
             string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
         {
@@ -276,6 +298,7 @@ namespace WazniakWebsite.Controllers
             // Edit view does not really require the first two arguments to be passed into ViewBag,
             // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
             FillTheViewBag(sub.Name, sub.ID, db.Answers.Find(mathematicaltask.ID).className());
+            PopulateModulesDropDownList(sub.ID, mathematicaltask.ModuleID);
 
             // In this case we want to reload the Edit page with the original MathematicalTask
             return View(mathematicaltask);
@@ -515,6 +538,13 @@ namespace WazniakWebsite.Controllers
             {
                 return HttpNotFound();
             }
+
+            var m = (db.Modules.Find(mathematicaltask.ModuleID));
+            if (m != null)
+            {
+                ViewBag.ModuleTitle = m.Title;
+            }
+
             return View(mathematicaltask);
         }
 
