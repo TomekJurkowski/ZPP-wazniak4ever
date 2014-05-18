@@ -102,6 +102,7 @@ namespace wazniak_forever
             else
             {
                 App.ViewModel.AddAnswer(currentExerciseId, false);
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(false);
                 headerBuilder.Append("You're wrong :-(");
                 builder.Append("Explanation:\n");
                 for (int i = 0; i < feedback.Length; ++i)

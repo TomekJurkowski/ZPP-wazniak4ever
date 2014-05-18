@@ -200,6 +200,21 @@ namespace wazniak_forever.ViewModel
             
         }
 
+        private void calculateModuleIndex()
+        {
+            UserSubject currentSubject = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID);
+            UserModule currentModule = _userModuleMappings.Find(module => module.ModuleID == Modules[currentSubject.CurrentModuleIndex].ID);
+            if (currentModule.CheckAnswers())
+            {
+                currentSubject.CurrentModuleIndex++;
+                CurrentModuleIndex++;
+            }
+
+            string s = "";
+            foreach (bool ans in currentModule.parseAnswersToList(currentModule.AnswersNumber)) s += ans.ToString() + ", ";
+            MessageBox.Show(s);
+        }
+
         private double countWrongAnswerRatio(int correctAnswers, int wrongAnswerSum)
         {
             return ((double)UserModule.ATTEMPTS - (double)correctAnswers) / (double)wrongAnswerSum;
@@ -220,9 +235,8 @@ namespace wazniak_forever.ViewModel
         private List<Exercise> randomExercises(List<Exercise> moduleExercises, int Count)
         {
             List<Exercise> result = new List<Exercise>();
-            if (moduleExercises.Count == 0) return result;
             Random r = new Random();
-            for (int i = 0; i < Count; i++)
+            for (int i = 0; i < Math.Min(Count, moduleExercises.Count); i++)
             {
                 Exercise ex = moduleExercises[r.Next(moduleExercises.Count)];
                 result.Add(ex);
@@ -252,12 +266,6 @@ namespace wazniak_forever.ViewModel
             return result;
         }
 
-        private void wypisz()
-        {
-            MessageBox.Show("Current module ID: " + CurrentModule.ID);
-            foreach (Exercise e in Exercises) MessageBox.Show(e.ModuleID.ToString());
-        }
-
         public void pickExercises()
         {
             if (Modules == null)
@@ -265,16 +273,23 @@ namespace wazniak_forever.ViewModel
                 MessageBox.Show("Unfortunately, there are no exercises for this course yet!");
                 return;
             }
+
             CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
+            CurrentModule = Modules[CurrentModuleIndex];
+            MessageBox.Show(CurrentModuleIndex.ToString());
+            if (_userModuleMappings.Count <= CurrentModuleIndex) 
+            {
+                UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new List<bool>());
+                db.UserModules.InsertAsync(uM);
+                _userModuleMappings.Add(uM);
+            }
+
             List<UserModule> UserModules = _userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID);
             int RepetitionBase = 2 * CurrentModuleIndex + 1 - Convert.ToInt32(CurrentModuleIndex == 0);
             int[] ModuleWeights = countWeights(CurrentModuleIndex, RepetitionBase, UserModules);
             int RandomExerciseCount = RepetitionBase - ModuleWeights.Sum();
-            CurrentModule = Modules[CurrentModuleIndex];
 
-            wypisz();
-
-            List<Exercise> ExercisesBackup = randomExercises(Exercises.FindAll(ex => ex.ModuleID == 0), UserModule.ATTEMPTS);
+            List<Exercise> ExercisesBackup = randomExercises(Exercises.FindAll(ex => ex.ModuleID == CurrentModule.ID), UserModule.ATTEMPTS);
             ExercisesBackup.Concat(chooseRepetitionExercises(CurrentModuleIndex, ModuleWeights));
             if (RandomExerciseCount > 0) ExercisesBackup.Concat(randomExercises(Exercises.FindAll(ex => ex.ModuleID < CurrentModule.ID), RandomExerciseCount));
 
@@ -834,14 +849,8 @@ namespace wazniak_forever.ViewModel
             _givenAnswers.Add(new KeyValuePair<int, bool>(exerciseId, correctAnswer));
         }
 
-        public async void IncAnswersNumber()
+        public void IncAnswersNumber()
         {
-            if (_userModuleMappings.Count <= CurrentModuleIndex) 
-            {
-                UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new List<bool>());
-                await db.UserModules.InsertAsync(uM);
-                _userModuleMappings.Add(uM);
-            }
             _userModuleMappings[CurrentModuleIndex].AnswersNumber++;
         }
 
@@ -857,7 +866,6 @@ namespace wazniak_forever.ViewModel
             currentUserSubjectMapping.LastAttempt = System.DateTime.Now;
             await db.UsersAndSubjects.UpdateAsync(currentUserSubjectMapping);
 
-
             // MODULES
             foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.AnswersNumber > 0))
             {
@@ -872,7 +880,7 @@ namespace wazniak_forever.ViewModel
                     .Where(ue => ue.UserID == db.User.UserId && ue.ExerciseID == t.Key).ToListAsync()).FirstOrDefault();
                 if (userExerciseMap == null)
                 {
-                    UserExercise newUE = new UserExercise(db.User.UserId, t.Key, 1, t.Value ? 1 : 0, System.DateTime.Now);
+                    UserExercise newUE = new UserExercise(db.User.UserId, CurrentCourseID, t.Key, 1, t.Value ? 1 : 0, System.DateTime.Now);
                     await db.UsersAndExercises.InsertAsync(newUE);
                 }
                 else
@@ -911,8 +919,9 @@ namespace wazniak_forever.ViewModel
             MyCourses.Remove(MyCourses.Find(course => course.ID == CurrentCourseID));
 
             // BELOW: DO NOT DELETE YET
-            var lol = _userExerciseMappings.FindAll(mapping => mapping.UserID == db.User.UserId);
-            foreach (UserExercise uE in lol) await db.UsersAndExercises.DeleteAsync(uE);
+            var exercisesToRemove = _userExerciseMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.SubjectID == CurrentCourseID);
+            foreach (UserExercise uE in exercisesToRemove) await db.UsersAndExercises.DeleteAsync(uE);
+            foreach (UserModule uM in _userModuleMappings.FindAll(module => module.UserID == db.User.UserId && module.SubjectID == CurrentCourseID)) await db.UserModules.DeleteAsync(uM);
 
             LoadCoursePage();  
         }

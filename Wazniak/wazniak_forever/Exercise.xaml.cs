@@ -95,9 +95,9 @@ namespace wazniak_forever.Controls
             {
                 if (Grid.GetRow(element) == 3) element.Visibility = Visibility.Collapsed;
             }
+
             if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) 
             {
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(false);
                 App.ViewModel.IncAnswersNumber();
             }
 

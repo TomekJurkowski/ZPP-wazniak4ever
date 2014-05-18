@@ -365,6 +365,7 @@ namespace wazniak_forever.Model
         public int SequenceNo { get; set; }
         public int AnswersNumber { get; set; }
         public const int ATTEMPTS = 10;
+        public const int DONE = 8;
 
         public bool ans1 { get; set; }
         public bool ans2 { get; set; }
@@ -438,12 +439,18 @@ namespace wazniak_forever.Model
             AnswersNumber = resultList.Count;
             parseAnswers(resultList);
         }
+
+        public bool CheckAnswers()
+        {
+            return (parseAnswersToList(AnswersNumber).FindAll(b => b == true).Count >= DONE);
+        }
     }
 
     public class UserExercise
     {
         public string ID { get; set; }
         public string UserID { get; set; }
+        public int SubjectID { get; set; }
         public int ExerciseID { get; set; }
         public int Attempts { get; set; }
         public int CorrectAnswers { get; set; }
@@ -451,9 +458,10 @@ namespace wazniak_forever.Model
 
         public UserExercise() { }
 
-        public UserExercise(string userId, int exerciseId, int attempts, int correctAnswers, System.DateTime lastAttempt)
+        public UserExercise(string userId, int subjectId, int exerciseId, int attempts, int correctAnswers, System.DateTime lastAttempt)
         {
             UserID = userId;
+            SubjectID = subjectId;
             ExerciseID = exerciseId;
             Attempts = attempts;
             CorrectAnswers = correctAnswers;

@@ -97,6 +97,7 @@ namespace wazniak_forever
             else
             {
                 App.ViewModel.AddAnswer(currentExerciseId, false);
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(false);
                 headerBuilder.Append("Wrong!\n");
                 builder.Append("You answered: " + choice + "\nCorrect answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
                 ExControl.WrongAnswerMediaElement.Play();
