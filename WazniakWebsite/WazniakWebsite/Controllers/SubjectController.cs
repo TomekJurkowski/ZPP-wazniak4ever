@@ -297,5 +297,40 @@ namespace WazniakWebsite.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpPost]
+        public string GetModuleStatistics(int courseId)
+        {
+            var moduleStats = from module in db.Modules.Where(module => module.SubjectID == courseId)
+                              select new
+                              {
+                                  id = module.ID,
+                                  name = module.Title,
+                                  y = module.ID,
+                                  drilldown = true
+                              };
+            return Newtonsoft.Json.JsonConvert.SerializeObject(moduleStats);
+        }
+
+        [HttpPost]
+        public string GetExerciseStatistics(int moduleId)
+        {
+            var iter = 0;
+            var exerciseStats = (from exercise in db.Tasks.Where(task => task.ModuleID == moduleId)
+                                 select new
+                                 {
+                                     name = exercise.Title,
+                                     y = exercise.ID,
+                                     id = exercise.ID
+                                 }).ToList();
+            return Newtonsoft.Json.JsonConvert.SerializeObject(exerciseStats);
+        }
+
+        [HttpPost]
+        public string GetExerciseType(int exerciseId)
+        {
+            var firstOrDefault = db.Tasks.FirstOrDefault(task => task.ID == exerciseId);
+            return firstOrDefault != null ? firstOrDefault.className() : null;
+        }
     }
 }

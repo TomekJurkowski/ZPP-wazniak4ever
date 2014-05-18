@@ -20,7 +20,24 @@
         .form-group {
             margin-right: 30px;
         }
+
+        .hiddenRow {
+            padding: 0 !important;
+        }
+
+        .chartOuterContainer {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+
+
     </style>
+    
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/drilldown.js"></script>
+
+
 
     <script type="text/javascript">
         function editExercise(id) {
@@ -35,6 +52,14 @@
             window.location = '/Subject/Details/' + id;
         }
 
+        function goToTaskDetails(id) {
+            var url = "/Subject/GetExerciseType";
+            $.post(url, { exerciseId: id })
+                .done(function (data) {
+                window.location = '/' + data + '/Details/' + id;
+            });               
+        }
+
         $(function () {
             $("[id^='tooltipEdit']").tooltip({
                 animated: 'fade',
@@ -44,8 +69,174 @@
                 animated: 'fade',
                 placement: 'top'
             });
+            $("[id^='tooltipStats']").tooltip({
+                animated: 'fade',
+                placement: 'top'
+            });
+
         });
+
+        function getModules(courseId) {
+            var url = "/Subject/GetModuleStatistics";
+            $.post(url, { courseId: courseId })
+                .done(function (data) {
+                    var chart = $('#demo_' + courseId).highcharts();
+                    var parsedData = JSON.parse(data);
+                    chart.addSeries(
+                        {
+                            name: 'Modules',
+                            colorByPoint: true,
+                            data: parsedData
+                        }
+                    );
+                    chart.setSize($('#chartRow_' + courseId).width(), 500);
+                });
+        };
+
+        function getExercises(chart, moduleId, point, courseId) {
+            var url = "/Subject/GetExerciseStatistics";
+            chart.showLoading('Downloading exercise statistics ...');
+            $.post(url, { moduleId: moduleId })
+                .done(function (data) {
+                    var parsedData = JSON.parse(data);
+                    chart.hideLoading();
+                    var series = {
+                        name: 'Exercises',
+                        data: parsedData,
+                        enabledLabels: false
+                    }
+                    chart.addSeriesAsDrilldown(point, series);
+            });
+        }
+
+        function initialiseChart(subjectId) {
+            $('#demo_' + subjectId).highcharts({
+                chart: {
+                    type: 'column',
+                    zoomType: 'x',
+                    resetZoomButton: {
+                        position: {
+                            // align: 'right', // by default
+                            // verticalAlign: 'top', // by default
+                            x: 0,
+                            y: -30
+                        }
+                    },
+                    events: {
+                        drilldown: function(e) {
+                            if (!e.seriesOptions) {
+                                var chart = this;
+                                getExercises(chart, e.point.id, e.point, subjectId);
+
+                            }
+
+                        },
+
+                    }
+                },
+                title: {
+                    text: 'Statistics'
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        formatter: function () {
+                            if ((!this.axis.series[0].options.enabledLabels
+                                && this.axis.series[0].options.enabledLabels != undefined)) {
+                                return null;
+                            }
+                            else {
+                                return this.value;
+                            }
+
+                        }
+                    }
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'Total percent of correct answers'
+                    }
+                },
+
+                labels: {
+                    formatter: function () {
+                        if ((!this.axis.series[0].options.enabledLabels
+                            && this.axis.series[0].options.enabledLabels != undefined)) {
+                            return null;
+                        }
+                        else {
+                            return this.value;
+                        }
+
+                    }
+                },
+
+                subtitle: {
+                    text: 'Click the module columns to view exercises within a module. Click the exercise columns to view exercise details.'  
+                },
+
+                legend: {
+                    enabled: false
+                },
+
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function () {
+                                if ((!this.series.options.enabledLabels
+                                    && this.series.options.enabledLabels != undefined)) {
+                                    return null;
+                                }
+                                else {
+                                    return this.y +'%';
+                                }
+
+                            },
+                            //format: '{point.y:.1f}%'
+                        }
+                    },
+                    column: {
+                        point: {
+                            events: {
+                                click: function () {
+                                    var drilldown = this.drilldown;
+                                    if (drilldown) {
+                                    } else {
+                                        goToTaskDetails(this.y);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                },
+
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> correct answers<br/>',
+                },
+
+                series: [],
+
+                scrollbar: {
+                    enabled: true
+                },
+
+                drilldown: {
+                    series: []
+                }
+            });
+        }
+
+        function drawChart(subjectId) {
+
+            initialiseChart(subjectId);
+            getModules(subjectId);
+        }
     </script>
+
 }
 
 <h2 class="PurpleText">Subjects</h2>
@@ -84,6 +275,7 @@
         </th>
         <th></th>
         <th></th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model)
@@ -105,6 +297,16 @@
             </td>
             <td>
                 <span id="tooltipRemove" class="glyphicon glyphicon-trash PurpleColor clickable" title="Delete" onclick="deleteExercise('@item.ID')"></span>
+            </td>
+            <td>
+                <span id="tooltipStats" class="glyphicon glyphicon-signal PurpleColor clickable" title="Statistics" data-toggle="collapse" data-target="#demo_@item.ID" onclick="drawChart(@item.ID)"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" class="hiddenRow" id="chartRow_@item.ID">
+                <div>
+                    <div class="collapse" id="demo_@item.ID">Demo1</div>
+                </div>
             </td>
         </tr>
     }
