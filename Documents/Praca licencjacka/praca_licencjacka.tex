@@ -298,6 +298,75 @@ Po wybraniu lub wpisaniu odpowiedzi, należy wcisnąć przycisk Submit. Na ekran
 
 \section{Aplikacja webowa}
 
+\subsection{Lista przedmiotów}
+Po uruchomieniu aplikacji webowej w przeglądarce i zalogowaniu się, użytkownik ma dostęp do listy przedmiotów, którymi może zarządzać, i do których może dodawać nowe zadania. Dla każdego przedmiotu wyświetlana jest jego nazwa, fragment opisu oraz data ostatniej aktualizacji. Możliwe jest również wyszukiwanie przedmiotów po nazwie. Aby przejść do strony wybranego przedmiotu, wystarczy nacisnąć odpowiadający mu wiersz na liście kursów.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Web_courses.png}
+    \caption{Lista przedmiotów}
+    \label{fig:web_courses}
+\end{figure}
+
+\subsection{Strona przedmiotu}
+Po przejściu do strony wybranego przedmiotu możliwe jest dodawanie, edycja i usuwanie zadań oraz zarządzanie modułami kursu. Zadania dodane do danego przedmiotu wyświetlane są w tabeli zawierającej tytuł zadania, typ odpowiedzi oraz skrót tekstu odpowiedzi. Aby edytować istniejące zadanie, wystarczy wcisnąć wiersz tabeli odpowiadający wybranemu zadaniu. Kliknięcie przycisku Add new Exercise umożliwia utworzenie nowego zadania. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Web_course.png}
+    \caption{Strona przedmiotu}
+    \label{fig:web_course}
+\end{figure}
+
+\newpage
+\subsection{Dodawanie zadania}
+Po kliknięciu przycisku Add new Exercise, na ekranie pojawi się okno, w którym należy zaznaczyć rodzaj nowego zadania. Możliwe jest dodanie zadania zwykłego (Regular Exercise) oraz zadania zawierającego wzory matematyczne (Mathematical Exercise). 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Web_course_new_exercise.png}
+    \caption{Wybór rodzaju zadania}
+    \label{fig:web_course_new_exercise}
+\end{figure}
+
+Po wybraniu preferowanego typu zadania i zatwierdzeniu wyboru przyciskiem Create exercise, na ekranie pojawi się nowa strona, na której należy wprowadzić treść zadania oraz odpowiedź. 
+
+W przypadku zadania matematycznego, na ekranie pojawi się pole tekstowe, w którym należy wprowadzić treść zadania oraz okno Preview, w którym na bieżąco można oglądać treść polecenia wraz z odpowiednio sformatowanymi wzorami matematycznymi. Symbole matematyczne należy wprowadzać w notacji LaTeX-owej.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Web_math_exercise.png}
+    \caption{Dodawanie zadania matematycznego}
+    \label{fig:web_math_exercise}
+\end{figure}
+
+\newpage
+W przypadku dodawania zadania zwykłego, na stronie nowego zadania należy wprowadzić treść polecenia, a następnie wybrać rodzaj odpowiedzi. Dostępne są następujące typy odpowiedzi:
+\begin{itemize}
+\item Single Value Answer - krótka odpowiedź tekstowa, np. jedno słowo lub liczba,
+\item Text Answer - dłuższa odpowiedź tekstowa, np. zdanie, opis,
+\item Single Choice Answer - odpowiedź typu ABCD jednokrotnego wyboru,
+\item Multiple Choice Answer - odpowiedź typu ABCD wielokrotnego wyboru
+\end{itemize} 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Web_regular_exercise_1.png}
+    \caption{Dodawanie zadania zwykłego - Krok 1}
+    \label{fig:web_regular_exercise_1}
+\end{figure}
+
+Po wybraniu typu odpowiedzi, na ekranie pojawi się odpowiedni edytor służący do wprowadzania odpowiedzi. W przypadku odpowiedzi typu tekstowego, należy wpisać pełną treść odpowiedzi w polu tekstowym. W przypadku odpowiedzi typu ABCD, należy podać wszystkie możliwe opcje oraz zaznaczyć odpowiedzi poprawne. Możliwe jest dodanie dowolnie wielu opcji do wyboru; minimalna liczba opcji w zadaniach typu ABCD wynosi 3. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Web_regular_exercise_2.png}
+    \caption{Dodawanie zadania zwykłego - Krok 2}
+    \label{fig:web_regular_exercise_2}
+\end{figure}
+
+Po wprowadzniu treści zadania oraz odpowiedzi, należy zatwierdzić nowe zadanie klikając przycisk Create. Użytkownik zostanie wówczas przekierowany do strony odpowiedniego przedmiotu, a lista zadań kursu będzie zawierała dodane właśnie polecenie.
+
 \chapter{Organizacja pracy}\label{r:org}
 
 \section{Zakres}
@@ -310,7 +379,7 @@ Komunikacja pomiędzy członkami zespołu odbywała się za pośrednictwem mailo
 Dokumenty dotyczące projektu były tworzone za pomocą Google Docs. Prezentacje na zajęcia z Zespołowego Projektu Programistycznego były przygotowywane z wykorzystaniem Google Docs oraz serwisu \url{https://slides.com/}.
 
 \subsection{Oprogramowanie}
-Przy implementacji oprogramowania korzystaliśmy ze środowiska Microsoft Visual Studio 2013 oraz platformy Windows Azure. Do testowania aplikacji mobilnej wykorzystaliśmy telefony Nokia z systemem operacyjnym Windows 8.
+Przy implementacji oprogramowania korzystaliśmy ze środowiska Microsoft Visual Studio 2013 oraz platformy Windows Azure. Do testowania aplikacji mobilnej wykorzystaliśmy telefony Nokia z systemem operacyjnym Windows Phone 8.
 
 \chapter{Podsumowanie}
 

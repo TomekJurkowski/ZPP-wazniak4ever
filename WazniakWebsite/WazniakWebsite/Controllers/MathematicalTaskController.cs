@@ -610,7 +610,7 @@ namespace WazniakWebsite.Controllers
             foreach (Match match in regex.Matches(text))
             {
                 //System.Diagnostics.Debug.WriteLine("Value: " + match.Value);
-                var matchVal = match.Value;
+                var matchVal = (match.Value);
                 var notInline = matchVal.StartsWith("$$");
                 var imgStream = notInline
                     ? await LoadEquationImage(match.Value.Substring(2, match.Value.Length - 4), false)

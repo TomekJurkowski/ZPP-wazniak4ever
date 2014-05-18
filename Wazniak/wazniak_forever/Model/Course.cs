@@ -566,11 +566,12 @@ namespace wazniak_forever.Model
 
         public RegularExercise() {}
 
-        public RegularExercise(int id, int subjectId, int solutionId, 
+        public RegularExercise(int id, int subjectId, int moduleId, int solutionId, 
             string title, string question, Subject subject, Solution solution, string mathText)
         {
             ID = id;
             SubjectID = subjectId;
+            ModuleID = moduleId;
             Title = title;
             Question = question;
             Subject = subject;
