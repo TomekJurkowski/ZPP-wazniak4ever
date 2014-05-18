@@ -828,7 +828,6 @@ namespace wazniak_forever.ViewModel
             {
                 UserModule uM = new UserModule(module.ID, module.UserID, module.ModuleID, module.SubjectID, module.SequenceNo, module.AnswersNumber, module.parseAnswersToList(UserModule.ATTEMPTS));
                 _userModuleMappings.Add(uM);
-                MessageBox.Show(module.ModuleID.ToString() + " on the list is: " + _userModuleMappings.Last().ModuleID.ToString());
             });
 
             _userExerciseMappings = new List<UserExercise>();

@@ -380,10 +380,9 @@ namespace wazniak_forever.Model
 
         public UserModule() { }
         
-        public UserModule(string id, string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, List<bool> answers)
+        public UserModule(string id, string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, List<bool> answers) : this(userID, moduleID, subjectID, sequenceNo, answersNumber, answers)
         {
             ID = id;
-            new UserModule(userID, moduleID, subjectID, sequenceNo, answersNumber, answers);
         }
 
         public UserModule(string userID, int moduleID, int subjectID, int sequenceNo, int answersNumber, List<bool> answers)
