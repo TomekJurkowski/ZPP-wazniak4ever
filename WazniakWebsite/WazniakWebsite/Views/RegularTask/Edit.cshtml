@@ -174,6 +174,11 @@
         div[id^="multiRow_"], div[id^="singleRow_"] {
             margin-bottom: 15px;
         }
+
+        .modulePanel {
+            float: left;
+            margin-right: 10px;
+        }
     </style>
 }
 
@@ -201,8 +206,10 @@
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="ModuleID">Module</label>
             <div class="col-md-10">
-                @Html.DropDownListFor(x => x.ModuleID, (IEnumerable<SelectListItem>)ViewBag.ModuleID, new { @class = "form-control PurpleText" })
+                @Html.DropDownListFor(x => x.ModuleID, (IEnumerable<SelectListItem>)ViewBag.ModuleID, new { @class = "form-control PurpleText modulePanel" })
                 @Html.ValidationMessageFor(model => model.ModuleID)
+                <input type="text" class="form-control PurpleText modulePanel" id="newModuleInput" placeholder="New module" />
+                <input type="button" class="btn PurpleBtn modulePanel" value="Add module" id="moduleSaveBtn" onclick="addNewModule()" />
             </div>
         </div>
 

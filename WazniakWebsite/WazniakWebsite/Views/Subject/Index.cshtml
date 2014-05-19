@@ -30,7 +30,22 @@
             width: 100%;
             height: 400px;
         }
+        
+        .wrapperDiv {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            overflow: auto;
+        }
 
+        .rightColumn {
+            float: right;
+            margin-top: 20px;
+        }
+
+        .leftColumn {
+            float: left;
+        }
 
     </style>
     
@@ -239,14 +254,18 @@
 
 }
 
-<h2 class="PurpleText">Subjects</h2>
+<div class="wrapperDiv">
+    <h2 class="PurpleText leftColumn">Subjects</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+    <div class="rightColumn">
+        @Html.ActionLink("New Subject", "Create", null, new { @class = "btn btn-lg PurpleBtn", @role = "button" })
+    </div>
+</div>
+
 
 @using (Html.BeginForm())
 {
+    <hr />
     <div class="form-inline">
         <div class="form-group">
             <label class="control-label PurpleText">Find subject by name:</label>
