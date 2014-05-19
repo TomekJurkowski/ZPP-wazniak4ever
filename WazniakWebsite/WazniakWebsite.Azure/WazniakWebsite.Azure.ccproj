@@ -5,13 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>2.3</ProductVersion>
-    <ProjectGuid>5d312c2d-0b16-40f4-907b-33ec2e998a89</ProjectGuid>
+    <ProjectGuid>dce88417-ea47-4d63-a404-800629cb6b2d</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WazniakWebsite.Azure</RootNamespace>
     <AssemblyName>WazniakWebsite.Azure</AssemblyName>
-    <StartDevelopmentStorage>True</StartDevelopmentStorage>
+    <StartDevelopmentStorage>False</StartDevelopmentStorage>
     <Name>WazniakWebsite.Azure</Name>
+    <UseWebProjectPorts>True</UseWebProjectPorts>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
