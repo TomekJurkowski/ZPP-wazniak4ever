@@ -167,23 +167,21 @@ namespace wazniak_forever.ViewModel
             return 0;
         }
 
+        public double CalculateBreakingPoint()
+        {
+            double result = (double)_userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex / (double)Modules.Count;
+            return result;
+        }
+
         public void DEBUG_WYPISZ(List<bool> list) {
             string s = "";
             foreach (bool ans in list) s += ans.ToString() + ", ";
             MessageBox.Show(s);
         }
 
-        private void calculateModuleIndex()
+        public void AddAnswer(bool ans)
         {
-            UserSubject currentSubject = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID);
-            UserModule currentModule = _userModuleMappings.Find(module => module.ModuleID == Modules[currentSubject.CurrentModuleIndex].ID);
-            if (currentModule.CheckAnswers())
-            {
-                currentSubject.CurrentModuleIndex++;
-                CurrentModuleIndex++;
-                CurrentModule = Modules[CurrentModuleIndex];
-            }
-            DEBUG_WYPISZ(currentModule.parseAnswersToList(currentModule.AnswersNumber));
+            if (CourseType == CourseType.StudyWithClarifier) ModulesAnswers[CurrentModule.SequenceNo].Add(ans);
         }
 
         private double countWrongAnswerRatio(int correctAnswers, int wrongAnswerSum)
@@ -247,13 +245,12 @@ namespace wazniak_forever.ViewModel
 
             CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
             CurrentModule = Modules[CurrentModuleIndex];
-            if (_userModuleMappings.Count <= CurrentModuleIndex)
+            if (_userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID).Count <= CurrentModuleIndex)
             {
                 UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new List<bool>());
                 _userModuleMappings.Add(uM);
                 db.UserModules.InsertAsync(uM);
             }
-            calculateModuleIndex();
 
             List<UserModule> UserModules = _userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID);
             int RepetitionBase = 2 * CurrentModuleIndex + 1 - Convert.ToInt32(CurrentModuleIndex == 0);
@@ -689,6 +686,7 @@ namespace wazniak_forever.ViewModel
             if (MyCourses.Any(course => course.ID == CurrentCourseID))
             {
                 CourseOptions.Add(new Option(OptionType.DeleteFromMyCourses, false, "Delete from My Courses", new Uri("/Assets/DeleteIcon.png", UriKind.RelativeOrAbsolute)));
+                CourseOptions.Insert(1, new Option(OptionType.StudyWithClarifier, false, "Study with Clarifier", new Uri("/Assets/IdeaIcon.png", UriKind.RelativeOrAbsolute)));
             }
             else
             {
@@ -729,7 +727,6 @@ namespace wazniak_forever.ViewModel
             
             LoadDownloadedCourseOptions();
             CheckCourseOwnership();
-            LoadLoggedInOptions();
         }
 
         public async void LoadCoursePage()
@@ -821,8 +818,25 @@ namespace wazniak_forever.ViewModel
             _givenAnswers.Add(new KeyValuePair<int, bool>(exerciseId, correctAnswer));
         }
 
+        private void calculateModuleIndex(UserSubject currentSubject)
+        {
+            UserModule currentModule = _userModuleMappings.Find(module => module.ModuleID == Modules[currentSubject.CurrentModuleIndex].ID);
+            if (currentModule.CheckAnswers())
+            {
+                currentSubject.CurrentModuleIndex++;
+            }
+        }
+
         public async System.Threading.Tasks.Task SendMyResults(int subjectCorrectAnswers, int subjectAttempts)
         {
+
+            // MODULES
+            foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.SubjectID == CurrentCourseID))
+            {
+                currentUserModuleMapping.AddAnswers(ModulesAnswers[currentUserModuleMapping.SequenceNo]);
+                await db.UserModules.UpdateAsync(currentUserModuleMapping);
+            }
+
             // SUBJECTS
             var currentUserSubjectMapping = _userSubjectMappings.Find(mapping =>
                 mapping.SubjectID == CurrentCourseID
@@ -831,14 +845,8 @@ namespace wazniak_forever.ViewModel
             currentUserSubjectMapping.CorrectAnswers += subjectCorrectAnswers;
             currentUserSubjectMapping.Attempts += subjectAttempts;
             currentUserSubjectMapping.LastAttempt = System.DateTime.Now;
+            calculateModuleIndex(currentUserSubjectMapping);
             await db.UsersAndSubjects.UpdateAsync(currentUserSubjectMapping);
-
-            // MODULES
-            foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.SubjectID == CurrentCourseID))
-            {
-                currentUserModuleMapping.AddAnswers(ModulesAnswers[currentUserModuleMapping.SequenceNo]);
-                await db.UserModules.UpdateAsync(currentUserModuleMapping);
-            }
 
             // EXERCISES
             foreach (KeyValuePair<int, bool> t in _givenAnswers)
@@ -862,14 +870,16 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task AddToMyCourses()
         {
-            await db.UsersAndSubjects.InsertAsync(
-                new UserSubject
-                {
-                    UserID = DatabaseContext.MobileService.CurrentUser.UserId,
-                    SubjectID = CurrentCourseID,
-                    CorrectAnswers = 0,
-                    Attempts = 0
-                });
+            if (MyCourses.Find(subject => subject.ID == CurrentCourseID) != null) return;
+
+            UserSubject uS = new UserSubject(db.User.UserId, CurrentCourseID, 0, 0, 0, DateTime.Now);
+
+            if (_userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID) == null)
+            {
+                _userSubjectMappings.Add(uS);
+            }
+
+            await db.UsersAndSubjects.InsertAsync(uS);
             MyCourses.Add(AllCourses.Find(course => course.ID == CurrentCourseID));
             LoadCoursePage();
         }
@@ -885,7 +895,6 @@ namespace wazniak_forever.ViewModel
             _userSubjectMappings.Remove(deletedMapping);
             MyCourses.Remove(MyCourses.Find(course => course.ID == CurrentCourseID));
 
-            // BELOW: DO NOT DELETE YET
             var exercisesToRemove = _userExerciseMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.SubjectID == CurrentCourseID);
             foreach (UserExercise uE in exercisesToRemove) await db.UsersAndExercises.DeleteAsync(uE);
             foreach (UserModule uM in _userModuleMappings.FindAll(module => module.UserID == db.User.UserId && module.SubjectID == CurrentCourseID)) await db.UserModules.DeleteAsync(uM);

@@ -90,14 +90,14 @@ namespace wazniak_forever
             {
                 App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModule.SequenceNo].Add(true);
+                App.ViewModel.AddAnswer(true);
                 headerBuilder.Append("Correct!\n");
                 ExControl.CorrectAnswerMediaElement.Play();
             }
             else
             {
                 App.ViewModel.AddAnswer(currentExerciseId, false);
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModule.SequenceNo].Add(false);
+                App.ViewModel.AddAnswer(false);
                 headerBuilder.Append("Wrong!\n");
                 builder.Append("You answered: " + choice + "\nCorrect answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
                 ExControl.WrongAnswerMediaElement.Play();

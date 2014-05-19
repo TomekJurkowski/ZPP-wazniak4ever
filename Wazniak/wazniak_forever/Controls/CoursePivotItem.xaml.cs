@@ -66,6 +66,7 @@ namespace wazniak_forever.Controls
             if (this.Name == MY_COURSES_NAME)
             {
                 GradientStopCollection gSC = new GradientStopCollection();
+                //double breakingPoint = App.ViewModel.CalculateBreakingPoint();
                 for (int i = 0; i < 4; i++) gSC.Add(new GradientStop());
                 gSC[0].Color = (Application.Current.Resources["TileBackgroundColor"] as SolidColorBrush).Color;
                 gSC[1].Color = gSC[0].Color;

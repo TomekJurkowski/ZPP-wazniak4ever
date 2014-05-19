@@ -342,9 +342,14 @@ namespace wazniak_forever.Model
         public int Attempts { get; set; }
         public System.DateTime LastAttempt { get; set; }
 
-        public UserSubject(string id, string userID, int subjectID, int currentModuleIndex, int correctAnswers, int attempts, System.DateTime lastAttempt)
+        public UserSubject(string id, string userID, int subjectID, int currentModuleIndex, int correctAnswers, int attempts, System.DateTime lastAttempt) :
+            this(userID, subjectID, currentModuleIndex, correctAnswers, attempts, lastAttempt)
         {
             ID = id;
+        }
+
+        public UserSubject(string userID, int subjectID, int currentModuleIndex, int correctAnswers, int attempts, System.DateTime lastAttempt)
+        {
             UserID = userID;
             SubjectID = subjectID;
             CurrentModuleIndex = currentModuleIndex;

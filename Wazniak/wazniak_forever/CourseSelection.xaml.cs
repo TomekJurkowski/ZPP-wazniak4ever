@@ -42,8 +42,6 @@ namespace wazniak_forever
                 await App.ViewModel.PerformTimeConsumingProcess(this, "Loading My Courses...", App.ViewModel.LoadMyCourses);
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading all courses...", App.ViewModel.LoadAllCourses);
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading new courses...", App.ViewModel.LoadNewCourses);
-            //App.ViewModel.LoadAllCourses();
-            //App.ViewModel.LoadNewCourses();
         }
 
         private PivotItem CreatePivotItem(string header, string name)

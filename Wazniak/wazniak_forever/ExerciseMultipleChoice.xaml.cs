@@ -94,7 +94,7 @@ namespace wazniak_forever
             {
                 App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModule.SequenceNo].Add(true);
+                App.ViewModel.AddAnswer(true);
                 headerBuilder.Append("Correct!");
                 builder.Append("");
                 ExControl.CorrectAnswerMediaElement.Play();
@@ -102,7 +102,7 @@ namespace wazniak_forever
             else
             {
                 App.ViewModel.AddAnswer(currentExerciseId, false);
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModule.SequenceNo].Add(false);
+                App.ViewModel.AddAnswer(false);
                 headerBuilder.Append("You're wrong :-(");
                 builder.Append("Explanation:\n");
                 for (int i = 0; i < feedback.Length; ++i)
