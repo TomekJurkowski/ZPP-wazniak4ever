@@ -155,21 +155,6 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private int getWeight(double ratio, System.DateTime lastAttempt) 
-        {
-            TimeSpan t = System.DateTime.Now - lastAttempt;
-            double lastAttemptWeight = (double)t.TotalDays + 1;
-            return (int)((1 - ratio) * 10 + lastAttemptWeight);
-        }
-
-        private int compareExerciseData(int correctAnswers1, int attempts1, System.DateTime lastAttempt1, int correctAnswers2, int attempts2, System.DateTime lastAttempt2, int attemptFactor)
-        {
-            int weight1 = getWeight(correctAnswers1 / attempts1, lastAttempt1);
-            int weight2 = getWeight(correctAnswers2 / attempts2, lastAttempt2);
-            int result = weight1 - (attempts1 * attemptFactor)- weight2 + (attempts2 * attemptFactor);
-            return result;
-        }
-
         private int compareSubjects(Subject s1, Subject s2)
         {
             UserSubject uS1 = _userSubjectMappings.Find(mapping =>
@@ -179,25 +164,7 @@ namespace wazniak_forever.ViewModel
             if (uS1.Attempts == 0 && uS2.Attempts == 0) return 0;
             else if (uS1.Attempts == 0) return -1;
             else if (uS2.Attempts == 0) return 1;
-            return -compareExerciseData(uS1.CorrectAnswers, uS1.Attempts, uS1.LastAttempt, uS2.CorrectAnswers, uS2.Attempts, uS2.LastAttempt, 0);
-        }
-
-        private int compareExercises(Exercise ex1, Exercise ex2)
-        {
-            UserExercise uE1 = _userExerciseMappings.Find(mapping =>
-                mapping.ExerciseID == ex1.ID && mapping.UserID == db.User.UserId);
-            UserExercise uE2 = _userExerciseMappings.Find(mapping =>
-                mapping.ExerciseID == ex2.ID && mapping.UserID == db.User.UserId);
-            if (uE1 == null && uE2 == null) return 0;
-            if (uE1 == null) return -1;
-            if (uE2 == null) return 1;
-            return -compareExerciseData(uE1.CorrectAnswers, uE1.Attempts, uE1.LastAttempt, uE2.CorrectAnswers, uE2.Attempts, uE2.LastAttempt, 2);
-        }
-
-
-        public void sortExercisesByProgress()
-        {
-            
+            return 0;
         }
 
         public void DEBUG_WYPISZ(List<bool> list) {
@@ -854,11 +821,6 @@ namespace wazniak_forever.ViewModel
             _givenAnswers.Add(new KeyValuePair<int, bool>(exerciseId, correctAnswer));
         }
 
-        public void IncAnswersNumber()
-        {
-            _userModuleMappings[CurrentModuleIndex].AnswersNumber++;
-        }
-
         public async System.Threading.Tasks.Task SendMyResults(int subjectCorrectAnswers, int subjectAttempts)
         {
             // SUBJECTS
@@ -872,11 +834,9 @@ namespace wazniak_forever.ViewModel
             await db.UsersAndSubjects.UpdateAsync(currentUserSubjectMapping);
 
             // MODULES
-            foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.AnswersNumber > 0))
+            foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.SubjectID == CurrentCourseID))
             {
                 currentUserModuleMapping.AddAnswers(ModulesAnswers[currentUserModuleMapping.SequenceNo]);
-                MessageBox.Show("Send my results");
-                DEBUG_WYPISZ(ModulesAnswers[currentUserModuleMapping.SequenceNo]);
                 await db.UserModules.UpdateAsync(currentUserModuleMapping);
             }
 

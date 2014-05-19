@@ -407,6 +407,7 @@ namespace wazniak_forever.Model
             if (answers.Count > 7) ans8 = answers[7];
             if (answers.Count > 8) ans9 = answers[8];
             if (answers.Count > 9) ans10 = answers[9];
+            AnswersNumber = answers.Count;
         }
 
         public List<bool> parseAnswersToList(int space)
@@ -435,7 +436,6 @@ namespace wazniak_forever.Model
                 resultList.AddRange(answers);
             }
             else resultList = answers;
-            AnswersNumber = resultList.Count;
             parseAnswers(resultList);
         }
 

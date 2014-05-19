@@ -86,21 +86,18 @@ namespace wazniak_forever
 
             var currentExerciseId = App.ViewModel.Exercises[App.ViewModel.CurrentQuestionNumber].ID;
 
-            MessageBox.Show("SUBMIT");
-
             if (ans.Equals(App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>))
             {
                 App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(true);
-                App.ViewModel.DEBUG_WYPISZ(App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex]);
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModule.SequenceNo].Add(true);
                 headerBuilder.Append("Correct!\n");
                 ExControl.CorrectAnswerMediaElement.Play();
             }
             else
             {
                 App.ViewModel.AddAnswer(currentExerciseId, false);
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(false);
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModule.SequenceNo].Add(false);
                 headerBuilder.Append("Wrong!\n");
                 builder.Append("You answered: " + choice + "\nCorrect answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);
                 ExControl.WrongAnswerMediaElement.Play();

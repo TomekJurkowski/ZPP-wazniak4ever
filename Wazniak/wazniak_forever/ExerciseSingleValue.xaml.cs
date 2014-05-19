@@ -58,14 +58,14 @@ namespace wazniak_forever
             {
                 App.ViewModel.AddAnswer(currentExerciseId, true);
                 App.ViewModel.CorrectAnswers++;
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(true);
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModule.SequenceNo].Add(true);
                 headerBuilder.Append("Correct!");
                 ExControl.CorrectAnswerMediaElement.Play();
             }
             else
             {
                 App.ViewModel.AddAnswer(currentExerciseId, false);
-                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModuleIndex].Add(false);
+                App.ViewModel.ModulesAnswers[App.ViewModel.CurrentModule.SequenceNo].Add(false);
                 headerBuilder.Append("Wrong!");
                 builder.Append("You answered: " + AnswerBox.Text + "\n");
                 builder.Append("Correct answer is: " + (App.ViewModel.CurrentSolution.Answer as SingleAnswer<string>).value);

@@ -96,11 +96,6 @@ namespace wazniak_forever.Controls
                 if (Grid.GetRow(element) == 3) element.Visibility = Visibility.Collapsed;
             }
 
-            if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) 
-            {
-                App.ViewModel.IncAnswersNumber();
-            }
-
             SubmitAnswer.Visibility = Visibility.Collapsed;
             ExplanationPanel.Visibility = Visibility.Visible;
             ExplanationHeader.Text = headerBuilder.ToString();
