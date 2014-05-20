@@ -81,22 +81,22 @@
 
         function selectPreviousAnswer() {
             switch ("@ViewBag.PreviouslySelectedAnswer") {
-                case "@ViewBag.SingleValueAnswer":
-                    $("#tooltip1").tab('show');
-                    $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
-                    break;
-                case "@ViewBag.TextAnswer":
-                    $("#tooltip2").tab('show');
-                    $("#answerTypeInput").val("@ViewBag.TextAnswer");
-                    break;
-                case "@ViewBag.SingleChoiceAnswer":
-                    $("#tooltip3").tab('show');
-                    $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
-                    break;
-                case "@ViewBag.MultipleValueAnswer":
-                    $("#tooltip4").tab('show');
-                    $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
-                    break;
+            case "@ViewBag.SingleValueAnswer":
+                $("#tooltip1").tab('show');
+                $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                break;
+            case "@ViewBag.TextAnswer":
+                $("#tooltip2").tab('show');
+                $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                break;
+            case "@ViewBag.SingleChoiceAnswer":
+                $("#tooltip3").tab('show');
+                $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                break;
+            case "@ViewBag.MultipleValueAnswer":
+                $("#tooltip4").tab('show');
+                $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                break;
             }
         }
 
@@ -114,18 +114,18 @@
                 $(this).tab('show');
             
                 switch ($(this).attr('id')) {
-                    case "tooltip1":
-                        $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
-                        break;
-                    case "tooltip2":
-                        $("#answerTypeInput").val("@ViewBag.TextAnswer");
-                        break;
-                    case "tooltip3":
-                        $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
-                        break;
-                    case "tooltip4":
-                        $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
-                        break;
+                case "tooltip1":
+                    $("#answerTypeInput").val("@ViewBag.SingleValueAnswer");
+                    break;
+                case "tooltip2":
+                    $("#answerTypeInput").val("@ViewBag.TextAnswer");
+                    break;
+                case "tooltip3":
+                    $("#answerTypeInput").val("@ViewBag.SingleChoiceAnswer");
+                    break;
+                case "tooltip4":
+                    $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
+                    break;
                 }
 
                 goToByScroll();
@@ -149,6 +149,86 @@
 
     </script>
     
+    <script type="text/javascript">
+        var isModuleSaveBtnVisible = 0;
+
+        $(function () {
+            $("#moduleSaveBtn").hide();
+            $("#moduleSaveBtn").attr('disabled', 'disabled');
+
+            $("#newModuleInput").keyup(function () {
+                if ($("#newModuleInput").val() == "") {
+                    hideSaveBtn();
+                    return;
+                }
+                showSaveBtn();
+            });
+        });
+        
+        function showSaveBtn() {
+            if (isModuleSaveBtnVisible == 0) {
+                isModuleSaveBtnVisible = 1;
+
+                $("#saveMsgSpan").text("");
+                $("#saveMsgErrorSpan").text("");
+
+                $("#moduleSaveBtn").show(500);
+                $("#moduleSaveBtn").removeAttr('disabled');
+            }
+        }
+
+        function hideSaveBtn() {
+            if (isModuleSaveBtnVisible == 1) {
+                isModuleSaveBtnVisible = 0;
+                $("#moduleSaveBtn").hide(500);
+                $("#moduleSaveBtn").attr('disabled', 'disabled');
+            }
+        }
+        
+        function showSaveCompletedCommunicate(msg) {
+            $("#saveMsgSpan").text(msg);
+        }
+
+        function showSaveErrorCommunicate(msg) {
+            $("#saveMsgErrorSpan").text(msg);
+        }
+
+        function addNewModule() {
+            var title = $("#newModuleInput").val();
+            if (title == "") {
+                showSaveErrorCommunicate("Fill in the module name first!");
+                return ;
+            }
+
+            $.ajax({
+                url: '@Url.Action("AddNewModule", "Subject")',
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                data: { moduleTitle: title },
+                traditional: true,
+                statusCode: {
+                    404: function () {
+                        showSaveErrorCommunicate('Could not contact server - please try again later.');
+                    },
+                    500: function () {
+                        showSaveErrorCommunicate('A server-side error has occurred - please try again later.');
+                    }
+                },
+                success: function (data) {
+                    hideSaveBtn();
+                    $("#saveMsgErrorSpan").text("");
+                    showSaveCompletedCommunicate(data.msg);
+                    
+                },
+                error: function () {
+                    showSaveErrorCommunicate('An error have occurred - please try again and in case of another failure contact administrators.');
+                }
+            });
+        }
+
+    </script>
+
     <style>
         textarea {
             max-width: 100% !important;
@@ -159,6 +239,11 @@
 
         div[id^="multiRow_"], div[id^="singleRow_"] {
             margin-bottom: 15px;
+        }
+
+        .modulePanel {
+            float: left;
+            margin-right: 10px;
         }
     </style>
 }
@@ -189,8 +274,14 @@
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="ModuleID">Module</label>
             <div class="col-md-10">
-                @Html.DropDownListFor(x => x.ModuleID, (IEnumerable<SelectListItem>)ViewBag.ModuleID, new { @class = "form-control PurpleText" })
+                @Html.DropDownListFor(x => x.ModuleID, (IEnumerable<SelectListItem>)ViewBag.ModuleID, new { @class = "form-control PurpleText modulePanel" })
                 @Html.ValidationMessageFor(model => model.ModuleID)
+                <input type="text" class="form-control PurpleText modulePanel" id="newModuleInput" placeholder="New module" />
+                <input type="button" class="btn PurpleBtn modulePanel" value="Add module" id="moduleSaveBtn" onclick="addNewModule()" />
+                <div>
+                    <span class="field-validation-error" id="saveMsgErrorSpan"></span>
+                    <span class="text-success" id="saveMsgSpan"></span>
+                </div>
             </div>
         </div>
 

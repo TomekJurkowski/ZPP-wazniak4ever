@@ -45,6 +45,11 @@
             text-align: center;
             float: none !important;
         }
+
+        .modulePanel {
+            float: left;
+            margin-right: 10px;
+        }
     </style>
 
     <script type="text/javascript">
@@ -343,8 +348,10 @@
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="ModuleID">Module</label>
             <div class="col-md-10">
-                @Html.DropDownListFor(x => x.ModuleID, (IEnumerable<SelectListItem>)ViewBag.ModuleID, new { @class = "form-control PurpleText" })
+                @Html.DropDownListFor(x => x.ModuleID, (IEnumerable<SelectListItem>)ViewBag.ModuleID, new { @class = "form-control PurpleText modulePanel" })
                 @Html.ValidationMessageFor(model => model.ModuleID)
+                <input type="text" class="form-control PurpleText modulePanel" id="newModuleInput" placeholder="New module" />
+
             </div>
         </div>
 
@@ -360,8 +367,8 @@
         <h5 id="description" class="col-md-10 col-md-offset-2 PurpleText">
             <b>
                 Change the content of the exercise in field below. Remember that if you want to insert a mathematical expression
-                simply type sign \$ (or \$\$ if you want the expression to be placed in the next line), then write the expression
-                in LaTeX syntax and finish it with another \$ (\$\$). The preview of the text that you are typing will be dynamically
+                simply type \$ sign (or \$\$ if you want the expression to be placed in the next line), then write the expression
+                in the LaTeX syntax and finish it with another \$ (\$\$). The preview of the exercise that you are typing will be dynamically
                 displayed in the box bellow.
             </b>
         </h5>
