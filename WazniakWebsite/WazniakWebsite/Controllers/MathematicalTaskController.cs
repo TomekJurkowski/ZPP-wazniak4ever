@@ -71,7 +71,7 @@ namespace WazniakWebsite.Controllers
         {
             var modulesQuery = from m in db.Modules
                                where m.SubjectID == subjectId
-                               orderby m.Title
+                               orderby m.SequenceNo
                                select m;
             ViewBag.ModuleID = new SelectList(modulesQuery, "ID", "Title", selectedModule);
         }

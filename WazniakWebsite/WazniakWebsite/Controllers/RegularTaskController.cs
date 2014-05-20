@@ -5,8 +5,6 @@ using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
@@ -73,7 +71,7 @@ namespace WazniakWebsite.Controllers
         {
             var modulesQuery = from m in db.Modules
                                where m.SubjectID == subjectId
-                               orderby m.Title
+                               orderby m.SequenceNo
                                select m;
             ViewBag.ModuleID = new SelectList(modulesQuery, "ID", "Title", selectedModule);
         }

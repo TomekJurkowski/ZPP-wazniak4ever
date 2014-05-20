@@ -8,14 +8,21 @@ using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
 
-// The helper class below is used in this file in order to create a wrapped message
-// that can be send as a result of a POST request, by ChangeModulesSequenceNumbers method.
-// I consciously leave this class in this file.
+// The helper classes below is used in this file in order to create a wrapped messages
+// that can be send as a result of a POST request, by ChangeModulesSequenceNumbers and
+// AddNewModule methods. I consciously leave this class in this file.
 namespace WazniakWebsite.Models
 {
     [Serializable]
     public class Message
     {
+        public string msg { get; set; }
+    }
+
+    [Serializable]
+    public class MessageWithModuleId
+    {
+        public int id { get; set; }
         public string msg { get; set; }
     }
 }
@@ -144,6 +151,28 @@ namespace WazniakWebsite.Controllers
             db.SaveChanges();
 
             return Json(new Message { msg = "The sequence of modules has been successfully changed!" },
+                JsonRequestBehavior.DenyGet);
+        }
+
+        // Private function that returns the sequence number of the next module within the subject.
+        private int getNextModuleSequenceNo(int subjectId)
+        {
+            return db.Modules.Count(m => m.SubjectID == subjectId);
+        }
+
+        [HttpPost]
+        public ActionResult AddNewModule(int subjectId, string newModuleTitle)
+        {
+            var module = new Module { SubjectID = subjectId, Title = newModuleTitle, SequenceNo = getNextModuleSequenceNo(subjectId) };
+            db.Modules.Add(module);
+
+            var subject = db.Subjects.Find(subjectId);
+
+            // Update subject time
+            subject.UpdateLastUpdatedTime();
+            db.Entry(subject).State = EntityState.Modified;
+            db.SaveChanges();
+            return Json(new MessageWithModuleId { id = module.ID, msg = "Module has been created!" },
                 JsonRequestBehavior.DenyGet);
         }
 

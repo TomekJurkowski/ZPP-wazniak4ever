@@ -199,13 +199,14 @@
                 showSaveErrorCommunicate("Fill in the module name first!");
                 return ;
             }
+            var subject = parseInt("@ViewBag.SubjectId");
 
             $.ajax({
                 url: '@Url.Action("AddNewModule", "Subject")',
                 type: 'POST',
                 dataType: 'json',
                 cache: false,
-                data: { moduleTitle: title },
+                data: { subjectId: subject, newModuleTitle: title },
                 traditional: true,
                 statusCode: {
                     404: function () {
@@ -219,7 +220,8 @@
                     hideSaveBtn();
                     $("#saveMsgErrorSpan").text("");
                     showSaveCompletedCommunicate(data.msg);
-                    
+                    updateModuleDropdownList(title, data.id);
+                    $("#newModuleInput").val("");
                 },
                 error: function () {
                     showSaveErrorCommunicate('An error have occurred - please try again and in case of another failure contact administrators.');
@@ -227,6 +229,13 @@
             });
         }
 
+        function updateModuleDropdownList(title, id) {
+            $("#ModuleID").append($('<option/>', {
+                value: id,
+                text: title
+            }));
+            $("#ModuleID").val(id);
+        }
     </script>
 
     <style>

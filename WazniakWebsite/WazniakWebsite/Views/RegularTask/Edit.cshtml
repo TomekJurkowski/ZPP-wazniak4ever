@@ -163,6 +163,95 @@
 
     </script>
 
+    <script type="text/javascript">
+        var isModuleSaveBtnVisible = 0;
+
+        $(function () {
+            $("#moduleSaveBtn").hide();
+            $("#moduleSaveBtn").attr('disabled', 'disabled');
+
+            $("#newModuleInput").keyup(function () {
+                if ($("#newModuleInput").val() == "") {
+                    hideSaveBtn();
+                    return;
+                }
+                showSaveBtn();
+            });
+        });
+
+        function showSaveBtn() {
+            if (isModuleSaveBtnVisible == 0) {
+                isModuleSaveBtnVisible = 1;
+
+                $("#saveMsgSpan").text("");
+                $("#saveMsgErrorSpan").text("");
+
+                $("#moduleSaveBtn").show(500);
+                $("#moduleSaveBtn").removeAttr('disabled');
+            }
+        }
+
+        function hideSaveBtn() {
+            if (isModuleSaveBtnVisible == 1) {
+                isModuleSaveBtnVisible = 0;
+                $("#moduleSaveBtn").hide(500);
+                $("#moduleSaveBtn").attr('disabled', 'disabled');
+            }
+        }
+
+        function showSaveCompletedCommunicate(msg) {
+            $("#saveMsgSpan").text(msg);
+        }
+
+        function showSaveErrorCommunicate(msg) {
+            $("#saveMsgErrorSpan").text(msg);
+        }
+
+        function addNewModule() {
+            var title = $("#newModuleInput").val();
+            if (title == "") {
+                showSaveErrorCommunicate("Fill in the module name first!");
+                return ;
+            }
+            var subject = parseInt("@Model.SubjectID");
+
+            $.ajax({
+                url: '@Url.Action("AddNewModule", "Subject")',
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                data: { subjectId: subject, newModuleTitle: title },
+                traditional: true,
+                statusCode: {
+                    404: function () {
+                        showSaveErrorCommunicate('Could not contact server - please try again later.');
+                    },
+                    500: function () {
+                        showSaveErrorCommunicate('A server-side error has occurred - please try again later.');
+                    }
+                },
+                success: function (data) {
+                    hideSaveBtn();
+                    $("#saveMsgErrorSpan").text("");
+                    showSaveCompletedCommunicate(data.msg);
+                    updateModuleDropdownList(title, data.id);
+                    $("#newModuleInput").val("");
+                },
+                error: function () {
+                    showSaveErrorCommunicate('An error have occurred - please try again and in case of another failure contact administrators.');
+                }
+            });
+        }
+
+        function updateModuleDropdownList(title, id) {
+            $("#ModuleID").append($('<option/>', {
+                value: id,
+                text: title
+            }));
+            $("#ModuleID").val(id);
+        }
+    </script>
+
     <style>
         textarea {
             max-width: 100% !important;
@@ -210,6 +299,10 @@
                 @Html.ValidationMessageFor(model => model.ModuleID)
                 <input type="text" class="form-control PurpleText modulePanel" id="newModuleInput" placeholder="New module" />
                 <input type="button" class="btn PurpleBtn modulePanel" value="Add module" id="moduleSaveBtn" onclick="addNewModule()" />
+                <div>
+                    <span class="field-validation-error" id="saveMsgErrorSpan"></span>
+                    <span class="text-success" id="saveMsgSpan"></span>
+                </div>
             </div>
         </div>
 
