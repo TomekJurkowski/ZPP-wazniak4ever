@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 namespace WazniakWebsite.Controllers
 {
@@ -79,6 +81,16 @@ namespace WazniakWebsite.Controllers
             }
         }
 
+        private async Task UploadFile(HttpPostedFileBase file)
+        {
+            if (file.ContentLength > 0)
+            {
+                var blobContainer = _blobStorageService.GetCloudBLobContainer();
+                var blob = blobContainer.GetBlockBlobReference(file.FileName);
+                await blob.UploadFromStreamAsync(file.InputStream);
+            }
+        }
+
         [HttpPost]
         [ActionName("Upload")]
         [ValidateAntiForgeryToken]
@@ -93,7 +105,7 @@ namespace WazniakWebsite.Controllers
             var imgNames = new List<string>();
             foreach (Match match in regex.Matches(text))
             {
-                System.Diagnostics.Debug.WriteLine("Value: " + match.Value);
+                Debug.WriteLine("Value: " + match.Value);
                 var matchVal = match.Value;
                 var notInline = matchVal.StartsWith("$$");
                 var imgStream = notInline
@@ -111,7 +123,7 @@ namespace WazniakWebsite.Controllers
             }
             UploadImages(imgStreams, imgNames);
             newText += text.Substring(start, text.Length - start);
-            System.Diagnostics.Debug.WriteLine("New text: " + newText);
+            Debug.WriteLine("New text: " + newText);
             return RedirectToAction("Upload");
         }
 
@@ -126,6 +138,119 @@ namespace WazniakWebsite.Controllers
             blob.Delete();
 
             return "File Deleted.";
+        }
+
+        private async Task<string> EncodeFileFromUrl(string fileName)
+        {
+            var requestUri = fileName;
+            using (var client = new HttpClient())
+            {
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri);
+                var responseMessage = await client.SendAsync(requestMessage);
+                var stream = await responseMessage.Content.ReadAsStreamAsync();
+                using (var memoryStream = new MemoryStream())
+                {
+                    stream.CopyTo(memoryStream);
+                    return Convert.ToBase64String(memoryStream.ToArray());
+                }
+
+            }
+
+        }
+
+        private string EncodeFileFromFileBase(HttpPostedFileBase file)
+        {
+                var stream = file.InputStream;
+                var fileBytes = new byte[stream.Length];
+                stream.Read(fileBytes, 0, (int)stream.Length);
+                return Convert.ToBase64String(fileBytes);
+        }
+
+        private const string BLOB_URL_PATH =
+           "https://clarifierblob.blob.core.windows.net/clarifiermathimages/";
+
+        [HttpGet]
+        public ActionResult DeleteFile(string id)
+        {
+            //var uri = new Uri(id, UriKind.RelativeOrAbsolute);
+            //var fileName = Path.GetFileName(uri.LocalPath);
+
+            var blockContainer = _blobStorageService.GetCloudBLobContainer();
+            var blob = blockContainer.GetBlockBlobReference(id);
+
+            blob.Delete();
+
+            return Json(new {files = new[] {new {id = true}}});
+        }
+
+        public async Task<ActionResult> UploadFiles()
+        {
+            var statuses = new List<ViewDataUploadFilesResult>();
+            var encodedFile =
+                    await EncodeFileFromUrl("http://www.coffeecup.com/images/icons/applications/web-image-studio_128x128.png");
+
+            JsonResult result;
+            if (Request.Files.Count == 0)
+            {
+                Debug.WriteLine("not upload");
+                statuses.Add(new ViewDataUploadFilesResult()
+                {
+                    name = "lalala",
+                    size = 1000,
+                    type = "JPG",
+                    url = "/Home/Download/",
+                    deleteUrl = "/Home/Delete/",
+                    thumbnailUrl = @"data:image/png;base64," + encodedFile,
+                    //thumbnailUrl = "http://www.coffeecup.com/images/icons/applications/web-image-studio_128x128.png",
+                    deleteType = "GET",
+                });
+                result = Json(new { files = statuses, alreadyUploaded = true });
+            }
+            else
+            {
+                for (var i = 0; i < Request.Files.Count; i++)
+                {
+                    var file = Request.Files[i];
+
+                    await UploadFile(file);
+
+                    statuses.Add(new ViewDataUploadFilesResult()
+                    {
+                        name = file.FileName,
+                        size = file.ContentLength,
+                        type = file.ContentType,
+                        url = BLOB_URL_PATH + file.FileName,
+                        deleteUrl = "/Home/DeleteFile?id=" + file.FileName,
+                        thumbnailUrl = @"data:image/png;base64," + EncodeFileFromFileBase(file),
+                        //thumbnailUrl = "http://www.coffeecup.com/images/icons/applications/web-image-studio_128x128.png",
+                        deleteType = "GET",
+                    });
+                }
+                result = Json(new { files = statuses, alreadyUploaded = false });
+            }
+
+
+            result.ContentType = "text/plain";
+            Debug.WriteLine(result.ToString());
+            return result;
+        }
+
+        
+
+        public class ViewDataUploadFilesResult
+        {
+            public string name { get; set; }
+            public int size { get; set; }
+            public string type { get; set; }
+            public string url { get; set; }
+            public string deleteUrl { get; set; }
+            public string thumbnailUrl { get; set; }
+            public string deleteType { get; set; }
+        }
+
+        private string StorageRoot
+        {
+            get { return Path.Combine(Server.MapPath("~/Files")); }
         }
     }
 }

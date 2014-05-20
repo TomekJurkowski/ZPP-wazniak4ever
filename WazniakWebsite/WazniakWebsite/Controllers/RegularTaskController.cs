@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
@@ -20,6 +23,11 @@ namespace WazniakWebsite.Controllers
         private const string SINGLE_STATEMENT = "You must provide at least 1 (preferably at least 3) statements for Single Choice Answer and none of the statements can be empty.";
 
         private SchoolContext db = new SchoolContext();
+
+        private string StorageRoot
+        {
+            get { return Path.Combine(Server.MapPath("~/Files")); }
+        }
 
         // GET: /RegularTask/Details/5
         public ActionResult Details(int? id)
@@ -575,7 +583,6 @@ namespace WazniakWebsite.Controllers
             s.UpdateLastUpdatedTime();
             db.Entry(s).State = EntityState.Modified;
         }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -584,5 +591,7 @@ namespace WazniakWebsite.Controllers
             }
             base.Dispose(disposing);
         }
+
+        
     }
 }
