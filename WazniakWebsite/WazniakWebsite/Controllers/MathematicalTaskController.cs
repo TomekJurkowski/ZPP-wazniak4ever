@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
@@ -76,6 +77,11 @@ namespace WazniakWebsite.Controllers
             ViewBag.ModuleID = new SelectList(modulesQuery, "ID", "Title", selectedModule);
         }
 
+        private void SetExistingImageUrl(string imageUrl)
+        {
+            ViewBag.ImageUrl = imageUrl;
+        }
+
         // GET: /MathematicalTask/Create//SubjectName/5
         public ActionResult Create(string subjectName, int subjectId)
         {
@@ -90,14 +96,16 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] MathematicalTask mathematicaltask,
             string subjectName, int subjectId, string answerType, string valueAns, string textAns,
-            string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
+            string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo,
+            HttpPostedFileBase imageFile)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     return await CreateTaskInternal(mathematicaltask, subjectName, subjectId, answerType, valueAns,
-                        textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
+                        textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo,
+                        imageFile);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -119,7 +127,8 @@ namespace WazniakWebsite.Controllers
         // depending whether the creation/insertion was successful or failed at some point.
         private async Task<ActionResult> CreateTaskInternal(MathematicalTask mathematicaltask, string subjectName,
             int subjectId, string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
-            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
+            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo,
+            HttpPostedFileBase imageFile)
         {
             switch (answerType)
             {
@@ -207,10 +216,43 @@ namespace WazniakWebsite.Controllers
             db.SaveChanges();
 
             mathematicaltask.ModifiedText = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);
+            mathematicaltask.ImageUrl = UploadFileFromFileBase(imageFile, mathematicaltask.ID);
+
             db.Entry(mathematicaltask).State = EntityState.Modified;
             db.SaveChanges();
 
             return RedirectToAction("Details", "Subject", new { id = subjectId });
+        }
+
+        private const string BLOB_URL_IMAGE_PATH =
+           "https://clarifierblob.blob.core.windows.net/clarifiermathimages/";
+
+        private string UploadFileFromFileBase(HttpPostedFileBase file, int taskId)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = BLOB_URL_IMAGE_PATH + "imageAttach_task_" + taskId;
+                var blobContainer = _blobStorageService.GetCloudBLobContainer();
+                var blob = blobContainer.GetBlockBlobReference(fileName);
+                //await blob.UploadFromStreamAsync(file.InputStream);
+                blob.UploadFromStream(file.InputStream);
+                return fileName;
+            }
+            return "";
+        }
+
+
+        public string RemoveImageAttachment(int taskId)
+        {
+            var name = BLOB_URL_IMAGE_PATH + "imageAttach_task_" + taskId;
+            var uri = new Uri(name);
+            var fileName = Path.GetFileName(uri.LocalPath);
+            var blobContainer = _blobStorageService.GetCloudBLobContainer();
+            var blob = blobContainer.GetBlockBlobReference(fileName);
+
+            blob.Delete();
+
+            return "File Deleted";
         }
 
         // This function is called, when user does not provide us with all the necessary
@@ -268,6 +310,7 @@ namespace WazniakWebsite.Controllers
             // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
             FillTheViewBag(sub.Name, sub.ID, mathematicaltask.Answer.className());
             PopulateModulesDropDownList(sub.ID, mathematicaltask.ModuleID);
+            SetExistingImageUrl(mathematicaltask.ImageUrl);
 
             return View(mathematicaltask);
         }
@@ -277,7 +320,8 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] MathematicalTask mathematicaltask,
             int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
-            string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
+            string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo,
+            HttpPostedFileBase imageFile, int? removeImageFlag)
         {
             var sub = db.Subjects.Find(mathematicaltask.SubjectID);
 
@@ -286,7 +330,8 @@ namespace WazniakWebsite.Controllers
                 if (ModelState.IsValid)
                 {
                     return await EditTaskInternal(mathematicaltask, sub, isAnswerChanged, answerType, valueAns,
-                        textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
+                        textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo,
+                        imageFile, removeImageFlag);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -299,6 +344,7 @@ namespace WazniakWebsite.Controllers
             // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
             FillTheViewBag(sub.Name, sub.ID, db.Answers.Find(mathematicaltask.ID).className());
             PopulateModulesDropDownList(sub.ID, mathematicaltask.ModuleID);
+            SetExistingImageUrl(mathematicaltask.ImageUrl);
 
             // In this case we want to reload the Edit page with the original MathematicalTask
             return View(mathematicaltask);
@@ -310,7 +356,8 @@ namespace WazniakWebsite.Controllers
         // or failed at some point.
         private async Task<ActionResult> EditTaskInternal(MathematicalTask mathematicaltask, Subject sub,
             int isAnswerChanged, string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
-            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
+            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo,
+            HttpPostedFileBase imageFile, int? removeImageFlag)
         {
             // First let's see if the answer for the task is being changed or not.
             // If it's not then we have an easy case to deal with.
@@ -323,6 +370,17 @@ namespace WazniakWebsite.Controllers
 
                 RemoveOldImagesFromBloB(mathematicaltask.ID);
                 mathematicaltask.ModifiedText = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);
+
+                if (imageFile != null)
+                {
+                    mathematicaltask.ImageUrl = UploadFileFromFileBase(imageFile, mathematicaltask.ID);
+                }
+
+                if (removeImageFlag == 1)
+                {
+                    mathematicaltask.ImageUrl = "";
+                    RemoveImageAttachment(mathematicaltask.ID);
+                }
 
                 db.Entry(mathematicaltask).State = EntityState.Modified;
                 db.SaveChanges();
@@ -489,7 +547,18 @@ namespace WazniakWebsite.Controllers
             mathematicaltask.Attempts = 0;
 
             RemoveOldImagesFromBloB(mathematicaltask.ID);
-            mathematicaltask.ModifiedText = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);                
+            mathematicaltask.ModifiedText = await UploadImagesToBlob(mathematicaltask.Text, mathematicaltask.ID);
+
+            if (imageFile != null)
+            {
+                mathematicaltask.ImageUrl = UploadFileFromFileBase(imageFile, mathematicaltask.ID);
+            }
+
+            if (removeImageFlag == 1)
+            {
+                mathematicaltask.ImageUrl = "";
+                RemoveImageAttachment(mathematicaltask.ID);
+            }
 
             db.Entry(mathematicaltask).State = EntityState.Modified;
             db.SaveChanges();
@@ -562,6 +631,9 @@ namespace WazniakWebsite.Controllers
                 DeleteMathematicalTasksAnswer(id);
                 RemoveOldImagesFromBloB(id);
                 db.MathematicalTasks.Remove(mathematicaltask);
+
+                if (!string.IsNullOrEmpty(mathematicaltask.ImageUrl))
+                    RemoveImageAttachment(id);
 
                 UpdateSubjectTime(db.Subjects.Find(subjectId));
 

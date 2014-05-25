@@ -1,4 +1,5 @@
-﻿@model WazniakWebsite.Models.RegularTask
+﻿@using System.Web.UI.WebControls
+@model WazniakWebsite.Models.RegularTask
 
 @{
     ViewBag.Title = "Edit";
@@ -6,6 +7,8 @@
 
 @section HeadScripts
 {
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
     <script type="text/javascript">
         
         // variable and 2 functions responsible for adding/removing rows for SingleChoiceAnswer
@@ -177,6 +180,10 @@
                 }
                 showSaveBtn();
             });
+            $('#removeImgBtn').click(function (e) {
+                $('#removeImageFlagInput').attr('value', 1);
+                e.preventDefault();
+            });
         });
 
         function showSaveBtn() {
@@ -250,6 +257,14 @@
             }));
             $("#ModuleID").val(id);
         }
+
+        function removeImageAttachment(taskId) {
+            var url = "/RegularTask/RemoveImageAttachment";
+            $.post(url, {taskId : taskId})
+                .done(function (data) {
+                    $('#imgDeleteMsg').innerHTML(data);
+            });
+        }
     </script>
 
     <style>
@@ -273,7 +288,7 @@
 
 <h2 class="PurpleText">Edit</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "RegularTask", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
@@ -353,20 +368,50 @@
 
         <br />
         
-        <div class="form-group">
-            <div class="fileinput fileinput-exists" data-provides="fileinput">
-                <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                    <img data-src="holder.js/100%x100%">
-                </div>
-                <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
-                    <img src="" style="max-height: 140px;">
-                </div>
-                <div>
-                    <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="imageFile" id="imageFileInput" /></span>
-                    <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" id="removeImgBtn">Remove</a>
-                </div>
-            </div>
-        </div>
+       @if (ViewBag.ImageUrl != null && ViewBag.ImageUrl != "")
+       {
+           <div class="form-group">
+               <label class="control-label col-md-2 PurpleText">Image</label>
+               <div class="col-md-10">
+                   <div class="fileinput fileinput-exists" data-provides="fileinput">
+                       <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                           <img data-src="holder.js/100%x100%">
+                       </div>
+                       <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
+                           <img src="@ViewBag.ImageUrl" style="max-height: 140px;">
+                       </div>
+                       <div>
+                           <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="imageFile" id="imageFileInput" /></span>
+                           <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" id="removeImgBtn">Remove</a>
+                       </div>
+                       <input type="number" name="removeImageFlag" id="removeImageFlagInput" hidden="" value="0" />
+                   </div>
+               </div>                  
+           </div>
+       }
+       else
+       {
+           <div class="form-group">
+               <label class="control-label col-md-2 PurpleText">Image</label>
+               <div class="col-md-10">
+                   <div class="fileinput fileinput-new" data-provides="fileinput">
+                       <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                           <img data-src="holder.js/100%x100%">
+                       </div>
+                       <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
+                           <img src="" style="max-height: 140px;">
+                       </div>
+                       <div>
+                           <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="imageFile" id="imageFileInput" /></span>
+                           <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                       </div>
+                   </div> 
+               </div>
+                   
+           </div>
+       }
+
+        
 
         <div class="checkbox col-md-offset-2">
             <label class="PurpleText">

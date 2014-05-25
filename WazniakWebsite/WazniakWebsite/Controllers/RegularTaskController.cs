@@ -84,6 +84,11 @@ namespace WazniakWebsite.Controllers
             ViewBag.ModuleID = new SelectList(modulesQuery, "ID", "Title", selectedModule);
         }
 
+        private void SetExistingImageUrl(string imageUrl)
+        {
+            ViewBag.ImageUrl = imageUrl;
+        }
+
         // GET: /RegularTask/Create/SubjectName/5
         public ActionResult Create(string subjectName, int subjectId)
         {
@@ -229,7 +234,7 @@ namespace WazniakWebsite.Controllers
         {
             if (file != null && file.ContentLength > 0)
             {
-                var fileName = BLOB_URL_PATH + "imageAttach_task_" + taskId + file.FileName;
+                var fileName = BLOB_URL_PATH + "imageAttach_task_" + taskId;
                 var blobContainer = _blobStorageService.GetCloudBLobContainer();
                 var blob = blobContainer.GetBlockBlobReference(fileName);
                 //await blob.UploadFromStreamAsync(file.InputStream);
@@ -237,6 +242,20 @@ namespace WazniakWebsite.Controllers
                 return fileName;
             }
             return "";
+        }
+
+
+        public string RemoveImageAttachment(int taskId)
+        {
+            var name = BLOB_URL_PATH + "imageAttach_task_" + taskId;
+            var uri = new Uri(name);
+            var fileName = Path.GetFileName(uri.LocalPath);
+            var blobContainer = _blobStorageService.GetCloudBLobContainer();
+            var blob = blobContainer.GetBlockBlobReference(fileName);
+
+            blob.Delete();
+            
+            return "File Deleted";
         }
 
         // This function is called, when user does not provide us with all the necessary
@@ -292,8 +311,9 @@ namespace WazniakWebsite.Controllers
 
             // Edit view does not really require the first two arguments to be passed into ViewBag,
             // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
-            FillTheViewBag(sub.Name, sub.ID, regulartask.Answer.className());
+            FillTheViewBag(sub.Name, sub.ID, regulartask.Answer.className());            
             PopulateModulesDropDownList(sub.ID, regulartask.ModuleID);
+            SetExistingImageUrl(regulartask.ImageUrl);
 
             return View(regulartask);
         }
@@ -303,7 +323,8 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
             int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
-            string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
+            string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo,
+            HttpPostedFileBase imageFile, int? removeImageFlag)
         {
             var sub = db.Subjects.Find(regulartask.SubjectID);
 
@@ -312,7 +333,8 @@ namespace WazniakWebsite.Controllers
                 if (ModelState.IsValid)
                 {
                     return EditTaskInternal(regulartask, sub, isAnswerChanged, answerType, valueAns, textAns,
-                        multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
+                        multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo,
+                        imageFile, removeImageFlag);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -325,6 +347,7 @@ namespace WazniakWebsite.Controllers
             // but it might in the future (probably won't) plus is is easier to use FillTheViewBag function.
             FillTheViewBag(sub.Name, sub.ID, db.Answers.Find(regulartask.ID).className());
             PopulateModulesDropDownList(sub.ID, regulartask.ModuleID);
+            SetExistingImageUrl(regulartask.ImageUrl);
 
             // In this case we want to reload the Edit page with the original RegularTask
             return View(db.RegularTasks.Find(regulartask.ID));
@@ -336,7 +359,8 @@ namespace WazniakWebsite.Controllers
         // or failed at some point.
         private ActionResult EditTaskInternal(RegularTask regulartask, Subject sub, int isAnswerChanged,
             string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
-            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
+            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo,
+            HttpPostedFileBase imageFileBase, int? removeImageFlag)
         {
             // First let's see if the answer for the task is being changed or not.
             // If it's not then we have an easy case to deal with.
@@ -346,6 +370,16 @@ namespace WazniakWebsite.Controllers
 
                 regulartask.CorrectAnswers = 0;
                 regulartask.Attempts = 0;
+                if (imageFileBase != null)
+                    regulartask.ImageUrl = UploadFileFromFileBase(imageFileBase, regulartask.ID);
+
+                if (removeImageFlag == 1)
+                {
+                    regulartask.ImageUrl = "";
+                    RemoveImageAttachment(regulartask.ID);
+                }
+
+                
                 db.Entry(regulartask).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });
@@ -509,6 +543,15 @@ namespace WazniakWebsite.Controllers
 
             regulartask.CorrectAnswers = 0;
             regulartask.Attempts = 0;
+
+            if (imageFileBase != null)
+                regulartask.ImageUrl = UploadFileFromFileBase(imageFileBase, regulartask.ID);
+            if (removeImageFlag == 1)
+            {
+                regulartask.ImageUrl = "";
+                RemoveImageAttachment(regulartask.ID);
+            }
+
             db.Entry(regulartask).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Details", "Subject", new { id = regulartask.SubjectID });
@@ -579,6 +622,9 @@ namespace WazniakWebsite.Controllers
                 // Let's delete the Answer and then the RegularTask itself.
                 DeleteRegularTasksAnswer(id);
                 db.RegularTasks.Remove(regulartask);
+
+                if (!string.IsNullOrEmpty(regulartask.ImageUrl))
+                    RemoveImageAttachment(id);
 
                 UpdateSubjectTime(db.Subjects.Find(subjectId));
 
