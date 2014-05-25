@@ -17,7 +17,7 @@
     
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundColor}">
-        <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="3">
+        <controls:Exercise x:Name="ExControl" Foreground="{StaticResource MenuItemColor}" Grid.Row="0" Grid.RowSpan="4">
         </controls:Exercise>
         <TextBox 
             Name="AnswerBox" 
