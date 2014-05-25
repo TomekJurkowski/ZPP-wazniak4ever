@@ -15,6 +15,8 @@ namespace WazniakWebsite.Models
         public int ModuleID { get; set; }
         public int CorrectAnswers { get; set; }
         public int Attempts { get; set; }
+
+        public string ImageUrl { get; set; }
         
         public virtual Subject Subject { get; set; }
         

@@ -5,10 +5,13 @@ using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
+using Task = System.Threading.Tasks.Task;
 
 namespace WazniakWebsite.Controllers
 {
@@ -22,6 +25,10 @@ namespace WazniakWebsite.Controllers
         private const string SINGLE_STATEMENT = "You must provide at least 1 (preferably at least 3) statements for Single Choice Answer and none of the statements can be empty.";
 
         private SchoolContext db = new SchoolContext();
+        private BlobStorageService _blobStorageService = new BlobStorageService();
+
+        private const string BLOB_URL_PATH =
+           "https://clarifierblob.blob.core.windows.net/clarifiermathimages/";
 
         private string StorageRoot
         {
@@ -89,7 +96,7 @@ namespace WazniakWebsite.Controllers
         // POST: /RegularTask/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
+        public async Task<ActionResult> Create([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
             string subjectName, int subjectId, string answerType, string valueAns, string textAns,
             string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo,
             HttpPostedFileBase imageFile)
@@ -100,8 +107,9 @@ namespace WazniakWebsite.Controllers
                 {
                     
                     
-                    return CreateTaskInternal(regulartask, subjectName, subjectId, answerType, valueAns,
-                        textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
+                    await CreateTaskInternal(regulartask, subjectName, subjectId, answerType, valueAns,
+                        textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo,
+                        imageFile);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -121,9 +129,10 @@ namespace WazniakWebsite.Controllers
         // since it is responsible for the actual creation of a new RegularTask with its Answer
         // and inserting those objects into the database. This function returns a proper ActionResult
         // depending whether the creation/insertion was successful or failed at some point.
-        private ActionResult CreateTaskInternal(RegularTask regulartask, string subjectName, int subjectId,
+        private async Task<ActionResult> CreateTaskInternal(RegularTask regulartask, string subjectName, int subjectId,
             string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
-            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo)
+            IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo,
+            HttpPostedFileBase imageFileBase)
         {
             switch (answerType)
             {
@@ -208,7 +217,25 @@ namespace WazniakWebsite.Controllers
             regulartask.Attempts = 0;
             db.RegularTasks.Add(regulartask);
             db.SaveChanges();
+
+            regulartask.ImageUrl = await UploadFileFromFileBase(imageFileBase, regulartask.ID);
+            db.Entry(regulartask).State = EntityState.Modified;
+            db.SaveChanges();
+
             return RedirectToAction("Details", "Subject", new { id = subjectId });
+        }
+
+        private async Task<string> UploadFileFromFileBase(HttpPostedFileBase file, int taskId)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = BLOB_URL_PATH + "imageAttach_task_" + taskId + file.FileName;
+                var blobContainer = _blobStorageService.GetCloudBLobContainer();
+                var blob = blobContainer.GetBlockBlobReference(fileName);
+                await blob.UploadFromStreamAsync(file.InputStream);
+                return fileName;
+            }
+            return "";
         }
 
         // This function is called, when user does not provide us with all the necessary

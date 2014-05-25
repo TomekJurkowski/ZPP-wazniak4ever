@@ -288,6 +288,10 @@
     <Compile Include="Migrations\201405142247295_someChanges.Designer.cs">
       <DependentUpon>201405142247295_someChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201405251239398_TaskWithImage.cs" />
+    <Compile Include="Migrations\201405251239398_TaskWithImage.Designer.cs">
+      <DependentUpon>201405251239398_TaskWithImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Authentication\IdentityModels.cs" />
     <Compile Include="Models\ClarifierUser.cs" />
@@ -432,6 +436,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405142247295_someChanges.resx">
       <DependentUpon>201405142247295_someChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405251239398_TaskWithImage.resx">
+      <DependentUpon>201405251239398_TaskWithImage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
