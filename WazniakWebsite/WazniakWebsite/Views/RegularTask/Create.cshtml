@@ -272,13 +272,7 @@
 
 <h2 class="PurpleText">Create</h2>
 
-<div class="form-group">
-    @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Title)
-    </div>
-</div>
+
 
         
 @using (Html.BeginForm("Create", "RegularTask", FormMethod.Post, new { enctype = "multipart/form-data" })) 
@@ -290,6 +284,14 @@
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.SubjectID)
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2 PurpleText" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Title)
+            </div>
+        </div>
         
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="ModuleID">Module</label>

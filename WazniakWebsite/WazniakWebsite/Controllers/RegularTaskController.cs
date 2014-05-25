@@ -96,7 +96,7 @@ namespace WazniakWebsite.Controllers
         // POST: /RegularTask/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
+        public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
             string subjectName, int subjectId, string answerType, string valueAns, string textAns,
             string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo,
             HttpPostedFileBase imageFile)
@@ -107,7 +107,7 @@ namespace WazniakWebsite.Controllers
                 {
                     
                     
-                    await CreateTaskInternal(regulartask, subjectName, subjectId, answerType, valueAns,
+                    return CreateTaskInternal(regulartask, subjectName, subjectId, answerType, valueAns,
                         textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo,
                         imageFile);
                 }
@@ -129,7 +129,7 @@ namespace WazniakWebsite.Controllers
         // since it is responsible for the actual creation of a new RegularTask with its Answer
         // and inserting those objects into the database. This function returns a proper ActionResult
         // depending whether the creation/insertion was successful or failed at some point.
-        private async Task<ActionResult> CreateTaskInternal(RegularTask regulartask, string subjectName, int subjectId,
+        private ActionResult CreateTaskInternal(RegularTask regulartask, string subjectName, int subjectId,
             string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
             IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo,
             HttpPostedFileBase imageFileBase)
@@ -218,21 +218,22 @@ namespace WazniakWebsite.Controllers
             db.RegularTasks.Add(regulartask);
             db.SaveChanges();
 
-            regulartask.ImageUrl = await UploadFileFromFileBase(imageFileBase, regulartask.ID);
+            regulartask.ImageUrl = UploadFileFromFileBase(imageFileBase, regulartask.ID);
             db.Entry(regulartask).State = EntityState.Modified;
             db.SaveChanges();
 
             return RedirectToAction("Details", "Subject", new { id = subjectId });
         }
 
-        private async Task<string> UploadFileFromFileBase(HttpPostedFileBase file, int taskId)
+        private string UploadFileFromFileBase(HttpPostedFileBase file, int taskId)
         {
             if (file != null && file.ContentLength > 0)
             {
                 var fileName = BLOB_URL_PATH + "imageAttach_task_" + taskId + file.FileName;
                 var blobContainer = _blobStorageService.GetCloudBLobContainer();
                 var blob = blobContainer.GetBlockBlobReference(fileName);
-                await blob.UploadFromStreamAsync(file.InputStream);
+                //await blob.UploadFromStreamAsync(file.InputStream);
+                blob.UploadFromStream(file.InputStream);
                 return fileName;
             }
             return "";
