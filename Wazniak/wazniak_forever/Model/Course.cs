@@ -8,6 +8,7 @@ using SQLite;
 using Newtonsoft.Json;
 using System.Windows.Threading;
 using System;
+using wazniak_forever.Controls;
 
 namespace wazniak_forever.Model
 {
@@ -67,6 +68,14 @@ namespace wazniak_forever.Model
         }
     }
 
+    public class ImageAttachment
+    {
+        [PrimaryKey]
+        public int Id { get; set; }
+        public int TaskId { get; set; }
+        public byte[] ImageBytes { get; set; }
+    }
+
     public class DatabaseContext
     {
         public MobileServiceUser User { get; set; }
@@ -103,6 +112,8 @@ namespace wazniak_forever.Model
             await Connect.CreateTableAsync<MultipleChoiceExerciseOption>();
             await Connect.CreateTableAsync<SingleChoiceExerciseOption>();
             await Connect.CreateTableAsync<Module>();
+            await Connect.CreateTableAsync<ImageAttachment>();
+
         }
 
         public async void Drop()
@@ -112,6 +123,7 @@ namespace wazniak_forever.Model
             await Connect.DropTableAsync<MultipleChoiceExerciseOption>();
             await Connect.DropTableAsync<SingleChoiceExerciseOption>();
             await Connect.DropTableAsync<Module>();
+            await Connect.DropTableAsync<ImageAttachment>();
         }
 
         public async Task<List<Subject>> LoadSubjectsOffline()
@@ -137,6 +149,26 @@ namespace wazniak_forever.Model
             return await Connect.Table<Module>().Where(module => module.SubjectID == subjectId).ToListAsync();
         }
 
+        public async Task<byte[]> LoadImageAttachmentOffline(int taskId)
+        {
+            var image = await Connect.Table<ImageAttachment>().Where(img => img.TaskId == taskId).FirstOrDefaultAsync();
+            if (image != null)
+            {
+                return image.ImageBytes;
+            }
+            return null;
+        }
+
+        private async Task<ImageAttachment> LoadImageAttachmentObjectOffline(int taskId)
+        {
+            var image = await Connect.Table<ImageAttachment>().Where(img => img.TaskId == taskId).FirstOrDefaultAsync();
+            if (image != null)
+            {
+                return image;
+            }
+            return null;
+        }
+
         /*public async Task<List<MultipleChoiceExerciseOption>> LoadMultipleChoiceExOptionsOffline(int subjectID)
         {
             return await Connect.Table<MultipleChoiceExerciseOption>()
@@ -149,6 +181,26 @@ namespace wazniak_forever.Model
                 .Where(option => option.SubjectID == subjectID).ToListAsync();
         }*/
 
+        private async Task<List<ImageAttachment>> GetAllImageAttachments(List<TaskAnswer> tasksWithAnswers)
+        {
+            var images = new List<ImageAttachment>();
+            foreach (var task in tasksWithAnswers)
+            {
+                if (!string.IsNullOrEmpty(task.ImageUrl))
+                {
+                    var imageBytes = await RichTextBoxExtensions.LoadImageFromUrl(task.ImageUrl);
+                    images.Add(new ImageAttachment
+                    {
+                        TaskId = task.ID,
+                        ImageBytes = imageBytes
+                    });
+                    System.Diagnostics.Debug.WriteLine(images.Count);
+                }
+            }
+
+            return images;
+        }
+
         private async System.Threading.Tasks.Task InsertIntoLocalDatabase(Subject newSubject)
         {
             await Connect.InsertAsync(newSubject);
@@ -157,10 +209,15 @@ namespace wazniak_forever.Model
             var singleChoiceExerciseOptions = await SingleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
             var modules = await Modules.Where(module => module.SubjectID == newSubject.ID).ToListAsync();
 
+            var images = await GetAllImageAttachments(tasksWithAnswers);
+            
+
             await Connect.InsertAllAsync(tasksWithAnswers);
             await Connect.InsertAllAsync(multipleChoiceExerciseOptions);
             await Connect.InsertAllAsync(singleChoiceExerciseOptions);
             await Connect.InsertAllAsync(modules);
+            await Connect.InsertAllAsync(images);
+            
         }
 
         public async System.Threading.Tasks.Task SaveSubjectLocally(Subject newSubject)
@@ -184,6 +241,9 @@ namespace wazniak_forever.Model
             tasks.ForEach(async task =>
             {
                 await Connect.DeleteAsync(task);
+                var imageAttachment = await LoadImageAttachmentObjectOffline(task.ID);
+                if (imageAttachment != null)
+                    await Connect.DeleteAsync(imageAttachment);
             });
             var multipleChoiceOptions = await LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(subject.ID);
             multipleChoiceOptions.ForEach(async option =>

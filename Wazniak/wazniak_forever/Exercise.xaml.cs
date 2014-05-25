@@ -278,6 +278,7 @@ namespace wazniak_forever.Controls
             }
         }
 
+
         public static BitmapImage LoadBitmapImage(byte[] imageBytes)
         {
             using (var ms = new MemoryStream(imageBytes))
@@ -351,7 +352,9 @@ namespace wazniak_forever.Controls
 
         public async void LoadImage(string imageUrl)
         {
-            var imageBytes = await RichTextBoxExtensions.LoadImageFromUrl(imageUrl);
+            var imageBytes = App.ViewModel.OnlineMode
+                ? await RichTextBoxExtensions.LoadImageFromUrl(imageUrl)
+                : await App.ViewModel.db.LoadImageAttachmentOffline(App.ViewModel.CurrentExercise.ID);
             BitmapImage = RichTextBoxExtensions.LoadBitmapImage(imageBytes);
         }
     }
