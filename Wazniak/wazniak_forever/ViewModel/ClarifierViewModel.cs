@@ -508,7 +508,7 @@ namespace wazniak_forever.ViewModel
                        
                         default:
                             var regExer = new RegularExercise(task.ID, CurrentCourseID, task.ModuleID, task.TaskID,
-                                task.Title, task.Text1, subject, solution, task.ModifiedText);
+                                task.Title, task.Text1, subject, solution, task.ModifiedText, task.ImageUrl);
                             solution.Exercise = regExer;
                             Exercises.Add(regExer);
                             break;

@@ -54,6 +54,14 @@
                             Grid.Row="1"
                             Visibility="Collapsed"/>
 
+                <Image x:Name="ImageAttachment"
+                       Grid.Row="2"
+                       Visibility="Collapsed"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       MaxWidth="400"
+                       MaxHeight="300"
+                       />
                 <TextBlock x:Name="QuestionContent" 
                                 Text="{Binding CurrentExercise.Question}"
                                 FontSize="30"
@@ -61,7 +69,9 @@
                                 Foreground="{StaticResource MenuItemColor}"
                                 TextWrapping="Wrap"
                                 Grid.Row="2"/>
-
+                
+                
+                
                 <RichTextBox x:Name="MathQuestionBox"
                          Background="{StaticResource BackgroundColor}"
                          VerticalAlignment="Center"

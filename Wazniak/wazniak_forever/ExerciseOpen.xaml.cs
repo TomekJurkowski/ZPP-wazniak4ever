@@ -28,6 +28,7 @@ namespace wazniak_forever
             base.OnNavigatedTo(e);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
             ExControl.AdjustQuestionBox();
+            ExControl.ShowImageAttachment();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
