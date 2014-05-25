@@ -406,7 +406,10 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task LoadModules()
         {
-            Modules = await db.Modules.Where(module => module.SubjectID == CurrentCourseID).ToListAsync();
+            Modules = OnlineMode
+                ? await db.Modules.Where(module => module.SubjectID == CurrentCourseID).ToListAsync()
+                : await db.LoadModulesOffline(CurrentCourseID);
+
             ModulesAnswers = new List<List<bool>>();
             foreach (Module m in Modules)
             {

@@ -102,6 +102,7 @@ namespace wazniak_forever.Model
             await Connect.CreateTableAsync<TaskAnswer>();
             await Connect.CreateTableAsync<MultipleChoiceExerciseOption>();
             await Connect.CreateTableAsync<SingleChoiceExerciseOption>();
+            await Connect.CreateTableAsync<Module>();
         }
 
         public async void Drop()
@@ -110,6 +111,7 @@ namespace wazniak_forever.Model
             await Connect.DropTableAsync<TaskAnswer>();
             await Connect.DropTableAsync<MultipleChoiceExerciseOption>();
             await Connect.DropTableAsync<SingleChoiceExerciseOption>();
+            await Connect.DropTableAsync<Module>();
         }
 
         public async Task<List<Subject>> LoadSubjectsOffline()
@@ -130,6 +132,11 @@ namespace wazniak_forever.Model
                 .Where(option => option.SubjectID == subjectID).ToListAsync();
         }
 
+        public async Task<List<Module>> LoadModulesOffline(int subjectId)
+        {
+            return await Connect.Table<Module>().Where(module => module.SubjectID == subjectId).ToListAsync();
+        }
+
         /*public async Task<List<MultipleChoiceExerciseOption>> LoadMultipleChoiceExOptionsOffline(int subjectID)
         {
             return await Connect.Table<MultipleChoiceExerciseOption>()
@@ -148,10 +155,12 @@ namespace wazniak_forever.Model
             var tasksWithAnswers = await TasksWithAnswers.Where(task => task.SubjectID == newSubject.ID).ToListAsync();
             var multipleChoiceExerciseOptions = await MultipleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
             var singleChoiceExerciseOptions = await SingleChoiceOptions.Where(option => option.SubjectID == newSubject.ID).ToListAsync();
+            var modules = await Modules.Where(module => module.SubjectID == newSubject.ID).ToListAsync();
 
             await Connect.InsertAllAsync(tasksWithAnswers);
             await Connect.InsertAllAsync(multipleChoiceExerciseOptions);
             await Connect.InsertAllAsync(singleChoiceExerciseOptions);
+            await Connect.InsertAllAsync(modules);
         }
 
         public async System.Threading.Tasks.Task SaveSubjectLocally(Subject newSubject)
@@ -185,6 +194,11 @@ namespace wazniak_forever.Model
             singleChoiceOptions.ForEach(async option =>
             {
                 await Connect.DeleteAsync(option);
+            });
+            var modules = await LoadModulesOffline(subject.ID);
+            modules.ForEach(async module =>
+            {
+                await Connect.DeleteAsync(module);
             });
         }
 
@@ -557,6 +571,10 @@ namespace wazniak_forever.Model
         public Module(string name)
         {
             this.Title = name;
+        }
+
+        public Module()
+        {
         }
     }
 
