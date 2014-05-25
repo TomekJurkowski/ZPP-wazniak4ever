@@ -6,6 +6,9 @@
 
 @section HeadScripts
 {
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">   
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+
     <script type="text/javascript">
 
         // variable and 2 functions responsible for adding/removing rows for SingleChoiceAnswer
@@ -96,7 +99,7 @@
             case "@ViewBag.MultipleValueAnswer":
                 $("#tooltip4").tab('show');
                 $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
-                break;
+                    break;
             }
         }
 
@@ -125,7 +128,7 @@
                     break;
                 case "tooltip4":
                     $("#answerTypeInput").val("@ViewBag.MultipleChoiceAnswer");
-                    break;
+                        break;
                 }
 
                 goToByScroll();
@@ -236,6 +239,7 @@
             }));
             $("#ModuleID").val(id);
         }
+
     </script>
 
     <style>
@@ -254,6 +258,15 @@
             float: left;
             margin-right: 10px;
         }
+
+        #imgPreviewWithStyles {
+            background: #222;
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            padding: 15px;
+            z-index: 999;
+            border: none;
+        }
     </style>
 }
 
@@ -267,10 +280,8 @@
     </div>
 </div>
 
-@Html.Partial("_UploadFiles")
-
-
-@using (Html.BeginForm()) 
+        
+@using (Html.BeginForm("Create", "RegularTask", FormMethod.Post, new { enctype = "multipart/form-data" })) 
 {
     @Html.AntiForgeryToken()
     
@@ -307,6 +318,29 @@
                 <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
             </div>
         </div>
+        
+        <br/>
+        
+        <div class="form-group">
+            <label class="control-label col-md-2 PurpleText" >Image</label>
+            <div class="col-md-10">
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                        <img data-src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=no+image">
+                    </div>
+                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
+                        <img src="" style="max-height: 140px;">
+                    </div>
+                    <div>
+                        <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="imageFile" id="imageFileInput" /></span>
+                        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" id="removeImgBtn">Remove</a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+      
 
         <br />
         <h4 class="PurpleText">What kind of Answer do you want for this Exercise?</h4>

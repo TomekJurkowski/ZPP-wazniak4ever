@@ -5,6 +5,7 @@ using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
@@ -90,12 +91,15 @@ namespace WazniakWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
             string subjectName, int subjectId, string answerType, string valueAns, string textAns,
-            string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo)
+            string[] multiChoiceList, string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo,
+            HttpPostedFileBase imageFile)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    
+                    
                     return CreateTaskInternal(regulartask, subjectName, subjectId, answerType, valueAns,
                         textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo);
                 }

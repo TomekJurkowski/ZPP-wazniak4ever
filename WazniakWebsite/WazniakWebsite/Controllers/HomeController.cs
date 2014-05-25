@@ -169,7 +169,7 @@ namespace WazniakWebsite.Controllers
         private const string BLOB_URL_PATH =
            "https://clarifierblob.blob.core.windows.net/clarifiermathimages/";
 
-        [HttpGet]
+        /*[HttpGet]
         public ActionResult DeleteFile(string id)
         {
             //var uri = new Uri(id, UriKind.RelativeOrAbsolute);
@@ -251,6 +251,6 @@ namespace WazniakWebsite.Controllers
         private string StorageRoot
         {
             get { return Path.Combine(Server.MapPath("~/Files")); }
-        }
+        }*/
     }
 }
