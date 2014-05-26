@@ -55,7 +55,7 @@ namespace wazniak_forever.Controls
             }
         }
 
-        public async void ShowImageAttachment()
+        public void ShowImageAttachment()
         {
             if (App.ViewModel != null
                 && !string.IsNullOrEmpty(App.ViewModel.CurrentExercise.ImageUrl))
@@ -69,7 +69,7 @@ namespace wazniak_forever.Controls
             }
         }
 
-        private async void SetImageAttachment(string imageUrl)
+        private void SetImageAttachment(string imageUrl)
         {
             
 
@@ -160,7 +160,7 @@ namespace wazniak_forever.Controls
 
             if (App.ViewModel.CourseType == CourseType.StudyWithClarifier)
             {
-                App.ViewModel.CurrentModule = App.ViewModel.Modules.Find(module => module.ID == App.ViewModel.CurrentExercise.ModuleID);
+                App.ViewModel.CurrentModule = App.ViewModel.SubjectModules.Find(module => module.ID == App.ViewModel.CurrentExercise.ModuleID);
                 if (App.ViewModel.CurrentModule != null) App.ViewModel.CurrentModuleIndex = App.ViewModel.CurrentModule.SequenceNo;
                 else
                 {

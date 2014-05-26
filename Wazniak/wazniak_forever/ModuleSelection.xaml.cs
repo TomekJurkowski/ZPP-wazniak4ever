@@ -55,10 +55,6 @@ namespace wazniak_forever
                     timer.Start(1, 20);
                 }
             }
-
-            /*bool[] b = new bool[1];
-            b[0] = false;
-            await App.ViewModel.db.UserModules.InsertAsync(new UserModule(DatabaseContext.MobileService.CurrentUser.UserId, 0, 0, 0, b));*/
         }
 
         private async void StartCourse()

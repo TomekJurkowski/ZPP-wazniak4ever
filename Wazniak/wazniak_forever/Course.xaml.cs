@@ -54,13 +54,13 @@ namespace wazniak_forever
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...", 
                 async () => await App.ViewModel.LoadExercises(new List<int>()));
             if (App.ViewModel.Solutions.Count <= 0) return;
-            await App.ViewModel.LoadModules();
+            await App.ViewModel.LoadSubjectModules();
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}", CourseName.Text), UriKind.Relative));
         }
 
         private async void NavigateToModuleSelectionPage(CourseType courseType)
         {
-            await App.ViewModel.LoadModules();
+            await App.ViewModel.LoadSubjectModules();
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}&courseType={1}", CourseName.Text, courseType), UriKind.Relative));
         }
 

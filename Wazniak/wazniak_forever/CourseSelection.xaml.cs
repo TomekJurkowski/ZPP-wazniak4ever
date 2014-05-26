@@ -22,6 +22,11 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             LoadCoursesAsync();
+            if (App.ViewModel.db.User != null)
+            {
+                MainPivot.Items.Remove(MainPivot.Items[0]);
+                MainPivot.Items.Insert(0, CreatePivotItem("My Courses", "MyCourses"));
+            }
         }
 
         private async void LoadCoursesAsync()
@@ -38,7 +43,8 @@ namespace wazniak_forever
 
         private async System.Threading.Tasks.Task LoadFromAzure()
         {
-            if (App.ViewModel.db.User != null) 
+            await App.ViewModel.PerformTimeConsumingProcess(this, "Loading Modules...", App.ViewModel.LoadModules);
+            if (App.ViewModel.db.User != null)
                 await App.ViewModel.PerformTimeConsumingProcess(this, "Loading My Courses...", App.ViewModel.LoadMyCourses);
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading all courses...", App.ViewModel.LoadAllCourses);
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading new courses...", App.ViewModel.LoadNewCourses);

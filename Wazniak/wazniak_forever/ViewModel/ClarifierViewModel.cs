@@ -191,17 +191,13 @@ namespace wazniak_forever.ViewModel
             return uS1.CurrentModuleIndex - uS2.CurrentModuleIndex;
         }
 
-        public async System.Threading.Tasks.Task CalculateBreakingPoint(List<UserSubject> mySubjects)
+        public void CalculateBreakingPoint()
         {
-            if (mySubjects.Count == 0) BreakingPoint = 0.0;
-            else
-            {
-                var mySubject = mySubjects.Find(subject => subject.SubjectID == MyCourses[GridCounter].ID);
-                GridCounter++;                
-                var myModules = await db.Modules.Where(module => module.SubjectID == mySubject.SubjectID).ToListAsync();
-                BreakingPoint = (double)mySubject.CurrentModuleIndex / (double)myModules.Count;
-                MessageBox.Show(mySubject.SubjectID.ToString() + " " + mySubject.CurrentModuleIndex + " " + BreakingPoint);
-            }
+            int id = MyCourses[MyCourses.Count - GridCounter - 1].ID;
+            double divisor = (double)Modules.FindAll(module => module.SubjectID == id).Count;
+            if (divisor > 0.0) BreakingPoint = (double)_userSubjectMappings.Find(subject => subject.SubjectID == id).CurrentModuleIndex / divisor;
+            else BreakingPoint = 0.0;
+            GridCounter++;
         }
 
         public void AddAnswer(bool ans)
@@ -245,7 +241,7 @@ namespace wazniak_forever.ViewModel
             List<Exercise> result = new List<Exercise>();
             for (int i = 0; i < CurrentModuleIndex; i++)
             {
-                List<Exercise> moduleExercises = Exercises.FindAll(ex => ex.ModuleID == Modules[i].ID);
+                List<Exercise> moduleExercises = Exercises.FindAll(ex => ex.ModuleID == SubjectModules[i].ID);
                 result.Concat(randomExercises(moduleExercises, weights[i]));
             }
             return result;
@@ -263,14 +259,14 @@ namespace wazniak_forever.ViewModel
 
         public void pickExercises()
         {
-            if (Modules == null)
+            if (SubjectModules == null)
             {
                 MessageBox.Show("Unfortunately, there are no exercises for this course yet!");
                 return;
             }
 
             CurrentModuleIndex = _userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex;
-            CurrentModule = Modules[CurrentModuleIndex];
+            CurrentModule = SubjectModules[CurrentModuleIndex];
             if (_userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID).Count <= CurrentModuleIndex)
             {
                 UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new List<bool>());
@@ -380,6 +376,17 @@ namespace wazniak_forever.ViewModel
 
         public int CurrentCourseID { get; set; }
 
+        private List<Module> _subjectModules;
+        public List<Module> SubjectModules
+        {
+            get { return _subjectModules; }
+            set
+            {
+                _subjectModules = value;
+                NotifyPropertyChanged("SubjectModules");
+            }
+        }
+
         private List<Module> _modules;
         public List<Module> Modules
         {
@@ -432,12 +439,17 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task LoadModules()
         {
-            Modules = OnlineMode
+            Modules = await db.Modules.ToListAsync();
+        }
+
+        public async System.Threading.Tasks.Task LoadSubjectModules()
+        {
+            SubjectModules = OnlineMode
                 ? await db.Modules.Where(module => module.SubjectID == CurrentCourseID).ToListAsync()
                 : await db.LoadModulesOffline(CurrentCourseID);
 
             ModulesAnswers = new List<List<bool>>();
-            foreach (Module m in Modules)
+            foreach (Module m in SubjectModules)
             {
                 ModulesAnswers.Add(new List<bool>());
             }
@@ -769,12 +781,6 @@ namespace wazniak_forever.ViewModel
                     subject.ID, subject.CurrentModuleIndex, subject.CorrectAnswers, subject.Attempts, subject.LastAttempt));
             });
 
-            if (!isSorted)
-            {
-                isSorted = true;
-                MyCourses.Sort(CompareSubjects);
-            }
-
             _userModuleMappings = new List<UserModule>();
             myModules.ForEach(module =>
             {
@@ -788,6 +794,7 @@ namespace wazniak_forever.ViewModel
             {
                 _userExerciseMappings = await db.UsersAndExercises.Where(ue => ue.UserID == db.User.UserId).ToListAsync();
             }
+
         }
 
         private List<KeyValuePair<int, bool>> _givenAnswers = new List<KeyValuePair<int, bool>>();
@@ -805,7 +812,7 @@ namespace wazniak_forever.ViewModel
 
         private void calculateModuleIndex(UserSubject currentSubject)
         {
-            UserModule currentModule = _userModuleMappings.Find(module => module.ModuleID == Modules[currentSubject.CurrentModuleIndex].ID);
+            UserModule currentModule = _userModuleMappings.Find(module => module.ModuleID == SubjectModules[currentSubject.CurrentModuleIndex].ID);
             if (currentModule.CheckAnswers())
             {
                 currentSubject.CurrentModuleIndex++;
@@ -866,6 +873,7 @@ namespace wazniak_forever.ViewModel
 
             await db.UsersAndSubjects.InsertAsync(uS);
             MyCourses.Add(AllCourses.Find(course => course.ID == CurrentCourseID));
+            MyCourses.Sort(CompareSubjects);
             LoadCoursePage();
         }
 
