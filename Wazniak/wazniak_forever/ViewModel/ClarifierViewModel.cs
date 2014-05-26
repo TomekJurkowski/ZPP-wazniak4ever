@@ -158,7 +158,8 @@ namespace wazniak_forever.ViewModel
 
         private int _gridCounter;
 
-        public int GridCounter { 
+        public int GridCounter
+        { 
             get { return _gridCounter; }
             set
             {
@@ -179,6 +180,8 @@ namespace wazniak_forever.ViewModel
             }
         }
 
+        public bool isSorted { get; set; }
+
         public int CompareSubjects(Subject s1, Subject s2)
         {
             UserSubject uS1 = _userSubjectMappings.Find(mapping =>
@@ -198,7 +201,6 @@ namespace wazniak_forever.ViewModel
                 GridCounter++;
                 var myModules = await db.Modules.Where(module => module.SubjectID == mySubject.SubjectID).ToListAsync();
                 BreakingPoint = (double)mySubject.CurrentModuleIndex / (double)myModules.Count;
-                MessageBox.Show((double)mySubject.CurrentModuleIndex + " " + (double)myModules.Count);
             }
         }
 
@@ -729,18 +731,6 @@ namespace wazniak_forever.ViewModel
             LoadCourseOptions();
         }
 
-        /*
-        public void LoadDownloadedCoursePage()
-        {
-            CourseOptions = new List<Option>()
-            {
-                new Option(OptionType.Start, false, "Start", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
-                new Option(OptionType.Update, true, "Update", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute))
-            };
-            CheckCourseOwnership();
-        }
-        */
-
         public async System.Threading.Tasks.Task LoadAllCourses()
         {
             AllCourses = await db.Subjects.ToListAsync();
@@ -749,10 +739,6 @@ namespace wazniak_forever.ViewModel
         public async System.Threading.Tasks.Task LoadDownloadedCourses()
         {
             DownloadedCourses = await db.LoadSubjectsOffline();
-            /*DownloadedCourses = new List<Subject>()
-            {
-                new Subject("Databases")
-            };*/
         }
 
         private List<UserSubject> _userSubjectMappings;
@@ -782,7 +768,11 @@ namespace wazniak_forever.ViewModel
                     subject.ID, subject.CurrentModuleIndex, subject.CorrectAnswers, subject.Attempts, subject.LastAttempt));
             });
 
-            MyCourses.Sort(CompareSubjects);
+            if (!isSorted)
+            {
+                MyCourses.Sort(CompareSubjects);
+                isSorted = true;
+            }
 
             _userModuleMappings = new List<UserModule>();
             myModules.ForEach(module =>
@@ -962,19 +952,6 @@ namespace wazniak_forever.ViewModel
             };
             prompt.Show();
         }
-
-        /*public async void AddSampleItem(SampleItem newSampleItem)
-        {
-            await _sampleDB.Items.InsertAsync(newSampleItem);
-            AllSampleItems.Add(newSampleItem);
-
-        }
-
-        public async void DeleteSampleitem(SampleItem removedSampleitem)
-        {
-            await _sampleDB.Items.DeleteAsync(removedSampleitem);
-            AllSampleItems.Remove(removedSampleitem);
-        }*/
 
         public DTimer Timer { get; set; }
 
