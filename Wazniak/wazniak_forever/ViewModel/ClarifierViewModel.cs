@@ -191,16 +191,16 @@ namespace wazniak_forever.ViewModel
             return uS1.CurrentModuleIndex - uS2.CurrentModuleIndex;
         }
 
-        public async System.Threading.Tasks.Task CalculateBreakingPoint()
+        public async System.Threading.Tasks.Task CalculateBreakingPoint(List<UserSubject> mySubjects)
         {
-            var mySubjects = await db.UsersAndSubjects.Where(subject => subject.UserID == DatabaseContext.MobileService.CurrentUser.UserId).ToListAsync();
             if (mySubjects.Count == 0) BreakingPoint = 0.0;
             else
             {
                 var mySubject = mySubjects.Find(subject => subject.SubjectID == MyCourses[GridCounter].ID);
-                GridCounter++;
+                GridCounter++;                
                 var myModules = await db.Modules.Where(module => module.SubjectID == mySubject.SubjectID).ToListAsync();
                 BreakingPoint = (double)mySubject.CurrentModuleIndex / (double)myModules.Count;
+                MessageBox.Show(mySubject.SubjectID.ToString() + " " + mySubject.CurrentModuleIndex + " " + BreakingPoint);
             }
         }
 
@@ -211,6 +211,7 @@ namespace wazniak_forever.ViewModel
 
         private double countWrongAnswerRatio(int correctAnswers, int wrongAnswerSum)
         {
+            if (wrongAnswerSum == 0) return 0.0;
             return ((double)UserModule.ATTEMPTS - (double)correctAnswers) / (double)wrongAnswerSum;
         }
 
@@ -218,10 +219,10 @@ namespace wazniak_forever.ViewModel
         {
             int[] weights = new int[CurrentModuleIndex];
             int wrongAnswerSum = 0;
-            for (int i = 0; i < CurrentModuleIndex; i++) wrongAnswerSum += UserModule.ATTEMPTS - UserModules[i].AnswersNumber;
+            for (int i = 0; i < CurrentModuleIndex; i++) wrongAnswerSum += UserModule.ATTEMPTS - UserModules[i].CountCorrectAnswers();
             for (int i = 0; i < CurrentModuleIndex; i++)
             {
-                weights[i] = (int)Math.Round(RepetitionBase * countWrongAnswerRatio(UserModules[i].AnswersNumber, wrongAnswerSum));
+                weights[i] = (int)Math.Round(RepetitionBase * countWrongAnswerRatio(UserModules[i].CountCorrectAnswers(), wrongAnswerSum));
             }
             return weights;
         }
@@ -770,8 +771,8 @@ namespace wazniak_forever.ViewModel
 
             if (!isSorted)
             {
-                MyCourses.Sort(CompareSubjects);
                 isSorted = true;
+                MyCourses.Sort(CompareSubjects);
             }
 
             _userModuleMappings = new List<UserModule>();

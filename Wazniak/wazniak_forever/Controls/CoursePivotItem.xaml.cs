@@ -66,8 +66,15 @@ namespace wazniak_forever.Controls
             if (this.Name == MY_COURSES_NAME)
             {
                 GradientStopCollection gSC = new GradientStopCollection();
-                App.ViewModel.MyCourses.Sort(App.ViewModel.CompareSubjects);
-                await App.ViewModel.CalculateBreakingPoint();
+                MessageBox.Show((sender as Grid).Name);
+                if (!App.ViewModel.isSorted)
+                {
+                    App.ViewModel.isSorted = true;
+                    App.ViewModel.MyCourses.Sort(App.ViewModel.CompareSubjects);
+                    App.ViewModel.MyCourses.ForEach(course => MessageBox.Show(course.Name));
+                }
+                var mySubjects = await App.ViewModel.db.UsersAndSubjects.Where(subject => subject.UserID == DatabaseContext.MobileService.CurrentUser.UserId).ToListAsync();
+                await App.ViewModel.CalculateBreakingPoint(mySubjects);
                 for (int i = 0; i < 4; i++) gSC.Add(new GradientStop());
                 gSC[0].Color = (Application.Current.Resources["TileBackgroundColor"] as SolidColorBrush).Color;
                 gSC[1].Color = gSC[0].Color;

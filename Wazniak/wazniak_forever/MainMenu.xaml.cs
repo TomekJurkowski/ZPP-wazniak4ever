@@ -27,6 +27,7 @@ namespace wazniak_forever
             base.OnNavigatedTo(e);
             App.ViewModel.CheckForNetworkAvailability();
             App.ViewModel.GridCounter = 0;
+            App.ViewModel.isSorted = false;
         }
 
         private void MainOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)

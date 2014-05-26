@@ -506,6 +506,11 @@ namespace wazniak_forever.Model
             return result;
         }
 
+        public int CountCorrectAnswers()
+        {
+            return parseAnswersToList(AnswersNumber).FindAll(b => b == true).Count;
+        }
+
         public void AddAnswers(List<bool> answers)
         {
             List<bool> resultList = new List<bool>();
@@ -520,7 +525,7 @@ namespace wazniak_forever.Model
 
         public bool CheckAnswers()
         {
-            return (parseAnswersToList(AnswersNumber).FindAll(b => b == true).Count >= DONE);
+            return (CountCorrectAnswers() >= DONE);
         }
     }
 
