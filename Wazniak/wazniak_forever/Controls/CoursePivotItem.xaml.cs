@@ -61,18 +61,19 @@ namespace wazniak_forever.Controls
                 .ToList();
         }
 
-        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        private async void Grid_Loaded(object sender, RoutedEventArgs e)
         {
             if (this.Name == MY_COURSES_NAME)
             {
                 GradientStopCollection gSC = new GradientStopCollection();
-                //double breakingPoint = App.ViewModel.CalculateBreakingPoint();
+                App.ViewModel.MyCourses.Sort(App.ViewModel.CompareSubjects);
+                await App.ViewModel.CalculateBreakingPoint();
                 for (int i = 0; i < 4; i++) gSC.Add(new GradientStop());
                 gSC[0].Color = (Application.Current.Resources["TileBackgroundColor"] as SolidColorBrush).Color;
                 gSC[1].Color = gSC[0].Color;
-                gSC[1].Offset = 0.4;
+                gSC[1].Offset = App.ViewModel.BreakingPoint;
                 gSC[2].Color = Color.FromArgb(255, 180, 150, 250);
-                gSC[2].Offset = 0.5;
+                gSC[2].Offset = gSC[1].Offset + 0.1;
                 gSC[3].Color = gSC[2].Color;
                 gSC[3].Offset = 1.0;
                 LinearGradientBrush lGB = new LinearGradientBrush(gSC, 0.0);

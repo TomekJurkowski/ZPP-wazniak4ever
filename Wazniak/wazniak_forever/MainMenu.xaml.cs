@@ -26,6 +26,7 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             App.ViewModel.CheckForNetworkAvailability();
+            App.ViewModel.GridCounter = 0;
         }
 
         private void MainOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)

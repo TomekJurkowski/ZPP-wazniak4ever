@@ -109,7 +109,7 @@ namespace wazniak_forever.Controls
 
         public void AddElement(FrameworkElement element)
         {
-            Grid.SetRow(element, 3);
+            Grid.SetRow(element, 4);
             ContentPanel.Children.Add(element);
         }
 
@@ -125,7 +125,7 @@ namespace wazniak_forever.Controls
         {
             foreach (FrameworkElement element in ContentPanel.Children)
             {
-                if (Grid.GetRow(element) == 3) element.Visibility = Visibility.Collapsed;
+                if (Grid.GetRow(element) == 3 || Grid.GetRow(element) == 4) element.Visibility = Visibility.Collapsed;
             }
 
             SubmitAnswer.Visibility = Visibility.Collapsed;

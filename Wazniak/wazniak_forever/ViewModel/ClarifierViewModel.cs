@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using wazniak_forever.Model;
 using Microsoft.Phone.Shell;
 using System.Windows;
@@ -155,28 +156,50 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private int compareSubjects(Subject s1, Subject s2)
+        private int _gridCounter;
+
+        public int GridCounter { 
+            get { return _gridCounter; }
+            set
+            {
+                _gridCounter = value;
+                NotifyPropertyChanged("GridCounter");
+            }
+        }
+
+        private double _breakingPoint;
+
+        public double BreakingPoint
+        {
+            get { return _breakingPoint; }
+            set
+            {
+                _breakingPoint = value;
+                NotifyPropertyChanged("BreakingPoint");
+            }
+        }
+
+        public int CompareSubjects(Subject s1, Subject s2)
         {
             UserSubject uS1 = _userSubjectMappings.Find(mapping =>
                 mapping.SubjectID == s1.ID && mapping.UserID == db.User.UserId);
             UserSubject uS2 = _userSubjectMappings.Find(mapping =>
                 mapping.SubjectID == s2.ID && mapping.UserID == db.User.UserId);
-            if (uS1.Attempts == 0 && uS2.Attempts == 0) return 0;
-            else if (uS1.Attempts == 0) return -1;
-            else if (uS2.Attempts == 0) return 1;
-            return 0;
+            return uS1.CurrentModuleIndex - uS2.CurrentModuleIndex;
         }
 
-        public double CalculateBreakingPoint()
+        public async System.Threading.Tasks.Task CalculateBreakingPoint()
         {
-            double result = (double)_userSubjectMappings.Find(subject => subject.SubjectID == CurrentCourseID).CurrentModuleIndex / (double)Modules.Count;
-            return result;
-        }
-
-        public void DEBUG_WYPISZ(List<bool> list) {
-            string s = "";
-            foreach (bool ans in list) s += ans.ToString() + ", ";
-            MessageBox.Show(s);
+            var mySubjects = await db.UsersAndSubjects.Where(subject => subject.UserID == DatabaseContext.MobileService.CurrentUser.UserId).ToListAsync();
+            if (mySubjects.Count == 0) BreakingPoint = 0.0;
+            else
+            {
+                var mySubject = mySubjects.Find(subject => subject.SubjectID == MyCourses[GridCounter].ID);
+                GridCounter++;
+                var myModules = await db.Modules.Where(module => module.SubjectID == mySubject.SubjectID).ToListAsync();
+                BreakingPoint = (double)mySubject.CurrentModuleIndex / (double)myModules.Count;
+                MessageBox.Show((double)mySubject.CurrentModuleIndex + " " + (double)myModules.Count);
+            }
         }
 
         public void AddAnswer(bool ans)
@@ -419,31 +442,6 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task LoadExercises(IEnumerable<int> moduleIdList)
         {
-            /*var tasksWithAnswers = new List<TaskAnswer>();
-            var multipleChoiceExerciseOptions = new List<MultipleChoiceExerciseOption>();
-            var singleChoiceExerciseOptions = new List<SingleChoiceExerciseOption>();
-            foreach (var id in moduleIdList)
-            {
-                tasksWithAnswers.AddRange(OnlineMode 
-                    ? await 
-                        db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID && task.ModuleID == id)
-                            .LoadAllAync() 
-                    : await db.LoadExercisesOffline(CurrentCourseID));
-
-                multipleChoiceExerciseOptions.AddRange(OnlineMode
-                    ? await 
-                        db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID && option.ModuleID == id)
-                            .LoadAllAync()
-                    : await db.LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(CurrentCourseID));
-
-                singleChoiceExerciseOptions.AddRange(OnlineMode
-                    ? await
-                        db.SingleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID && option.ModuleID == id)
-                            .IncludeTotalCount()
-                            .LoadAllAync()
-                    : await db.LoadExerciseChoicesOffline<SingleChoiceExerciseOption>(CurrentCourseID));
-            }*/
-
             var tasksWithAnswers = OnlineMode
                 ? await
                     db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID)
@@ -570,15 +568,9 @@ namespace wazniak_forever.ViewModel
         }
         #endregion
 
-        /*public async void LoadCollectionsFromDatabase()
-        {
-            AllSampleItems = await _sampleDB.Items.ToCollectionAsync();
-        }*/
 
         public void CheckForNetworkAvailability()
         {
-            //NetworkInterface.GetIsNetworkAvailable()
-            //OnlineMode = DeviceNetworkInformation.IsNetworkAvailable;
             OnlineMode = NetworkInterface.GetIsNetworkAvailable();
             LoadMenu();
             LoadCourseOptions();
@@ -590,7 +582,6 @@ namespace wazniak_forever.ViewModel
             {
                 new Option(OptionType.MyCourses, true, "Courses", new Uri("/Assets/StartIcon.png", UriKind.RelativeOrAbsolute)),
                 new Option(OptionType.Downloads, false, "Downloads", new Uri("/Assets/DownloadsIcon.png", UriKind.RelativeOrAbsolute)),
-                //new Option(OptionType.Settings, false, "Settings", new Uri("/Assets/SettingsIcon.png", UriKind.RelativeOrAbsolute))
             };
 
             if (db.User != null)
@@ -791,7 +782,7 @@ namespace wazniak_forever.ViewModel
                     subject.ID, subject.CurrentModuleIndex, subject.CorrectAnswers, subject.Attempts, subject.LastAttempt));
             });
 
-            MyCourses.Sort(compareSubjects);
+            MyCourses.Sort(CompareSubjects);
 
             _userModuleMappings = new List<UserModule>();
             myModules.ForEach(module =>
@@ -891,7 +882,7 @@ namespace wazniak_forever.ViewModel
         {
             var deletedMapping = _userSubjectMappings.Find(mapping =>
                 mapping.SubjectID == CurrentCourseID
-                && mapping.UserID == db.User.UserId);
+                && mapping.UserID == DatabaseContext.MobileService.CurrentUser.UserId);
 
             await db.UsersAndSubjects.DeleteAsync(deletedMapping);
 
