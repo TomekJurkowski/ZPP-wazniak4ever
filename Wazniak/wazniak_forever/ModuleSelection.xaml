@@ -77,7 +77,7 @@
                 <toolkit:LongListMultiSelector x:Name="ModuleSelector"
                     VerticalAlignment="Top"
                     Visibility="Visible"
-                    ItemsSource="{Binding Modules}"
+                    ItemsSource="{Binding SubjectModules}"
                     LayoutMode="List"
                     IsSelectionEnabled="True">
                     <toolkit:LongListMultiSelector.ItemTemplate>
