@@ -22,10 +22,11 @@ namespace wazniak_forever
         {
             base.OnNavigatedTo(e);
             LoadCoursesAsync();
-            if (App.ViewModel.db.User != null)
+            if (App.ViewModel.db.User != null && !App.ViewModel.AreDownloads)
             {
                 MainPivot.Items.Remove(MainPivot.Items[0]);
                 MainPivot.Items.Insert(0, CreatePivotItem("My Courses", "MyCourses"));
+                MainPivot.SelectedIndex = 0;
             }
         }
 
