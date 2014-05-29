@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.ModelBinding;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
@@ -321,7 +323,7 @@ namespace WazniakWebsite.Controllers
         public async Task<ActionResult> Edit([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] MathematicalTask mathematicaltask,
             int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
             string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo,
-            HttpPostedFileBase imageFile, int? removeImageFlag)
+            HttpPostedFileBase imageFile, int? removeImageFlag, string imageUrl)
         {
             var sub = db.Subjects.Find(mathematicaltask.SubjectID);
 
@@ -331,7 +333,7 @@ namespace WazniakWebsite.Controllers
                 {
                     return await EditTaskInternal(mathematicaltask, sub, isAnswerChanged, answerType, valueAns,
                         textAns, multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo,
-                        imageFile, removeImageFlag);
+                        imageFile, removeImageFlag, imageUrl);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -357,7 +359,7 @@ namespace WazniakWebsite.Controllers
         private async Task<ActionResult> EditTaskInternal(MathematicalTask mathematicaltask, Subject sub,
             int isAnswerChanged, string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
             IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo,
-            HttpPostedFileBase imageFile, int? removeImageFlag)
+            HttpPostedFileBase imageFile, int? removeImageFlag, string imageUrl)
         {
             // First let's see if the answer for the task is being changed or not.
             // If it's not then we have an easy case to deal with.
@@ -374,6 +376,10 @@ namespace WazniakWebsite.Controllers
                 if (imageFile != null)
                 {
                     mathematicaltask.ImageUrl = UploadFileFromFileBase(imageFile, mathematicaltask.ID);
+                }
+                else if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    mathematicaltask.ImageUrl = imageUrl;
                 }
 
                 if (removeImageFlag == 1)
@@ -553,6 +559,10 @@ namespace WazniakWebsite.Controllers
             {
                 mathematicaltask.ImageUrl = UploadFileFromFileBase(imageFile, mathematicaltask.ID);
             }
+            else if (!string.IsNullOrEmpty(imageUrl))
+            {
+                mathematicaltask.ImageUrl = imageUrl;
+            }
 
             if (removeImageFlag == 1)
             {
@@ -681,8 +691,8 @@ namespace WazniakWebsite.Controllers
         private static async Task<Stream> LoadEquationImage(string exp, bool isInline)
         {
             var requestUri = isInline
-                ? "http://latex.codecogs.com/png.download?%5Cinline%20" + exp
-                : "http://latex.codecogs.com/png.download?%20" + exp;
+                ? "http://latex.codecogs.com/png.download?%5Cinline%20%7B%5Ccolor%7BDarkBlue%7D" + exp + "%7D"
+                : "http://latex.codecogs.com/png.download?%20%7B%5Ccolor%7BDarkBlue%7D" + exp + "%7D";
             using (var client = new HttpClient())
             {
                 var requestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri);

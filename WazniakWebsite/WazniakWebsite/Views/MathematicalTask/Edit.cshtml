@@ -490,50 +490,7 @@
             </div>
         </div>
         
-        @if (ViewBag.ImageUrl != null && ViewBag.ImageUrl != "")
-        {
-            <div class="form-group">
-                <label class="control-label col-md-2 PurpleText">Image</label>
-                <div class="col-md-10">
-                    <div class="fileinput fileinput-exists" data-provides="fileinput">
-                        <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                            <img data-src="holder.js/100%x100%">
-                        </div>
-                        <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
-                            <img src="@ViewBag.ImageUrl" style="max-height: 140px;">
-                        </div>
-                        <div>
-                            <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="imageFile" id="imageFileInput" /></span>
-                            <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" id="removeImgBtn">Remove</a>
-                        </div>
-                        <input type="number" name="removeImageFlag" id="removeImageFlagInput" hidden="" value="0" />
-                    </div>
-                </div>
-
-
-            </div>
-        }
-        else
-        {
-            <div class="form-group">
-                <label class="control-label col-md-2 PurpleText">Image</label>
-                <div class="col-md-10">
-                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                        <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                            <img data-src="holder.js/100%x100%">
-                        </div>
-                        <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
-                            <img src="" style="max-height: 140px;">
-                        </div>
-                        <div>
-                            <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="imageFile" id="imageFileInput" /></span>
-                            <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        }
+        
         
         <div class="form-group">
             <div class="col-md-10 col-md-offset-2">
@@ -625,6 +582,52 @@
             </div>
         </div>
         
+        @if (ViewBag.ImageUrl != null && ViewBag.ImageUrl != "")
+        {
+            <div class="form-group">
+                <label class="control-label col-md-2 PurpleText">Image</label>
+                <div class="col-md-10">
+                    <div class="fileinput fileinput-exists" data-provides="fileinput">
+                        <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                            <img data-src="holder.js/100%x100%">
+                        </div>
+                        <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
+                            <img src="@ViewBag.ImageUrl" style="max-height: 140px;">
+                            <input type="hidden" name="imageUrl" id="imageUrlInput" value="@ViewBag.ImageUrl"/>
+                        </div>
+                        <div>
+                            <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="imageFile" id="imageFileInput" /></span>
+                            <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" id="removeImgBtn">Remove</a>
+                        </div>
+                        <input type="number" name="removeImageFlag" id="removeImageFlagInput" hidden="" value="0" />
+                    </div>
+                </div>
+
+
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label class="control-label col-md-2 PurpleText">Image</label>
+                <div class="col-md-10">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                            <img data-src="holder.js/100%x100%">
+                        </div>
+                        <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
+                            <img src="" style="max-height: 140px;">
+                        </div>
+                        <div>
+                            <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="imageFile" id="imageFileInput" /></span>
+                            <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+
         <div class="form-group">
             <label class="myLabel control-label col-md-2 PurpleText">Current Exercise Solution</label>
             <div class="col-md-10">

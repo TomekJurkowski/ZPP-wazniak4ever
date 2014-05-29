@@ -324,7 +324,7 @@ namespace WazniakWebsite.Controllers
         public ActionResult Edit([Bind(Include = "ID,Title,Text,SubjectID,ModuleID")] RegularTask regulartask,
             int isAnswerChanged, string answerType, string valueAns, string textAns, string[] multiChoiceList,
             string[] multiAnswerList, string[] singleChoiceList, int singleCorrectNo,
-            HttpPostedFileBase imageFile, int? removeImageFlag)
+            HttpPostedFileBase imageFile, int? removeImageFlag, string imageUrl)
         {
             var sub = db.Subjects.Find(regulartask.SubjectID);
 
@@ -334,7 +334,7 @@ namespace WazniakWebsite.Controllers
                 {
                     return EditTaskInternal(regulartask, sub, isAnswerChanged, answerType, valueAns, textAns,
                         multiChoiceList, multiAnswerList, singleChoiceList, singleCorrectNo,
-                        imageFile, removeImageFlag);
+                        imageFile, removeImageFlag, imageUrl);
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -360,7 +360,7 @@ namespace WazniakWebsite.Controllers
         private ActionResult EditTaskInternal(RegularTask regulartask, Subject sub, int isAnswerChanged,
             string answerType, string valueAns, string textAns, IList<string> multiChoiceList,
             IList<string> multiAnswerList, ICollection<string> singleChoiceList, int singleCorrectNo,
-            HttpPostedFileBase imageFileBase, int? removeImageFlag)
+            HttpPostedFileBase imageFileBase, int? removeImageFlag, string imageUrl)
         {
             // First let's see if the answer for the task is being changed or not.
             // If it's not then we have an easy case to deal with.
@@ -371,7 +371,13 @@ namespace WazniakWebsite.Controllers
                 regulartask.CorrectAnswers = 0;
                 regulartask.Attempts = 0;
                 if (imageFileBase != null)
+                {
                     regulartask.ImageUrl = UploadFileFromFileBase(imageFileBase, regulartask.ID);
+                }
+                else if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    regulartask.ImageUrl = imageUrl;
+                }
 
                 if (removeImageFlag == 1)
                 {
@@ -545,7 +551,14 @@ namespace WazniakWebsite.Controllers
             regulartask.Attempts = 0;
 
             if (imageFileBase != null)
+            {
                 regulartask.ImageUrl = UploadFileFromFileBase(imageFileBase, regulartask.ID);
+            }
+            else if (!string.IsNullOrEmpty(imageUrl))
+            {
+                regulartask.ImageUrl = imageUrl;
+            }
+
             if (removeImageFlag == 1)
             {
                 regulartask.ImageUrl = "";
