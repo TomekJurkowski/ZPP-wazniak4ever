@@ -60,8 +60,8 @@
                        Visibility="Collapsed"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       MaxWidth="400"
-                       MaxHeight="300"
+                       MaxWidth="300"
+                       MaxHeight="200"
                        />
                 <TextBlock x:Name="QuestionContent" 
                                 Text="{Binding CurrentExercise.Question}"
@@ -75,13 +75,13 @@
                 
                 <RichTextBox x:Name="MathQuestionBox"
                          Background="{StaticResource BackgroundColor}"
-                         VerticalAlignment="Center"
-                         VerticalContentAlignment="Center"
-                         HorizontalContentAlignment="Center"
+                         FontSize="30"
+                         Margin="30,30,30,30"
+                         Foreground="{StaticResource MenuItemColor}"
                          Grid.Row="3"
-                         HorizontalAlignment="Center"
                          Visibility="Collapsed"
-                         Height="Auto">
+                         Height="Auto"
+                             >
                 </RichTextBox>
 
                 <TextBlock x:Name="StatisticTitle" 

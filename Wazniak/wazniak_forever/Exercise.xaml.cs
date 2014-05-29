@@ -97,9 +97,21 @@ namespace wazniak_forever.Controls
                 var imageId = notInline
                     ? match.Value.Substring(3, match.Value.Length - 6)
                     : match.Value.Substring(2, match.Value.Length - 4);
-                System.Diagnostics.Debug.WriteLine(imageId);
+                
                 paragraph.AddText(start, match.Index, text);
-                await paragraph.ReplaceLabelWithImage(imageId);
+
+                if (notInline)
+                {
+                    MathQuestionBox.Blocks.Add(paragraph);
+                    var imgParagraph = new Paragraph();
+                    await imgParagraph.ReplaceLabelWithLargeImage(imageId);
+                    MathQuestionBox.Blocks.Add(imgParagraph);
+                    paragraph = new Paragraph();
+                }
+                else
+                {
+                    await paragraph.ReplaceLabelWithImage(imageId); 
+                }                
                 start = match.Index + match.Length;
             }
             paragraph.AddText(start, text.Length, text);
@@ -260,8 +272,7 @@ namespace wazniak_forever.Controls
         {
             var run = new Run
             {
-                Text = text.Substring(start, end - start),
-                Foreground = new SolidColorBrush(Colors.Black),
+                Text = text.Substring(start, end - start)
             };
             paragraph.Inlines.Add(run);
         }
@@ -302,8 +313,28 @@ namespace wazniak_forever.Controls
                 //Source = new BitmapImage(new Uri("/Assets/CodeCogsEqnInline.png", UriKind.RelativeOrAbsolute)),
                 Height = 30
             };
+            paragraph.TextAlignment = TextAlignment.Left;
+            var uiImage = new InlineUIContainer { Child = image };
+            paragraph.Inlines.Add(uiImage);
+        }
+
+        public async static System.Threading.Tasks.Task ReplaceLabelWithLargeImage(this Paragraph paragraph, string id)
+        {
+            var requestUri = BLOB_URL + id;
+
+            var imageData = App.ViewModel.OnlineMode
+                ? await LoadImageFromUrl(requestUri)
+                : await App.ViewModel.db.LoadMathImageOfflineByName(id);
+            var image = new Image
+            {
+                Source = LoadBitmapImage(imageData),
+                //Source = new BitmapImage(new Uri("/Assets/CodeCogsEqnInline.png", UriKind.RelativeOrAbsolute)),
+                Height = 70
+            };
 
             var uiImage = new InlineUIContainer { Child = image };
+
+            paragraph.TextAlignment = TextAlignment.Center;
             paragraph.Inlines.Add(uiImage);
         }
     }
