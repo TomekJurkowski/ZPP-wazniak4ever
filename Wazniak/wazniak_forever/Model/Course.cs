@@ -1,4 +1,6 @@
-﻿using Microsoft.WindowsAzure.MobileServices;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using Microsoft.WindowsAzure.MobileServices;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Controls;
@@ -70,9 +72,17 @@ namespace wazniak_forever.Model
 
     public class ImageAttachment
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public int TaskId { get; set; }
+        public byte[] ImageBytes { get; set; }
+    }
+
+    public class MathImage
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string Name { get; set; }
         public byte[] ImageBytes { get; set; }
     }
 
@@ -113,7 +123,7 @@ namespace wazniak_forever.Model
             await Connect.CreateTableAsync<SingleChoiceExerciseOption>();
             await Connect.CreateTableAsync<Module>();
             await Connect.CreateTableAsync<ImageAttachment>();
-
+            await Connect.CreateTableAsync<MathImage>();
         }
 
         public async void Drop()
@@ -124,6 +134,7 @@ namespace wazniak_forever.Model
             await Connect.DropTableAsync<SingleChoiceExerciseOption>();
             await Connect.DropTableAsync<Module>();
             await Connect.DropTableAsync<ImageAttachment>();
+            await Connect.DropTableAsync<MathImage>();
         }
 
         public async Task<List<Subject>> LoadSubjectsOffline()
@@ -152,21 +163,19 @@ namespace wazniak_forever.Model
         public async Task<byte[]> LoadImageAttachmentOffline(int taskId)
         {
             var image = await Connect.Table<ImageAttachment>().Where(img => img.TaskId == taskId).FirstOrDefaultAsync();
-            if (image != null)
-            {
-                return image.ImageBytes;
-            }
-            return null;
+            return image != null ? image.ImageBytes : null;
         }
 
         private async Task<ImageAttachment> LoadImageAttachmentObjectOffline(int taskId)
         {
             var image = await Connect.Table<ImageAttachment>().Where(img => img.TaskId == taskId).FirstOrDefaultAsync();
-            if (image != null)
-            {
-                return image;
-            }
-            return null;
+            return image;
+        }
+
+        public async Task<byte[]> LoadMathImageOfflineByName(string name)
+        {
+            var image = await Connect.Table<MathImage>().Where(img => img.Name == name).FirstOrDefaultAsync();
+            return image != null ? image.ImageBytes : null;
         }
 
         /*public async Task<List<MultipleChoiceExerciseOption>> LoadMultipleChoiceExOptionsOffline(int subjectID)
@@ -181,25 +190,60 @@ namespace wazniak_forever.Model
                 .Where(option => option.SubjectID == subjectID).ToListAsync();
         }*/
 
-        private async Task<List<ImageAttachment>> GetAllImageAttachments(List<TaskAnswer> tasksWithAnswers)
+        private async Task<List<ImageAttachment>> GetAllImageAttachments(IEnumerable<TaskAnswer> tasksWithAnswers)
         {
             var images = new List<ImageAttachment>();
-            foreach (var task in tasksWithAnswers)
+            foreach (var task in tasksWithAnswers.Where(task => !string.IsNullOrEmpty(task.ImageUrl)))
             {
-                if (!string.IsNullOrEmpty(task.ImageUrl))
+                var imageBytes = await RichTextBoxExtensions.LoadImageFromUrl(task.ImageUrl);
+                images.Add(new ImageAttachment
                 {
-                    var imageBytes = await RichTextBoxExtensions.LoadImageFromUrl(task.ImageUrl);
-                    images.Add(new ImageAttachment
-                    {
-                        TaskId = task.ID,
-                        ImageBytes = imageBytes
-                    });
-                    System.Diagnostics.Debug.WriteLine(images.Count);
-                }
+                    TaskId = task.ID,
+                    ImageBytes = imageBytes
+                });
+                System.Diagnostics.Debug.WriteLine(images.Count);
             }
 
             return images;
         }
+
+
+        private async Task<List<MathImage>> GetAllMathImagesForTask(string text)
+        {
+            const string BLOB_URL = "http://clarifierblob.blob.core.windows.net/clarifiermathimages/";
+            var regex = new Regex("(\\$[^\\$]+?\\$)|(\\$\\$[^\\$]+?\\$\\$)");
+            var images = new List<MathImage>();
+            foreach (Match match in regex.Matches(text))
+            {
+                var matchVal = match.Value;
+                var notInline = matchVal.StartsWith("$$");
+                var imageId = notInline
+                    ? match.Value.Substring(3, match.Value.Length - 6)
+                    : match.Value.Substring(2, match.Value.Length - 4);
+                var imageUrl = BLOB_URL + imageId;
+                var imageBytes = await RichTextBoxExtensions.LoadImageFromUrl(imageUrl);
+                images.Add(new MathImage
+                {
+                    Name = imageId,
+                    ImageBytes = imageBytes
+                });
+            }
+            return images;
+        }
+
+        private async Task<List<MathImage>>  GetAllMathImages(IEnumerable<TaskAnswer> tasksWithAnswers)
+        {
+            var images = new List<MathImage>();
+
+            foreach (var task in tasksWithAnswers.Where(task => task.TaskDiscriminator == "MathematicalTask"))
+            {
+                var taskImages = await GetAllMathImagesForTask(task.ModifiedText);
+                images.AddRange(taskImages);
+            }
+
+            return images;
+        }
+
 
         private async System.Threading.Tasks.Task InsertIntoLocalDatabase(Subject newSubject)
         {
@@ -210,14 +254,14 @@ namespace wazniak_forever.Model
             var modules = await Modules.Where(module => module.SubjectID == newSubject.ID).ToListAsync();
 
             var images = await GetAllImageAttachments(tasksWithAnswers);
-            
+            var mathImages = await GetAllMathImages(tasksWithAnswers);            
 
             await Connect.InsertAllAsync(tasksWithAnswers);
             await Connect.InsertAllAsync(multipleChoiceExerciseOptions);
             await Connect.InsertAllAsync(singleChoiceExerciseOptions);
             await Connect.InsertAllAsync(modules);
             await Connect.InsertAllAsync(images);
-            
+            await Connect.InsertAllAsync(mathImages);
         }
 
         public async System.Threading.Tasks.Task SaveSubjectLocally(Subject newSubject)
@@ -234,6 +278,8 @@ namespace wazniak_forever.Model
             }
         }
 
+
+
         private async System.Threading.Tasks.Task DeleteFromLocalDatabase(Subject subject)
         {
             await Connect.DeleteAsync(subject);
@@ -244,6 +290,14 @@ namespace wazniak_forever.Model
                 var imageAttachment = await LoadImageAttachmentObjectOffline(task.ID);
                 if (imageAttachment != null)
                     await Connect.DeleteAsync(imageAttachment);
+                if (task.TaskDiscriminator == "MathematicalTask")
+                {
+                    var mathImages = await GetAllMathImagesForTask(task.ModifiedText);
+                    mathImages.ForEach(async image =>
+                    {
+                        await Connect.DeleteAsync(image);
+                    });
+                }              
             });
             var multipleChoiceOptions = await LoadExerciseChoicesOffline<MultipleChoiceExerciseOption>(subject.ID);
             multipleChoiceOptions.ForEach(async option =>

@@ -293,7 +293,9 @@ namespace wazniak_forever.Controls
         {
             var requestUri = BLOB_URL + id;
 
-            var imageData = await LoadImageFromUrl(requestUri);
+            var imageData = App.ViewModel.OnlineMode
+                ? await LoadImageFromUrl(requestUri)
+                : await App.ViewModel.db.LoadMathImageOfflineByName(id);
             var image = new Image
             {
                 Source = LoadBitmapImage(imageData),
