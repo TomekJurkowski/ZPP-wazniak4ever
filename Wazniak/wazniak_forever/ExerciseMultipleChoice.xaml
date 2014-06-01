@@ -33,7 +33,7 @@
                                    Foreground="{StaticResource MenuItemColor}"
                                    Text="{Binding}" 
                                    TextWrapping="Wrap"
-                                   FontSize="30"/>
+                                   FontSize="25"/>
                 </DataTemplate>
             </toolkit:LongListMultiSelector.ItemTemplate>
         </toolkit:LongListMultiSelector>

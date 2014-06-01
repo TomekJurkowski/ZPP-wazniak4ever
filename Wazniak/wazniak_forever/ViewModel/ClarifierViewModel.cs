@@ -524,7 +524,7 @@ namespace wazniak_forever.ViewModel
                        
                         default:
                             var regExer = new RegularExercise(task.ID, CurrentCourseID, task.ModuleID, task.TaskID,
-                                task.Title, task.Text1, subject, solution, task.ModifiedText, task.ImageUrl);
+                                task.Title, task.Text1, subject, solution, task.ModifiedText, task.ImageUrl, task.TaskDiscriminator);
                             solution.Exercise = regExer;
                             Exercises.Add(regExer);
                             break;
@@ -647,26 +647,23 @@ namespace wazniak_forever.ViewModel
                     }
                 };
 
-            while (!success)
-            {
-                if (db.User == null)
+            while (db.User == null && !success)
+            {                
+                string message;
+                try
                 {
-                    string message;
-                    try
-                    {
-                        db.User = await DatabaseContext.MobileService
-                            .LoginAsync(provider);
-                        success = true;
-                        message =
-                            string.Format("You are now logged in as {0}", db.User.UserId);
-                        MessageBox.Show(message);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        messageBox.Show();
-                    }
-                    
+                    db.User = await DatabaseContext.MobileService
+                                        .LoginAsync(provider);
+                    success = true;
+                    message =
+                        string.Format("You are now logged in as {0}", db.User.UserId);
+                    MessageBox.Show(message);
                 }
+                catch (InvalidOperationException)
+                {
+                    messageBox.Show();
+                }
+
             }
             
         }

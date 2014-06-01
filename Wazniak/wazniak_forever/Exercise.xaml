@@ -65,7 +65,7 @@
                        />
                 <TextBlock x:Name="QuestionContent" 
                                 Text="{Binding CurrentExercise.Question}"
-                                FontSize="30"
+                                FontSize="25"
                                 Margin="30,30,30,30"
                                 Foreground="{StaticResource MenuItemColor}"
                                 TextWrapping="Wrap"
@@ -75,7 +75,7 @@
                 
                 <RichTextBox x:Name="MathQuestionBox"
                          Background="{StaticResource BackgroundColor}"
-                         FontSize="30"
+                         FontSize="25"
                          Margin="30,30,30,30"
                          Foreground="{StaticResource MenuItemColor}"
                          Grid.Row="3"

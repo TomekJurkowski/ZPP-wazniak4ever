@@ -38,15 +38,18 @@ namespace wazniak_forever.Controls
             
         }
 
-        public void AdjustQuestionBox()
+        public async System.Threading.Tasks.Task AdjustQuestionBox(DependencyObject page)
         {
             if (App.ViewModel != null
-                && App.ViewModel.CurrentExercise.ModifiedText != null
-                && App.ViewModel.CurrentExercise.ModifiedText.Length > 0)
+                && App.ViewModel.CurrentExercise.TaskDiscriminator == "MathematicalTask")
             {
                 MathQuestionBox.Visibility = Visibility.Visible;
                 QuestionContent.Visibility = Visibility.Collapsed;
-                FillRichTextBox(App.ViewModel.CurrentExercise.ModifiedText);
+                await App.ViewModel.PerformTimeConsumingProcess(page, "Loading question...", async () =>
+                {
+                    await FillRichTextBox(App.ViewModel.CurrentExercise.ModifiedText);
+                });
+
             }
             else
             {
@@ -85,7 +88,7 @@ namespace wazniak_forever.Controls
             imageSource.LoadImage(imageUrl);
         }
 
-        private async void FillRichTextBox(string text)
+        private async System.Threading.Tasks.Task FillRichTextBox(string text)
         {
             var start = 0;
             var regex = new Regex("(\\$[^\\$]+?\\$)|(\\$\\$[^\\$]+?\\$\\$)");
@@ -303,7 +306,6 @@ namespace wazniak_forever.Controls
         public async static System.Threading.Tasks.Task ReplaceLabelWithImage(this Paragraph paragraph, string id)
         {
             var requestUri = BLOB_URL + id;
-
             var imageData = App.ViewModel.OnlineMode
                 ? await LoadImageFromUrl(requestUri)
                 : await App.ViewModel.db.LoadMathImageOfflineByName(id);
@@ -311,7 +313,7 @@ namespace wazniak_forever.Controls
             {
                 Source = LoadBitmapImage(imageData),
                 //Source = new BitmapImage(new Uri("/Assets/CodeCogsEqnInline.png", UriKind.RelativeOrAbsolute)),
-                Height = 30
+                MaxHeight = 25
             };
             paragraph.TextAlignment = TextAlignment.Left;
             var uiImage = new InlineUIContainer { Child = image };
@@ -329,7 +331,7 @@ namespace wazniak_forever.Controls
             {
                 Source = LoadBitmapImage(imageData),
                 //Source = new BitmapImage(new Uri("/Assets/CodeCogsEqnInline.png", UriKind.RelativeOrAbsolute)),
-                Height = 70
+                MaxHeight = 50
             };
 
             var uiImage = new InlineUIContainer { Child = image };

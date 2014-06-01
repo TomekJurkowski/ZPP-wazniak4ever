@@ -23,11 +23,11 @@ namespace wazniak_forever
             ExControl.AddElement(AnswerBox);
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             ExControl.CourseName.Text = Convert.ToString(NavigationContext.QueryString["courseName"]);
-            ExControl.AdjustQuestionBox();
+            await ExControl.AdjustQuestionBox(this);
             ExControl.ShowImageAttachment();
         }
 

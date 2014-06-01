@@ -710,6 +710,7 @@ namespace wazniak_forever.Model
         public Solution Solution { get; set; }
         public string ModifiedText { get; set; }
         public string ImageUrl { get; set; }
+        public string TaskDiscriminator { get; set; }
     }
 
     public class RegularExercise : Exercise
@@ -720,7 +721,7 @@ namespace wazniak_forever.Model
 
         public RegularExercise(int id, int subjectId, int moduleId, int solutionId, 
             string title, string question, Subject subject, Solution solution, string mathText,
-            string imageUrl)
+            string imageUrl, string taskDiscriminator)
         {
             ID = id;
             SubjectID = subjectId;
@@ -731,6 +732,7 @@ namespace wazniak_forever.Model
             Solution = solution;
             ModifiedText = mathText;
             ImageUrl = imageUrl;
+            TaskDiscriminator = taskDiscriminator;
         }
     }
 
