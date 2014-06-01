@@ -1,4 +1,5 @@
-﻿using PagedList;
+﻿using Microsoft.Ajax.Utilities;
+using PagedList;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -331,11 +332,13 @@ namespace WazniakWebsite.Controllers
         public string GetModuleStatistics(int courseId)
         {
             var moduleStats = from module in db.Modules.Where(module => module.SubjectID == courseId)
+                              join stat in db.ModuleStats on module.ID equals stat.ModuleID into statResults
+                              from statResult in statResults.DefaultIfEmpty()
                               select new
                               {
                                   id = module.ID,
                                   name = module.Title,
-                                  y = module.ID,
+                                  y = (statResult == null ? 0 : statResult.CorrectAnswers / statResult.Attempts),
                                   drilldown = true
                               };
             return Newtonsoft.Json.JsonConvert.SerializeObject(moduleStats);
@@ -344,12 +347,13 @@ namespace WazniakWebsite.Controllers
         [HttpPost]
         public string GetExerciseStatistics(int moduleId)
         {
-            var iter = 0;
             var exerciseStats = (from exercise in db.Tasks.Where(task => task.ModuleID == moduleId)
+                                 join stat in db.TaskStats on exercise.ID equals stat.TaskID into statResults
+                                 from statResult in statResults.DefaultIfEmpty()
                                  select new
                                  {
                                      name = exercise.Title,
-                                     y = exercise.ID,
+                                     y = (statResult == null ? 0 : statResult.CorrectAnswers / statResult.Attempts),
                                      id = exercise.ID
                                  }).ToList();
             return Newtonsoft.Json.JsonConvert.SerializeObject(exerciseStats);

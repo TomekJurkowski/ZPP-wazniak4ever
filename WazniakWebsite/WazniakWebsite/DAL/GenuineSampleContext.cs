@@ -19,6 +19,8 @@ namespace WazniakWebsite.DAL
             modelBuilder.Entity<Task>().ToTable("Task", "clarifier");
             modelBuilder.Entity<Answer>().ToTable("Answer", "clarifier");
             modelBuilder.Entity<Module>().ToTable("Module", "clarifier");
+            modelBuilder.Entity<ModuleStatistics>().ToTable("ModuleStatistics", "clarifier");
+            modelBuilder.Entity<TaskStatistics>().ToTable("TaskStatistics", "clarifier");
         }
 
         public DbSet<MathematicalTask> MathematicalTasks { get; set; }
@@ -33,5 +35,7 @@ namespace WazniakWebsite.DAL
         public DbSet<MultiChoice> MultiChoices { get; set; }
         public DbSet<SingleChoice> SingleChoices { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<ModuleStatistics> ModuleStats { get; set; }
+        public DbSet<TaskStatistics> TaskStats { get; set; } 
     }
 }

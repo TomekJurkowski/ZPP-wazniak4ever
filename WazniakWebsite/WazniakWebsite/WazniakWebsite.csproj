@@ -292,10 +292,19 @@
     <Compile Include="Migrations\201405251239398_TaskWithImage.Designer.cs">
       <DependentUpon>201405251239398_TaskWithImage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201406011138543_CreateModuleStatisticsTable.cs" />
+    <Compile Include="Migrations\201406011138543_CreateModuleStatisticsTable.Designer.cs">
+      <DependentUpon>201406011138543_CreateModuleStatisticsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201406011147554_CreateTaskStatisticsTable.cs" />
+    <Compile Include="Migrations\201406011147554_CreateTaskStatisticsTable.Designer.cs">
+      <DependentUpon>201406011147554_CreateTaskStatisticsTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Authentication\IdentityModels.cs" />
     <Compile Include="Models\ClarifierUser.cs" />
     <Compile Include="Models\Module.cs" />
+    <Compile Include="Models\ModuleStatistics.cs" />
     <Compile Include="Models\MultiChoice.cs" />
     <Compile Include="Models\MathematicalTask.cs" />
     <Compile Include="Models\RegularTask.cs" />
@@ -305,6 +314,7 @@
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\Task.cs" />
+    <Compile Include="Models\TaskStatistics.cs" />
     <Compile Include="Models\TextAnswer.cs" />
     <Compile Include="Models\MultipleChoiceAnswer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -439,6 +449,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405251239398_TaskWithImage.resx">
       <DependentUpon>201405251239398_TaskWithImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406011138543_CreateModuleStatisticsTable.resx">
+      <DependentUpon>201406011138543_CreateModuleStatisticsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406011147554_CreateTaskStatisticsTable.resx">
+      <DependentUpon>201406011147554_CreateTaskStatisticsTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
