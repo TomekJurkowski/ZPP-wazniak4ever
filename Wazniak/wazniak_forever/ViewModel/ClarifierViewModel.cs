@@ -849,6 +849,54 @@ namespace wazniak_forever.ViewModel
                     userExerciseMap.LastAttempt = System.DateTime.Now;
                     await db.UsersAndExercises.UpdateAsync(userExerciseMap);
                 }
+
+                //UPDATE STATS
+                var exerciseStats =
+                    (await db.ExerciseStatistics.Where(stats => stats.TaskID == t.Key)
+                    .ToListAsync()).FirstOrDefault();
+
+                if (exerciseStats == null)
+                {
+                    await db.ExerciseStatistics.InsertAsync(new TaskStatistics
+                    {
+                        TaskID = t.Key,
+                        CorrectAnswers = t.Value ? 1 : 0,
+                        Attempts = 1
+                    });
+                }
+                else
+                {
+                    exerciseStats.Attempts++;
+                    if (t.Value) exerciseStats.CorrectAnswers++;
+                    await db.ExerciseStatistics.UpdateAsync(exerciseStats);
+                }
+
+                var currTask =
+                    (await db.TasksWithAnswers.Where(task => task.TaskID == t.Key).ToListAsync())
+                    .FirstOrDefault();
+
+                if (currTask == null) return;
+                var taskModule = currTask.ModuleID;
+
+                var moduleStats =
+                    (await db.ModuleStatistics.Where(stats => stats.ModuleID == taskModule)
+                    .ToListAsync()).FirstOrDefault();
+
+                if (moduleStats == null)
+                {
+                    await db.ModuleStatistics.InsertAsync(new ModuleStatistics
+                    {
+                        ModuleID = taskModule,
+                        CorrectAnswers = t.Value ? 1 : 0,
+                        Attempts = 1
+                    });
+                }
+                else
+                {
+                    moduleStats.Attempts++;
+                    if (t.Value) moduleStats.CorrectAnswers++;
+                    await db.ModuleStatistics.UpdateAsync(moduleStats);
+                }
             }
         }
 

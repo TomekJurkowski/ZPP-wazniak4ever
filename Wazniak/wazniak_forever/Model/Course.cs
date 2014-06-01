@@ -108,8 +108,9 @@ namespace wazniak_forever.Model
         public IMobileServiceTable<SingleChoiceExerciseOption> SingleChoiceOptions =
             MobileService.GetTable<SingleChoiceExerciseOption>();
 
-        public IMobileServiceTable<Module> Modules = MobileService.GetTable<Module>(); 
-
+        public IMobileServiceTable<Module> Modules = MobileService.GetTable<Module>();
+        public IMobileServiceTable<TaskStatistics> ExerciseStatistics = MobileService.GetTable<TaskStatistics>();
+        public IMobileServiceTable<ModuleStatistics> ModuleStatistics = MobileService.GetTable<ModuleStatistics>(); 
 
         public SQLiteAsyncConnection Connect = new SQLiteAsyncConnection(
             Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,
@@ -737,6 +738,23 @@ namespace wazniak_forever.Model
     {
         public Image Question { get; set; }
     }
+
+    public class TaskStatistics
+    {
+        public int ID { get; set; }
+        public int TaskID { get; set; }
+        public long CorrectAnswers { get; set; }
+        public long Attempts { get; set; }
+    }
+
+    public class ModuleStatistics
+    {
+        public int ID { get; set; }
+        public int ModuleID { get; set; }
+        public long CorrectAnswers { get; set; }
+        public long Attempts { get; set; }
+    }
+
 
     #region Solutions
 
