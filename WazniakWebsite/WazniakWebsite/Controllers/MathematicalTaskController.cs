@@ -690,9 +690,14 @@ namespace WazniakWebsite.Controllers
 
         private static async Task<Stream> LoadEquationImage(string exp, bool isInline)
         {
-            var requestUri = isInline
+            /*var requestUri = isInline
                 ? "http://latex.codecogs.com/png.download?%5Cinline%20%7B%5Ccolor%7BDarkBlue%7D" + exp + "%7D"
-                : "http://latex.codecogs.com/png.download?%20%7B%5Ccolor%7BDarkBlue%7D" + exp + "%7D";
+                : "http://latex.codecogs.com/png.download?%20%7B%5Ccolor%7BDarkBlue%7D" + exp + "%7D";*/
+
+            var requestUri = isInline
+                ? @"http://latex.codecogs.com/png.download?" + Uri.EscapeDataString(@"\inline {\color{DarkBlue}" + exp + "}")
+                : @"http://latex.codecogs.com/png.download?" + Uri.EscapeDataString(@"{\color{DarkBlue}" + exp + "}");
+            
             using (var client = new HttpClient())
             {
                 var requestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri);

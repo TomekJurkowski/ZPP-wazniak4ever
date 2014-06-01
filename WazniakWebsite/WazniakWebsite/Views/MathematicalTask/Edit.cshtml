@@ -226,7 +226,7 @@
             Preview.Update();
 
             // set the value of the content
-            $("#Text").val("@Model.Text");
+            //$("#Text").val("@Model.Text");
 
             var h = $("#Text").height();
             $("#MathPreview").css("min-height", function () {
@@ -485,7 +485,7 @@
         <div class="form-group">
             <label class="control-label col-md-2 PurpleText" for="Text">Content</label>
             <div class="col-md-10">
-                <textarea class="form-control" id="Text" name="Text" rows="8" onkeyup="Preview.Update()"></textarea>
+                <textarea class="form-control" id="Text" name="Text" rows="8" onkeyup="Preview.Update()">@Model.Text</textarea>
                 <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
             </div>
         </div>
