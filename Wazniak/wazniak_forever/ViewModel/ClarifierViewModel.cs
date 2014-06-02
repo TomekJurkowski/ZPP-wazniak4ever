@@ -432,11 +432,6 @@ namespace wazniak_forever.ViewModel
             }
         }
 
-        private Solution prepareSolution(Answer ans)
-        {
-            return null;
-        }
-
         public async System.Threading.Tasks.Task LoadModules()
         {
             Modules = await db.Modules.ToListAsync();
@@ -459,9 +454,12 @@ namespace wazniak_forever.ViewModel
         {
             var tasksWithAnswers = OnlineMode
                 ? await
-                    db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID)
-                        .LoadAllAync()
+                    db.TasksWithAnswers.Where(task => task.SubjectID == CurrentCourseID).LoadAllAync()
                 : await db.LoadExercisesOffline(CurrentCourseID);
+            if (moduleIdList.Count() > 0)
+            {
+                tasksWithAnswers = tasksWithAnswers.FindAll(task => (moduleIdList as List<int>).Exists(module => module == task.ModuleID));
+            }
 
             var multipleChoiceExerciseOptions = OnlineMode ?
                 await db.MultipleChoiceOptions.Where(option => option.SubjectID == CurrentCourseID).LoadAllAync() :
