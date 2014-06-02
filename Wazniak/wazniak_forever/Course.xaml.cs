@@ -60,6 +60,7 @@ namespace wazniak_forever
 
         private async void NavigateToModuleSelectionPage(CourseType courseType)
         {
+            App.ViewModel.CourseType = courseType;
             await App.ViewModel.LoadSubjectModules();
             (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri(string.Format("/ModuleSelection.xaml?courseName={0}&courseType={1}", CourseName.Text, courseType), UriKind.Relative));
         }

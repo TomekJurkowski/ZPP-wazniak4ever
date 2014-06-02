@@ -919,10 +919,8 @@ namespace wazniak_forever.ViewModel
                 && mapping.UserID == DatabaseContext.MobileService.CurrentUser.UserId);
 
             await db.UsersAndSubjects.DeleteAsync(deletedMapping);
-
             _userSubjectMappings.Remove(deletedMapping);
             MyCourses.Remove(MyCourses.Find(course => course.ID == CurrentCourseID));
-
             var exercisesToRemove = _userExerciseMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.SubjectID == CurrentCourseID);
             foreach (UserExercise uE in exercisesToRemove) await db.UsersAndExercises.DeleteAsync(uE);
             foreach (UserModule uM in _userModuleMappings.FindAll(module => module.UserID == db.User.UserId && module.SubjectID == CurrentCourseID)) await db.UserModules.DeleteAsync(uM);

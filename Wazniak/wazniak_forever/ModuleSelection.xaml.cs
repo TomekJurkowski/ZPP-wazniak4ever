@@ -40,7 +40,6 @@ namespace wazniak_forever
 
         private async Task SelectExercise(CourseType type, IEnumerable<int> selectedModuleIdList)
         {
-            App.ViewModel.CourseType = type;
             await App.ViewModel.PerformTimeConsumingProcess(this, "Loading exercises...",
                 async () => await App.ViewModel.LoadExercises(selectedModuleIdList));
             if (App.ViewModel.Solutions.Count <= 0) return;
