@@ -381,6 +381,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
     <Content Include="Views\Shared\_UploadFiles.cshtml" />
+    <Content Include="Views\Home\IndexTemporary.cshtml" />
+    <Content Include="Views\Home\HomeFrame.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
