@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,13 +10,13 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.ModelBinding;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
 
 namespace WazniakWebsite.Controllers
 {
+    [Authorize]
     public class MathematicalTaskController : Controller
     {
         // CONSTANTS representing a statement that should be printed to the user if he has not filled the form properly

@@ -31,6 +31,7 @@ namespace WazniakWebsite.Models
 
 namespace WazniakWebsite.Controllers
 {
+    [Authorize]
     public class SubjectController : Controller
     {
         private SchoolContext db = new SchoolContext();

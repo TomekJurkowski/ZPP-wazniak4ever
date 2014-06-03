@@ -5,16 +5,14 @@ using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WazniakWebsite.DAL;
 using WazniakWebsite.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace WazniakWebsite.Controllers
 {
+    [Authorize]
     public class RegularTaskController : Controller
     {
         // CONSTANTS representing a statement that should be printed to the user if he has not filled the form properly
