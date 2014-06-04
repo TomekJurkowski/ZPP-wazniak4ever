@@ -269,7 +269,6 @@ namespace wazniak_forever.ViewModel
             CurrentModule = SubjectModules[CurrentModuleIndex];
             if (_userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID).Count <= CurrentModuleIndex)
             {
-                MessageBox.Show("ENTER");
                 UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new List<bool>());
                 _userModuleMappings.Add(uM);
                 await db.UserModules.InsertAsync(uM);
