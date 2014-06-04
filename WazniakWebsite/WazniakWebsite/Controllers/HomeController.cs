@@ -23,11 +23,6 @@ namespace WazniakWebsite.Controllers
             return View();
         }
 
-        public ActionResult IndexTemporary()
-        {
-            return View();
-        }
-
         public ActionResult HomeFrame()
         {
             return View();

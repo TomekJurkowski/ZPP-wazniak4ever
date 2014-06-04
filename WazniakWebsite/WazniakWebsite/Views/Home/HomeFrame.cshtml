@@ -9,11 +9,94 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <title>Home Frame - My ASP.NET Application</title>
-        
-        <link rel="stylesheet" href="~/Content/onepage-scroll.css" />
-        <link rel="stylesheet" href="~/Content/main-min.css" />
-        
+
+        <link rel="stylesheet" href="~/Content/HomeFrame/bootstrap-min.css">
+        <link rel="stylesheet" href="~/Content/HomeFrame/onepage-scroll.css" />
+        <link rel="stylesheet" href="~/Content/HomeFrame/main-min.css" />
+
         <script src="~/Scripts/HomeFrameScripts/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        
+        <style>
+            .btn-xlarge {
+                padding: 18px 68px;
+                font-size: 22px;
+                line-height: normal;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+            }
+
+            .btn-xlarge-narrow {
+                padding: 18px 48px;
+                font-size: 22px;
+                line-height: normal;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+            }
+
+            .PurpleBtn {
+                color: #FFFFFF;
+                -ms-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+                text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+                background-color: #660066;
+                *background-color: #660066;
+                background-image: -moz-linear-gradient(top, #9900cc, #660066);
+                background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9900cc), to(#660066));
+                background-image: -webkit-linear-gradient(top, #9900cc, #660066);
+                background-image: -o-linear-gradient(top, #9900cc, #660066);
+                background-image: linear-gradient(to bottom, #9900cc, #660066);
+                background-repeat: repeat-x;
+                border-color: #660066;
+                border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#9900cc', endColorstr='#660066', GradientType=0);
+                filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+            }
+
+            .PurpleBtn:hover,
+            .PurpleBtn:active,
+            .PurpleBtn.active,
+            .PurpleBtn.disabled,
+            .PurpleBtn[disabled] {
+                color: #FFFFFF;
+                background-color: #660066;
+                *background-color: #003bb3;
+            }
+
+             .LightPurpleBtn {
+                 color: #660066;
+                 -ms-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+                 text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+                 background-color: #ffccff;
+                 *background-color: #ffccff;
+                 background-image: -moz-linear-gradient(top, #F7F5FA, #ffccff);
+                 background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#F7F5FA), to(#ffccff));
+                 background-image: -webkit-linear-gradient(top, #F7F5FA, #ffccff);
+                 background-image: -o-linear-gradient(top, #F7F5FA, #ffccff);
+                 background-image: linear-gradient(to bottom, #F7F5FA, #ffccff);
+                 background-repeat: repeat-x;
+                 border-color: #ffccff;
+                 border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+                 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F7F5FA', endColorstr='#FCC', GradientType=0);
+                 filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+             }
+
+            .LightPurpleBtn:hover,
+            .LightPurpleBtn:active,
+            .LightPurpleBtn.active,
+            .LightPurpleBtn.disabled,
+            .LightPurpleBtn[disabled] {
+                color: #660066;
+                background-color: #ffccff;
+                *background-color: #003bb3;
+            }
+
+
+            h3 {
+                text-align: center;
+            }
+        </style>
+
     </head>    
 
     <body>
@@ -22,53 +105,120 @@
             <section class="home">
                 <div class="container">
 
-                    <div class="home-phone hide hidden-xs col-xs-12 col-sm-5">
-                        <img src="img/iphone-3.png" class="iphone-3 " alt="">
-                    </div>
-
                     <div class="row">
 
                         <div class="home-copy  col-xs-12 col-sm-8 col-sm-offset-2 animated fadeInDown delay-2 ">
-                            <h1 class="demo1">We love<br> <span class="rotate"> Imagination, Technology, Creativity, Innovation, Big Dreams </span></h1>
+                            <h1 class="demo1" style="margin-top: 150px; margin-bottom: 30px;">Clarifier<br></h1>
+                            <h2 class="demo1" style="margin-top: 30px;"><span class="rotate">Students' First Aid</span></h2>
 
-                            <p>We've been hard at work hand crafting amazing products for your team. We would like to share our recent work, hope you like it.</p>
-
-                            <span class="take-a-look animated fadeInDown delay-8"><i class="entypo-down-open"></i>Take a look</span>
+                            <br/>
+                            <br />
+                            <p>We've been hard at work creating an App that would help you learn and memorize difficult 'stuff'. App, that would be useful, smart, handy and user friendly, all at the same time. We want to share our recent work, hope you like it!</p>
                         </div>
                     </div>
 
                 </div>
             </section>
-            
+                        
             <section class="slide-1 slide full-color">
                 <div class="container">
-                    <div class="row">
+                    <div class="row" style="margin-top: 70px;">
 
-                        <div class="col-xs-12 col-sm-6 iphone-container ">
-                            <img src="img/iphone-1.png" class="hide iphone-1" alt="">
+                        <div class="col-xs-12 col-sm-4 copy">
+                            <h2 class="demo1" style="margin-top: 0; margin-bottom: 30px;">  What is Clarifier?  </h2>
+
+                            <p class="slide-1-left hide hidden-xs" style="margin-top: 0; margin-bottom: 20px;">
+                                Clarifier is an system designed to help students master and memorize difficult notions taught in classes.
+                            </p>
+                            
+                            <p class="slide-1-left hide hidden-xs" style="margin-top: 0; margin-bottom: 20px;">
+                                It consists of 2 major parts: mobile application designed for students and website dedicated to tutors, lecturers, etc.
+                            </p>
+
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4 iphone-container" style="margin-top: 134px;">
+                            <img src="~/Content/HomeFrame/Images/plakat-clarifier.jpg" class="hide iphone-1" alt="">
                         </div>
 
                         <div class="col-xs-12 col-sm-4 copy">
-                            <h2 class=" hide slide-1-title slide-titles">  Finally it's Launch day </h2>
-                            <p class="slide-1-1 hide">
-                                Use showcase to present your latest work in an elgantly simple way. Present multiple screenshots with copy to keep things flowing.
+
+                            <p class="slide-1-right hide hidden-xs" style="margin-top: 0; margin-bottom: 20px;">
+                                This website allows tutors to create and update exercises that will be used by the mobile app. Additionally, we provide tutors with beautiful and intelligible statistics.
+                            </p>
+                            
+                            <p class="slide-1-right hide hidden-xs" style="margin-top: 0; margin-bottom: 20px;">
+                                Application for students is available on WindoPhone8 devices. Soon we will spread to other platforms.
                             </p>
 
-                            <p class="slide-1-2 hide hidden-xs">
-                                You can easily add more slides and change the animation speed, style.
+                            <p class="slide-1-right hide hidden-xs" style="margin-top: 0; margin-bottom: 20px;">
+                                Clarifier is an system designed for students, by students - we really now what you need and we're giving it to you in this App!
                             </p>
 
-                            <p class="slide-1-3 hide hidden-xs">
-                                Mix it up and use the background image, flat colours or even big video.
+                            <p class="slide-1-right hide hidden-xs" style="margin-top: 0; margin-bottom: 20px;">
+                                Memorizing has never been that easy!
                             </p>
-                            <i class="hide entypo-down-open slide-1-scroll scroll-down"></i>
                         </div>
                     </div>
                 </div>
             </section>
 
+            @if (!Request.IsAuthenticated)
+            {
+            <section class="slide-2 slide full-color">
+                <div class="container">
+                    <div class="row" style="margin-top: 70px;">
+                        
+
+                        <div class="col-xs-12 col-sm-5 copy">
+                            <h2 class=" hide slide-2-left" style="margin-top: 0; margin-bottom: 30px;">  Log in </h2>
+                            
+                            <p class="slide-2-left hide hidden-xs" style="margin-top: 0; margin-bottom: 20px;">
+                                Log in and start help the student community by creating new exciting exercises! 
+                            </p>
+                            
+                            <div class="slide-2-right hide hidden-xs col--12 animated fadeInDown text-center">
+                                @Html.ActionLink("Log in", "Login", "Account", null, new { @class = "btn btn-lg btn-xlarge-narrow PurpleBtn" })
+                            </div>
+                        </div>
+                        
+                        <div class="col-xs-12 col-sm-5 col-sm-offset-2 copy">
+                            <h2 class=" hide slide-2-right" style="margin-top: 0; margin-bottom: 30px;">  Register </h2>
+                            
+                            <p class="slide-2-right hide hidden-xs" style="margin-top: 0; margin-bottom: 20px;">
+                                Don't have an account? Sign up, by clicking the button below:
+                            </p>
+                            
+                            <div class="slide-2-left hide hidden-xs col--12 animated fadeInDown text-center">
+                                @Html.ActionLink("Register", "Register", "Account", null, new { @class = "btn btn-lg btn-xlarge-narrow PurpleBtn" })
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+   
+            }
+
             <section class="home">
                 <div class="container">
+                    
+                    <div class="row">
+                        <div class="home-copy col-md-12 animated fadeInDown delay-2 ">
+                            <h1 class="demo1">Wanna try Clarifier?</h1>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="home-copy col-md-12 animated fadeInDown delay-2 text-center">
+                            <a href="http://windowsphone.com" class="btn btn-lg btn-xlarge LightPurpleBtn">CLICK HERE</a>
+                            <br />
+                            <h3 class="demo1">... or find us in Windows Store on your phone!</h3>
+                        </div>
+                    </div>
+
 
                     <br />
                     <hr />
