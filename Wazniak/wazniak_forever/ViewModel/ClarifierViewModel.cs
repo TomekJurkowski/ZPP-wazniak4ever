@@ -630,8 +630,7 @@ namespace wazniak_forever.ViewModel
                 RightButtonContent = "no",
                 IsFullScreen = false
             };
-
-            messageBox.Dismissed += (s, e) =>
+            /*messageBox.Dismissed += (s, e) =>
                 {
                     switch (e.Result)
                     {
@@ -643,26 +642,25 @@ namespace wazniak_forever.ViewModel
                         default:
                             break;
                     }
-                };
+                };*/
 
-            while (db.User == null && !success)
-            {                
-                string message;
+            //while (db.User == null && !success)
+            //{
+            //    string message;
                 try
                 {
                     db.User = await DatabaseContext.MobileService
                                         .LoginAsync(provider);
-                    success = true;
-                    message =
-                        string.Format("You are now logged in as {0}", db.User.UserId);
-                    MessageBox.Show(message);
+
+                    
+                    MessageBox.Show(string.Format("You are now logged in as {0}", db.User.UserId));
                 }
                 catch (InvalidOperationException)
                 {
-                    messageBox.Show();
+                    MessageBox.Show("We could not complete singing in.", "Sign in", MessageBoxButton.OK);
                 }
 
-            }
+            //}
             
         }
 

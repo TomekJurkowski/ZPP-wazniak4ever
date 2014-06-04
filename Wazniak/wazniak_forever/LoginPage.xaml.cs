@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -20,11 +21,9 @@ namespace wazniak_forever
             App.ViewModel.LoadAuthenticationProviders();
         }
 
-        
-
         private async void AuthenticationProviders_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AuthenticationProvider provider = AuthenticationProviders.SelectedItem as AuthenticationProvider;
+            var provider = AuthenticationProviders.SelectedItem as AuthenticationProvider;
             AuthenticationProviders.SelectedItem = null;
             if (provider != null)
             {
