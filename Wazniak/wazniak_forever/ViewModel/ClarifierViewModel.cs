@@ -612,10 +612,7 @@ namespace wazniak_forever.ViewModel
         {
             AuthenticationProviders = new List<AuthenticationProvider>()
             {
-                new AuthenticationProvider(AuthenticationProviderType.Microsoft, "Microsoft"),
-                new AuthenticationProvider(AuthenticationProviderType.Google, "Google"),
-                new AuthenticationProvider(AuthenticationProviderType.Facebook, "Facebook"),
-                new AuthenticationProvider(AuthenticationProviderType.Twitter, "Twitter")
+                new AuthenticationProvider(AuthenticationProviderType.Microsoft, "Microsoft")
             };
         }
 
@@ -630,38 +627,16 @@ namespace wazniak_forever.ViewModel
                 RightButtonContent = "no",
                 IsFullScreen = false
             };
-            /*messageBox.Dismissed += (s, e) =>
-                {
-                    switch (e.Result)
-                    {
-                        case CustomMessageBoxResult.LeftButton:
-                            break;
-                        case CustomMessageBoxResult.RightButton:
-                            success = true;
-                            break;
-                        default:
-                            break;
-                    }
-                };*/
 
-            //while (db.User == null && !success)
-            //{
-            //    string message;
-                try
-                {
-                    db.User = await DatabaseContext.MobileService
-                                        .LoginAsync(provider);
-
-                    
-                    MessageBox.Show(string.Format("You are now logged in as {0}", db.User.UserId));
-                }
-                catch (InvalidOperationException)
-                {
-                    MessageBox.Show("We could not complete singing in.", "Sign in", MessageBoxButton.OK);
-                }
-
-            //}
-            
+            try
+            {
+                db.User = await DatabaseContext.MobileService.LoginAsync(provider);
+                MessageBox.Show(string.Format("You are now logged in as {0}", db.User.UserId));
+            }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show("We could not complete singing in.", "Sign in", MessageBoxButton.OK);
+            }
         }
 
         public void Logout() {
