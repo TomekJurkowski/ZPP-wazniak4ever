@@ -257,7 +257,7 @@ namespace wazniak_forever.ViewModel
             return result;
         }
 
-        public void pickExercises()
+        public async System.Threading.Tasks.Task pickExercises()
         {
             if (SubjectModules == null)
             {
@@ -269,9 +269,10 @@ namespace wazniak_forever.ViewModel
             CurrentModule = SubjectModules[CurrentModuleIndex];
             if (_userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID).Count <= CurrentModuleIndex)
             {
+                MessageBox.Show("ENTER");
                 UserModule uM = new UserModule(db.User.UserId, CurrentModule.ID, CurrentCourseID, CurrentModule.SequenceNo, 0, new List<bool>());
                 _userModuleMappings.Add(uM);
-                db.UserModules.InsertAsync(uM);
+                await db.UserModules.InsertAsync(uM);
             }
 
             List<UserModule> UserModules = _userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID);
@@ -806,7 +807,6 @@ namespace wazniak_forever.ViewModel
 
         public async System.Threading.Tasks.Task SendMyResults(int subjectCorrectAnswers, int subjectAttempts)
         {
-
             // MODULES
             foreach (UserModule currentUserModuleMapping in _userModuleMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.SubjectID == CurrentCourseID))
             {
@@ -903,8 +903,8 @@ namespace wazniak_forever.ViewModel
             {
                 _userSubjectMappings.Add(uS);
             }
-
             await db.UsersAndSubjects.InsertAsync(uS);
+
             MyCourses.Add(AllCourses.Find(course => course.ID == CurrentCourseID));
             MyCourses.Sort(CompareSubjects);
             LoadCoursePage();
@@ -913,15 +913,25 @@ namespace wazniak_forever.ViewModel
         public async System.Threading.Tasks.Task DeleteFromMyCourses()
         {
             var deletedMapping = _userSubjectMappings.Find(mapping =>
-                mapping.SubjectID == CurrentCourseID
-                && mapping.UserID == DatabaseContext.MobileService.CurrentUser.UserId);
+                mapping.SubjectID == CurrentCourseID);
 
-            await db.UsersAndSubjects.DeleteAsync(deletedMapping);
             _userSubjectMappings.Remove(deletedMapping);
             MyCourses.Remove(MyCourses.Find(course => course.ID == CurrentCourseID));
-            var exercisesToRemove = _userExerciseMappings.FindAll(mapping => mapping.UserID == db.User.UserId && mapping.SubjectID == CurrentCourseID);
-            foreach (UserExercise uE in exercisesToRemove) await db.UsersAndExercises.DeleteAsync(uE);
-            foreach (UserModule uM in _userModuleMappings.FindAll(module => module.UserID == db.User.UserId && module.SubjectID == CurrentCourseID)) await db.UserModules.DeleteAsync(uM);
+            await db.UsersAndSubjects.DeleteAsync(deletedMapping);
+
+            // MODULES
+            foreach (UserModule uM in _userModuleMappings.FindAll(module => module.SubjectID == CurrentCourseID))
+            {
+                _userModuleMappings.RemoveAll(mapping => mapping.SubjectID == CurrentCourseID);
+                await db.UserModules.DeleteAsync(uM);
+            }
+
+            // EXERCISES
+            foreach (UserExercise uE in _userExerciseMappings.FindAll(mapping => mapping.SubjectID == CurrentCourseID))
+            {
+                _userExerciseMappings.RemoveAll(mapping => mapping.SubjectID == CurrentCourseID);
+                await db.UsersAndExercises.DeleteAsync(uE);
+            }
 
             LoadCoursePage();  
         }

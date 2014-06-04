@@ -58,7 +58,7 @@ namespace wazniak_forever
 
         private async void StartCourse()
         {
-            if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) App.ViewModel.pickExercises();
+            if (App.ViewModel.CourseType == CourseType.StudyWithClarifier) await App.ViewModel.pickExercises();
             else
             {
                 var type = (CourseType)Enum.Parse(typeof(CourseType), NavigationContext.QueryString["courseType"], true);
